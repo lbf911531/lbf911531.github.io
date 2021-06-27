@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗? 答： 基本没有 数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)  JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="v8-array数组底层实现">
+<meta property="og:url" content="http://example.com/2021/06/27/v8-array/index.html">
+<meta property="og:site_name" content="两忘轩">
+<meta property="og:description" content="题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗? 答： 基本没有 数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)  JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-87b00d7f18659c5ddd73b09fb27a45828b1.png">
+<meta property="og:image" content="http://example.com/2021/06/27/images/v8-array/1.png">
+<meta property="og:image" content="http://example.com/2021/06/27/images/v8-array/1621994110850.png">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-e4a4403ce1d020bcf03db57051e6cb77820.png">
+<meta property="article:published_time" content="2021-06-27T12:25:30.000Z">
+<meta property="article:modified_time" content="2021-06-27T12:53:07.848Z">
+<meta property="article:author" content="书生">
+<meta property="article:tag" content="原生JS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oscimg.oschina.net/oscnet/up-87b00d7f18659c5ddd73b09fb27a45828b1.png">
+
+
+<link rel="canonical" href="http://example.com/2021/06/27/v8-array/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/06/27/v8-array/","path":"2021/06/27/v8-array/","title":"v8-array数组底层实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>v8-array数组底层实现 | 两忘轩</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">两忘轩</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">清光未泯，来岁无穷</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-js%E4%B8%AD%E7%9A%84%E6%95%B0%E7%BB%84"><span class="nav-number">1.</span> <span class="nav-text">1. js中的数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-v8%E6%BA%90%E7%A0%81%E7%9C%8B%E6%95%B0%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">2. v8源码看数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%BF%AB%E6%95%B0%E7%BB%84%EF%BC%88FastElements%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.2 快数组（FastElements）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E6%89%A9%E5%AE%B9"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.2.1 扩容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E6%94%B6%E7%BC%A9"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.2.2 收缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-holes"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.2.3 holes</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%85%A2%E6%95%B0%E7%BB%84%EF%BC%88SlowElements%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.3 慢数组（SlowElements）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%BF%AB%E6%85%A2%E6%95%B0%E7%BB%84%E8%BD%AC%E5%8C%96%E5%8F%8A%E5%8C%BA%E5%88%AB"><span class="nav-number">2.3.</span> <span class="nav-text">2.4 快慢数组转化及区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-1-%E5%BF%AB-gt-%E6%85%A2"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.4.1 快 &#x3D;&gt; 慢</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-2-%E6%85%A2-gt-%E5%BF%AB"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.4.2 慢 &#x3D;&gt; 快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-3-%E5%8C%BA%E5%88%AB%E5%AF%B9%E6%AF%94"><span class="nav-number">2.3.3.</span> <span class="nav-text">2.4.3 区别对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-v8%E8%B0%83%E8%AF%95%E7%9B%B8%E5%85%B3"><span class="nav-number">2.4.</span> <span class="nav-text">2.5 v8调试相关</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="书生"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">书生</p>
+  <div class="site-description" itemprop="description">博客</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yourname" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/v8-array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="两忘轩">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          v8-array数组底层实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-06-27 20:25:30 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2021-06-27T20:25:30+08:00">2021-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?</p>
+<p>答： 基本没有</p>
+<pre><code class="reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
+
+JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。
+</code></pre>
+<p>由上述问题，引发关于数组底层实现的概念介绍：</p>
+<h2 id="1-js中的数组"><a href="#1-js中的数组" class="headerlink" title="1. js中的数组"></a>1. js中的数组</h2><ul>
+<li><p>与普通的数组并非一致。它可以存放不同类型的数据，如<code>[1,&quot;1&quot;,function,obj]</code>,不局限于一种数据类型。</p>
+</li>
+<li><p>既像队列，有shift,unshift方法；也类似栈，有push,pop方法</p>
+</li>
+<li><p>能够迭代，有for，forEach等等</p>
+</li>
+<li><p>有length属性，能够访问数组的长度；同时也可以动态扩容，根据元素的数量，扩大或收缩内存容量</p>
+</li>
+</ul>
+<h2 id="2-v8源码看数组"><a href="#2-v8源码看数组" class="headerlink" title="2. v8源码看数组"></a>2. v8源码看数组</h2><p> <img src="https://oscimg.oschina.net/oscnet/up-87b00d7f18659c5ddd73b09fb27a45828b1.png" alt="img"> </p>
+<p>JSArray继承自JSObject,这也印证了一句<code>js中数组也是对象</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/v8/v8/blob/master/src/objects/js-array.h">https://github.com/v8/v8/blob/master/src/objects/js-array.h</a></p>
+<p>注意截图中的注释，其翻译成中文意即：</p>
+<pre><code class="json">JSArray描述了JavaScript数组
+这样的数组可以有两种模式:
+-快速，后备存储是一个FixedArray和length &lt;= elements.length();
+请注意:push和pop可以用来增加和缩小数组。
+-慢，后备存储是一个HashTable与数字作为键
+</code></pre>
+<p>大概就是说，数组分为两种模式，一种是快速模式，它是基于fixedArray实现存储的；另一种是慢数组模式，它是基于HashTable实现存储。</p>
+<p>既然有两种模式，那么就可以引申出第一个问题： 谁是默认情况下使用的模式？</p>
+<p>答： <code>快数组模式</code>。</p>
+<pre><code class="javascript">var a = [8,1,2];
+
+// 打印 a的字节码：
+- map = 0x939ebe04359 [FastProperties]
+- prototype = 0x27e86e126289
+- elements = 0xe70c791d4e9 &lt;FixedArray[3]&gt; [FAST_SMI_ELEMENTS (COW)]
+- length = 3
+- properties = 0x2b609d202241 &lt;FixedArray[0]&gt; &#123;
+#length: 0x2019c3e58da9 &lt;AccessorInfo&gt; (const accessor descriptor)
+&#125;
+- elements= 0xe70c791d4e9 &lt;FixedArray[3]&gt; &#123;
+0: 8
+1: 1
+2: 2
+&#125;
+</code></pre>
+<p>引申：网上有一段资料， V8里面所有的数据类型的根父类都是Object，Object派生HeapObject，提供存储基本功能，往下的JSReceiver用于原型查找，再往下的JSObject就是JS里面的Object，Array/Function/Date等继承于JSObject。左边的FixedArray是实际存储数据的地方。 </p>
+<p> <img src="../images/v8-array/1.png" alt="img"> </p>
+<h3 id="2-2-快数组（FastElements）"><a href="#2-2-快数组（FastElements）" class="headerlink" title="2.2 快数组（FastElements）"></a>2.2 快数组（FastElements）</h3><p> 快数组是一种线性的存储方式，内部存储是连续的内存，新创建的空数组，默认的存储方式是快数组，快数组长度是可变的，可以根据元素的增加和删除来动态调整存储空间大小，内部是通过扩容和收缩机制实现。 </p>
+<pre><code class="javascript">// v8/src/objects/js-array.h 
+// Number of element slots to pre-allocate for an empty array.
+  static const int kPreallocatedArrayElements = 4;
+</code></pre>
+<p>数组初始化时会默认产生4个插槽。</p>
+<h4 id="2-2-1-扩容"><a href="#2-2-1-扩容" class="headerlink" title="2.2.1 扩容"></a>2.2.1 扩容</h4><p>当执行push等操作时，如果发现内存不够时：</p>
+<pre><code class="javascript">// v8/src/objects/js-objects.h // 计算扩容后的容量
+static const uint32_t kMinAddedElementsCapacity = 16;
+// Computes the new capacity when expanding the elements of a JSObject.
+static uint32_t NewElementsCapacity(uint32_t old_capacity) &#123;
+    // (old_capacity + 50%) + kMinAddedElementsCapacity
+    return old_capacity + (old_capacity &gt;&gt; 1) + kMinAddedElementsCapacity;
+&#125;
+// code-stub-assembler.cc
+Node* CodeStubAssembler::CalculateNewElementsCapacity(Node* old_capacity,
+                                                      ParameterMode mode) &#123;
+  CSA_SLOW_ASSERT(this, MatchesParameterMode(old_capacity, mode));
+  Node* half_old_capacity = WordOrSmiShr(old_capacity, 1, mode);
+  Node* new_capacity = IntPtrOrSmiAdd(half_old_capacity, old_capacity, mode);
+  Node* padding =
+      IntPtrOrSmiConstant(JSObject::kMinAddedElementsCapacity, mode);
+  return IntPtrOrSmiAdd(new_capacity, padding, mode);
+&#125;
+</code></pre>
+<p>换算一下就是：</p>
+<p><code>old_capacity + old_capacity / 2 + 16</code> ；即原内存大小的1.5倍 加上16。</p>
+<p>所以，扩容可以分为以下几步：</p>
+<ul>
+<li>push 操作时，发现数组内存不足</li>
+<li>申请 new_capacity = old_capacity /2 + old_capacity + 16 那么长度的内存空间</li>
+<li>将数组拷贝到新内存中</li>
+<li>把新元素放在当前 length 位置</li>
+<li>数组的 length + 1</li>
+<li>返回 length</li>
+</ul>
+<h4 id="2-2-2-收缩"><a href="#2-2-2-收缩" class="headerlink" title="2.2.2 收缩"></a>2.2.2 收缩</h4><pre><code class="javascript"> if (2 * length + JSObject::kMinAddedElementsCapacity &lt;= capacity) &#123;
+     // 可以理解成 2 * length + 16 &lt;= capacity，也就是 当前元素数量的2倍 + 16 小于数组预定内存大小
+     
+     // If more than half the elements won&#39;t be used, trim the array.
+     // Do not trim from short arrays to prevent frequent trimming on
+     // repeated pop operations.
+     // Leave some space to allow for subsequent push operations.
+     
+     // 判断： 根据length + 1 和old_length 决定是收缩空余的一半，还是全部收缩掉
+     int elements_to_trim = length + 1 == old_length
+         ? (capacity - length) / 2
+     : capacity - length;
+     isolate-&gt;heap()-&gt;RightTrimFixedArray(*backing_store, elements_to_trim);
+     // Fill the non-trimmed elements with holes.
+     BackingStore::cast(*backing_store)
+         .FillWithHoles(length,
+                        std::min(old_length, capacity - elements_to_trim));
+ &#125; else &#123;
+    // Otherwise, fill the unused tail with holes.
+    // 反之，用 空洞对象 填充(holes对象指的是数组中分配了空间，但是没有存放元素的位置)
+    BackingStore::cast(*backing_store)-&gt;FillWithHoles(length, old_length);
+&#125;
+</code></pre>
+<p>执行pop操作后， 如果超过一半的元素没有被使用，则修剪数组。</p>
+<h4 id="2-2-3-holes"><a href="#2-2-3-holes" class="headerlink" title="2.2.3 holes"></a>2.2.3 holes</h4><p> 对于<code>HOLES</code>，在<code>Fast Elements</code>模式中有一个扩展，称为<code>Fast Holey Elements</code>模式 。</p>
+<p>意思是值，在连续内存中，部分索引存有数据，而另一部分索引不存在数据。用代码解释是：</p>
+<pre><code class="javascript">var a = [2,3,4];
+a[100] = 5;
+</code></pre>
+<p>访问a[5]时，得到的是undefined，而在控制台打印a时，也可以看到，输出的值中存在 <code>empty</code>这样的关键字。</p>
+<h3 id="2-3-慢数组（SlowElements）"><a href="#2-3-慢数组（SlowElements）" class="headerlink" title="2.3 慢数组（SlowElements）"></a>2.3 慢数组（SlowElements）</h3><p> 慢数组是一种字典的内存形式。不用开辟大块连续的存储空间，节省了内存，但是由于需要维护这样一个<code>HashTable</code>，其效率会比快数组低，<code>V8</code>中是以<code>Dictionary</code>的结构实现的慢数组。</p>
+<pre><code class="c++">// src/objects/dictionary.h
+class EXPORT_TEMPLATE_DECLARE(V8_EXPORT_PRIVATE) Dictionary
+    : public HashTable&lt;Derived, Shape&gt; &#123;
+  using DerivedHashTable = HashTable&lt;Derived, Shape&gt;;
+
+ public:
+  using Key = typename Shape::Key;
+  // Returns the value at entry.
+  inline Object ValueAt(InternalIndex entry);
+  inline Object ValueAt(const Isolate* isolate, InternalIndex entry);
+  
+  // ...
+&#125;;
+</code></pre>
+<h3 id="2-4-快慢数组转化及区别"><a href="#2-4-快慢数组转化及区别" class="headerlink" title="2.4 快慢数组转化及区别"></a>2.4 快慢数组转化及区别</h3><p> 在V8中JSArray继承于JSObject。当设置属性的时候，会依次执行 <code>Object::SetProperty</code> 、 <code>Object::AddDataProperty</code> 、 <code>JSObject::AddDataElement</code> 、 <code>ShouldConvertToSlowElements</code> 。</p>
+<h4 id="2-4-1-快-gt-慢"><a href="#2-4-1-快-gt-慢" class="headerlink" title="2.4.1 快 =&gt; 慢"></a>2.4.1 快 =&gt; 慢</h4><p> 快数组转换为慢数组主要有以下两种情况： </p>
+<pre><code class="c++">// If the fast-case backing storage takes up much more memory than a dictionary
+// backing storage would, the object should have slow elements.
+// static
+// 如果快速备份存储比字典占用更多的内存
+// 备份存储，对象应该有慢元素。
+// 静态
+
+// src\objects\dictionary.h
+// JSObjects prefer dictionary elements if the dictionary saves this much
+// memory compared to a fast elements backing store.
+static const uint32_t kPreferFastElementsSizeFactor = 3;
+// ---------------
+// src\objects\dictionary.h
+class NumberDictionaryShape : public NumberDictionaryBaseShape &#123;
+ public:
+  static const int kPrefixSize = 1;
+  static const int kEntrySize = 3;
+&#125;;
+// --- src\objects\js-objects-inl.h
+static inline bool ShouldConvertToSlowElements(uint32_t used_elements,
+                                               uint32_t new_capacity) &#123;
+  uint32_t size_threshold = NumberDictionary::kPreferFastElementsSizeFactor *
+                            NumberDictionary::ComputeCapacity(used_elements) *
+                            NumberDictionary::kEntrySize;
+  return size_threshold &lt;= new_capacity;
+&#125;
+</code></pre>
+<p>将上述方法简化：</p>
+<p>​    当 3* ComputeCapacity(used_elements) * 3  =&lt; 新的容量 时，返回true，表示要将快数组向慢数组转化。而关于 <code>ComputeCapacity</code></p>
+<pre><code class="c++">static inline bool ShouldConvertToSlowElements(JSObject object,
+                                               uint32_t capacity,
+                                               uint32_t index,
+                                               uint32_t* new_capacity) &#123;
+  STATIC_ASSERT(JSObject::kMaxUncheckedOldFastElementsLength &lt;=
+                JSObject::kMaxUncheckedFastElementsLength);
+  if (index &lt; capacity) &#123;
+    *new_capacity = capacity;
+    return false;
+  &#125;
+    // 主要看这一行
+  if (index - capacity &gt;= JSObject::kMaxGap) return true;
+  *new_capacity = JSObject::NewElementsCapacity(index + 1);
+  DCHECK_LT(index, *new_capacity);
+  if (*new_capacity &lt;= JSObject::kMaxUncheckedOldFastElementsLength ||
+      (*new_capacity &lt;= JSObject::kMaxUncheckedFastElementsLength &amp;&amp;
+       ObjectInYoungGeneration(object))) &#123;
+    return false;
+  &#125;
+  return ShouldConvertToSlowElements(object.GetFastElementsUsage(),
+                                     *new_capacity);
+&#125;
+</code></pre>
+<p><code>kMaxGap</code>,通过查找，定义的值为1024； 也就是说当 <code>加入的 index</code> - <code>当前容量</code> 大于等于 <code>1024</code> 时，（这时候存在的holes数量就会大于等于1024个）也会转变成慢数组。</p>
+<pre><code class="javascript">let a = [1, 2]
+a[1030] = 1;
+</code></pre>
+<p><img src="../images/v8-array/1621994110850.png" alt="1621994110850"></p>
+<h4 id="2-4-2-慢-gt-快"><a href="#2-4-2-慢-gt-快" class="headerlink" title="2.4.2 慢 =&gt; 快"></a>2.4.2 慢 =&gt; 快</h4><p> 处于哈希表实现的数组，每次空间增长时， V8 的启发式算法都会检查其空间占用量 。</p>
+<p>而慢转快，比较直白的做法就是 给数组填充真实的数据，保证 填充的index - 当前容量 &lt;= 1024时即会转成快数组。比如：</p>
+<pre><code class="javascript">let a = [1,2];
+a[1030] = 1;
+//---
+a[500] = &quot;填充&quot;;
+</code></pre>
+<pre><code class="javascript">// src\objects\js-objects.cc
+</code></pre>
+<img src="https://oscimg.oschina.net/oscnet/up-e4a4403ce1d020bcf03db57051e6cb77820.png" alt="img" style="zoom:50%;" />
+
+ 
+
+<h4 id="2-4-3-区别对比"><a href="#2-4-3-区别对比" class="headerlink" title="2.4.3 区别对比"></a>2.4.3 区别对比</h4><ol>
+<li><strong>存储方式方面：</strong>快数组内存中是连续的，慢数组在内存中是零散分配的。</li>
+<li><strong>内存使用方面：</strong>由于快数组内存是连续的，可能需要开辟一大块供其使用，其中还可能有很多空洞，是比较费内存的。慢数组不会有空洞的情况，且都是零散的内存，比较节省内存空间。</li>
+<li><strong>遍历效率方面：</strong>快数组由于是空间连续的，遍历速度很快，而慢数组每次都要寻找 key 的位置，遍历效率会差一些。</li>
+</ol>
+<h3 id="2-5-v8调试相关"><a href="#2-5-v8调试相关" class="headerlink" title="2.5 v8调试相关"></a>2.5 v8调试相关</h3><pre><code class="javascript">1.npm install -g jsvu
+2.将.jsvu 所在的绝对路径添加到系统变量PATH中
+3.执行 jsvu 命令，会话首先会提示你选择64/32位系统，其次会询问安装v8还是v8-debug。
+建议安装v8-debug,它会比v8打印出来的数据要更为完整
+</code></pre>
+<hr>
+<p>记录一下个人安装jsvu遇到的坑：</p>
+<ol>
+<li><p>node版本最好是 v14.16.0</p>
+</li>
+<li><p>执行完第一步后，去添加环境变量时，发现系统C盘，并没有.jsvu文件夹的存在，可以自己先建立一个同名文件，然后在当前路径打开终端，再执行<code>jsvu</code>。</p>
+</li>
+<li><p>执行<code>jsvu</code>之后，在终端敲 <code>v8</code> 命令时，如果发现终端提示v8不是一个命令；可以在终端重新执行一次 <code>jsvu</code>。这时候，会发现，在.jsvu文件夹下，新增了 <code>v8.cmd/v8-debug.cmd</code>文件及<code>xs.cmd</code>。</p>
+</li>
+<li><p>如果执行<code>jsvu</code>命令并且选择的是安装v8-debug后，在.jsvu文件夹下没有发现<code>v8-debug.cmd</code>文件，可以执行<code>jsvu --engines=v8-debug</code></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>书生
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/06/27/v8-array/" title="v8-array数组底层实现">http://example.com/2021/06/27/v8-array/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%8E%9F%E7%94%9FJS/" rel="tag"># 原生JS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/27/URL-and-URI/" rel="prev" title="URL-and-URI">
+                  <i class="fa fa-chevron-left"></i> URL-and-URI
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/27/react-diff/" rel="next" title="fiber and diff初探">
+                  fiber and diff初探 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">书生</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
