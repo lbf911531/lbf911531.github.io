@@ -22,9 +22,9 @@
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 <meta name="description" content="博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="两忘轩">
+<meta property="og:title" content="埋书">
 <meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="两忘轩">
+<meta property="og:site_name" content="埋书">
 <meta property="og:description" content="博客">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="书生">
@@ -38,7 +38,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>两忘轩</title>
+<title>埋书</title>
   
 
 
@@ -67,7 +67,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">两忘轩</h1>
+      <h1 class="site-title">埋书</h1>
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">清光未泯，来岁无穷</p>
@@ -133,7 +133,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -198,7 +198,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/28/hexo/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/29/editor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -207,11 +207,11 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/28/hexo/" class="post-title-link" itemprop="url">hexo</a>
+          <a href="/2021/06/29/editor/" class="post-title-link" itemprop="url">模拟TextArea-踩坑记录</a>
         </h2>
 
         <div class="post-meta-container">
@@ -223,7 +223,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-06-28 19:43:20 / 修改时间：20:50:17" itemprop="dateCreated datePublished" datetime="2021-06-28T19:43:20+08:00">2021-06-28</time>
+      <time title="创建时间：2021-06-29 20:02:15 / 修改时间：22:10:41" itemprop="dateCreated datePublished" datetime="2021-06-29T20:02:15+08:00">2021-06-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,7 +245,557 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="从零开始搭建hexo-blog"><a href="#从零开始搭建hexo-blog" class="headerlink" title="从零开始搭建hexo blog"></a>从零开始搭建hexo blog</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h2><ol>
+          <h2 id="思路提供"><a href="#思路提供" class="headerlink" title="思路提供"></a><i class="fa fa-tags"></i>思路提供</h2><ol>
+<li><p>原生 div + textarea ，通过调整系列样式，将div设置为透明色，以textarea所在外层div包裹,相对外层div绝对定位。</p>
+</li>
+<li><p>使用div+contentEditable属性，将div设置为可编辑状态</p>
+<p>ps: 在使用contentEditable属性时，可以放心大胆使用。IE在这里是最先支持的，</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th>Google</th>
+<th>IE</th>
+<th>Firefox</th>
+<th>Safari</th>
+<th>Opera</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">contentEditable</td>
+<td>11.0</td>
+<td>5.5</td>
+<td>3.0</td>
+<td>3.2</td>
+<td>10.6</td>
+</tr>
+</tbody></table>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a><i class="fa fa-tags"></i>实践</h2><h3 id="实践-‘思路一’"><a href="#实践-‘思路一’" class="headerlink" title="实践-‘思路一’"></a>实践-‘思路一’</h3><p>既然是踩坑，就先从第一条思路开始尝试</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Document&lt;/title&gt;
+  &lt;style&gt;
+    .textarea-box &#123;
+      position: relative;
+      width: 300px;
+      height: 300px;
+    &#125;
+
+    .inner &#123;
+      width: 300px;
+      height: 300px;
+      font: 400 14px Arial;
+      color: #ffffff;
+      /* caret-color: #000; */
+    &#125;
+
+    .out &#123;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 30px;
+      box-sizing: border-box;
+      padding: 3px;
+      color: #000;
+      z-index: 2;
+      background: transparent;
+      font: 400 14px Arial;
+    &#125;
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;div class=&quot;textarea-box&quot;&gt;
+    &lt;div class=&quot;out&quot; onclick=&#39;inner.focus()&#39;&gt;&lt;/div&gt;
+    &lt;textarea class=&quot;inner&quot; id=&quot;inner&quot;&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    window.onload = function () &#123;
+      document.querySelector(&#39;.inner&#39;).addEventListener(&#39;input&#39;, function (e) &#123;
+        document.querySelector(&#39;.out&#39;).innerHTML = e.target.value.replace(/2/g, &#39;&lt;span style=&quot;color: red;&quot;&gt;2&lt;/span&gt;&#39;)
+      &#125;)
+    &#125;
+  &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>然后就会发现第一个问题： <code>光标看不见了</code>！！光标默认跟随了编辑器内容颜色，因为 div[class=’inner’]文本颜色变成了白色，且背景色为白色，因此光标也是白色了。</p>
+<pre><code class="markdown">解决：  ”caret-color “   // caret-color 属性用来定义插入光标（caret）的颜色
+通过给 div[class=&#39;inner&#39;] 设置caret-color: #000; 光标就又可以看见了
+</code></pre>
+<p>光标可见的问题虽然解决了，但随之出现了另一个问题：无法随意在文本中插入光标。</p>
+<p>（ps:第一个方案走到这里就暂时停了……）</p>
+<h3 id="实践-‘思路二’"><a href="#实践-‘思路二’" class="headerlink" title="实践-‘思路二’"></a>实践-‘思路二’</h3><p>相比于第一条路，给div加上 contentEditable属性，比起通过样式调整div模拟成textarea更便捷</p>
+<p>（ps: 以下代码皆为react + jsx语法）</p>
+<pre><code class="jsx">&lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
+  &lt;div
+    style=&#123;&#123;
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      zIndex: 2,
+      backgroundColor: 'transparent',
+      padding: '4px 11px',
+      outline: 'none',
+      height: '125px',
+      overflowY: 'auto',
+      lineHeight: '1.5',
+      verticalAlign: 'bottom',
+    &#125;&#125;
+    contentEditable=&quot;true&quot;
+    id=&quot;define-textarea&quot;
+    ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
+  /&gt;
+&lt;/div&gt;
+</code></pre>
+<p>走到这里就续借了第一条思路遗留的问题，在这里可以点击区域插入光标。做到了模拟textarea的效果。</p>
+<h4 id="模拟onChange"><a href="#模拟onChange" class="headerlink" title="模拟onChange"></a>模拟onChange</h4><p>在基本实现了模拟textarea的基础上，我们需要获取文本值。即类似于要模拟出表单控件都有的方法：onChange。</p>
+<p>然而很遗憾： 走邪道总是崎岖的。HTML中contentEditable属性并不支持它。</p>
+<p>事实上，在原生的HTML中，onChange仅支持  input, select,textarea( <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Events/input">https://developer.mozilla.org/zh-CN/docs/Web/Events/input</a> )</p>
+<p>那么问题来了，onChange是文本的变化，文本在什么时候会变化？敲击键盘的时候（ps：还有复制粘贴，js强制插入文本；这里不做深入的兼容）。因此，键盘事件成了一条思路。我们可以监听<code>keyup</code>事件。【<code>keydown</code>,比起键弹起，键按下到弹起前的两种事件在这里一点都不合适，你不知道什么时候结束了敲击】</p>
+<pre><code class="javascript">this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue);
+
+handleGetValue = e =&gt; &#123;
+  const &#123; onChange &#125; = this.props;
+  const &#123; innerText, innerHTML &#125; = e.target;
+  console.log(innerText, innerHTML);
+&#125;
+</code></pre>
+<h4 id="回写文本"><a href="#回写文本" class="headerlink" title="回写文本"></a>回写文本</h4><p>模拟了onChange之后，我们就能拿到文本值。同时抛出使用。这时候要想起一件事情——模拟的初衷在于高亮。高亮意味着，要对拿到的文本做关键字匹配，然后替换其为html片段，加入color样式。</p>
+<p>然后让我们完善整合一下上面的代码：</p>
+<pre><code class="jsx">  componentDidMount() &#123;
+    const &#123; highlightText &#125; = this.props;
+    this.setState(&#123; highlightText &#125;)
+    // keyup事件模拟input的onChange事件
+    this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue)
+  &#125;  
+
+  componentWillReceiveProps(nextProps) &#123;
+    const &#123; highlightText &#125; = nextProps;
+    this.setState(&#123; highlightText &#125;)
+  &#125;
+
+  // 等同onchange
+  handleGetValue = e =&gt; &#123;
+    const &#123; onChange &#125; = this.props;
+    const &#123; innerText, innerHTML &#125; = e.target;
+    if (onChange) &#123;
+      this.setState(&#123;
+        cursorPos: posObj,
+      &#125;, () =&gt; &#123;
+        // innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串
+        const string = !innerText || (innerHTML === &#39;&lt;br&gt;&#39;) ? &#39;&#39; : innerText;
+        onChange(string)
+      &#125;)
+    &#125;
+  &#125;
+
+  render() &#123;
+    const &#123; highlightText &#125; = this.state;
+
+    return (
+      &lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
+        &lt;div
+          style=&#123;&#123;
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            zIndex: 2,
+            backgroundColor: 'transparent',
+            padding: '4px 11px',
+            outline: 'none',
+            height: '125px',
+            overflowY: 'auto',
+            lineHeight: '1.5',
+            verticalAlign: 'bottom',
+          &#125;&#125;
+          dangerouslySetInnerHTML=&#123;&#123; __html: highlightText &#125;&#125;
+          contentEditable=&quot;true&quot;
+          id=&quot;define-textarea&quot;
+          ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
+        /&gt;
+      &lt;/div&gt;
+    )
+  &#125;
+</code></pre>
+<p>但这时候，如果你仔细一点，就会发现两个大坑！！</p>
+<ul>
+<li><p>第一： 光标永远在最开始的地方闪烁，而不是文本的末尾；</p>
+</li>
+<li><p>第二，你不能输入中文了。</p>
+</li>
+</ul>
+<p>针对上诉二个问题，先看看原因。不难发现，是因为onChange回抛再重写，导致了光标始值被刷新在了开头，也是因为无时不刻的回抛重写，让事件以为我们意图将拼音算入了文本。</p>
+<p>因此，对于第二问题：我们引入一个新东西： <code>compositionstart</code>，<code>compositionend</code></p>
+<p> <code>compositionstart</code> 事件触发于一段文字的输入之前（类似于 <code>keydown</code> 事件，但是该事件仅在若干可见字符的输入之前，而这些可见字符的输入可能需要一连串的键盘操作、语音识别或者点击输入法的备选词）。 详情参照 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Events/compositionstart">https://developer.mozilla.org/zh-CN/docs/Web/Events/compositionstart</a> </p>
+<p>通过 <code>compositionstart</code>，<code>compositionend</code>搭配使用，我们可以为onChange加一道锁，当发现进入了中文拼写时，锁置为true，直到拼音完成前的过程中，禁止掉onChange的回抛。</p>
+<pre><code class="jsx"> this.textArea.addEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue);
+ this.textArea.addEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse);
+
+ handleSetFlagTrue = () =&gt; &#123; this.flag = true; &#125;
+
+ handleSetFlagFalse = () =&gt; &#123; this.flag = false; &#125;
+</code></pre>
+<p>再来就是第一个问题： 我们需要记录一下上一次onChange时光标的位置，然后在下一次onChange之前，将光标手动移到该位置上。这样就可以保证了光标不会回到最开始的地方闪烁。</p>
+<pre><code class="javascript">  // 获取光标位置
+  saveSelection = () =&gt; &#123;
+    const target = document.querySelector(&#39;#define-textarea&#39;);
+    if (window.getSelection) &#123;
+      const range = window.getSelection().getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(target);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      const start = preSelectionRange.toString().length;
+
+      return &#123;
+        start,
+        end: start + range.toString().length,
+      &#125;
+    &#125; else if (document.body.createTextRange) &#123;
+      const selectedTextRange = document.selection.createRange();
+      const preSelectionTextRange = document.body.createTextRange();
+      preSelectionTextRange.moveToElementText(target);
+      preSelectionTextRange.setEndPoint(&quot;EndToStart&quot;, selectedTextRange);
+      const start = preSelectionTextRange.text.length;
+
+      return &#123;
+        start,
+        end: start + selectedTextRange.text.length,
+      &#125;
+    &#125;
+  &#125;;
+</code></pre>
+<p>同时这也能够让我们在文本中随意插入光标。</p>
+<p>到这里为止，基本上，实现了div的contentEditable属性模拟textarea，并高亮的目的。</p>
+<p>如果要延申到富文本编辑器的话，可以考虑 <code>window.execCommond</code>实现复制，粘贴，回退….</p>
+<p>以下贴上完整代码（ps:毫无疑问，简单的模拟还有很多bug和需求都没实现，这些都将在后续文档中逐步补充完善）</p>
+<pre><code class="jsx">
+import React from &#39;react&#39;;
+
+class Editor extends React.Component &#123;
+  constructor(props) &#123;
+    super(props);
+    this.state = &#123;
+      highlightText: null,
+      cursorPos: 0,
+    &#125;
+    this.flag = false;
+    this.clock = true;
+  &#125;
+
+  componentDidMount() &#123;
+    const &#123; highlightText &#125; = this.props;
+    this.setState(&#123; highlightText &#125;)
+    // keyup事件模拟input的onChange事件
+    this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue)
+    /**
+     * compositionstart，compositionend
+     * 是为了处理输入中文时，将拼音回写到了文本区中，监听二者事件加一个锁，
+     * 在完成中文之前，不执行keyup的回调
+     */
+    this.textArea.addEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue)
+    this.textArea.addEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse)
+  &#125;
+
+  componentWillReceiveProps(nextProps) &#123;
+    const &#123; highlightText &#125; = nextProps;
+    this.setState(&#123; highlightText &#125;, () =&gt; &#123;
+
+      const &#123; cursorPos &#125; = this.state;
+      this.restoreSelection(null, cursorPos);
+    &#125;)
+  &#125;
+
+  componentWillUnmount() &#123;
+    this.textArea.removeEventListener(&quot;keyup&quot;, this.handleGetValue)
+    this.textArea.removeEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue)
+    this.textArea.removeEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse)
+    this.setState = () =&gt; &#123; &#125;
+  &#125;
+
+  // 等同onchange
+  handleGetValue = e =&gt; &#123;
+    const &#123; onChange &#125; = this.props;
+    const &#123; innerText, innerHTML &#125; = e.target;
+    if (onChange &amp;&amp; !this.flag) &#123;
+      const posObj = this.saveSelection();
+      this.setState(&#123;
+        cursorPos: posObj,
+      &#125;, () =&gt; &#123;
+        // innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串
+        const string = !innerText || (innerHTML === &#39;&lt;br&gt;&#39;) ? &#39;&#39; : innerText;
+        onChange(string)
+      &#125;)
+    &#125;
+  &#125;
+
+  handleSetFlagTrue = () =&gt; &#123; this.flag = true; &#125;
+
+  handleSetFlagFalse = () =&gt; &#123; this.flag = false; &#125;
+
+  // 强制将光标挪动到文本最后
+  keepLastIndex = () =&gt; &#123;
+    const target = document.querySelector(&quot;#define-textarea&quot;);
+    if (window.getSelection) &#123;// ie11 10 9 ff safari
+      target.focus(); // 解决ff不获取焦点无法定位问题
+      const range = window.getSelection();// 创建range
+      range.selectAllChildren(target);// range 选择obj下所有子内容
+      range.collapseToEnd();// 光标移至最后
+    &#125;
+    else if (document.selection) &#123;// ie10 9 8 7 6 5
+      const range = document.selection.createRange();// 创建选择对象
+      range.moveToElementText(target);// range定位到obj
+      range.collapse(false);// 光标移至最后
+      range.select();
+    &#125;
+
+    this.setState(&#123;
+      cursorPos: this.saveSelection(),
+    &#125;);
+  &#125;
+
+  /**
+  * 设置光标位置
+  * @param ctrl  需要设置对象
+  * @param savedSel 对象中内容的光标的所在位置&#123;start: ,end: &#125;
+  */
+  restoreSelection = (target, savedSel) =&gt; &#123;
+    const ctrl = document.querySelector(&#39;#define-textarea&#39;)
+    if (document.createRange) &#123;
+      let charIndex = 0;
+      const range = document.createRange();
+      range.setStart(ctrl, 0);
+      range.collapse(true);
+      const nodeStack = [ctrl];
+      let node;
+      let foundStart = false;
+      let stop = false;
+
+      while (!stop &amp;&amp; (node = nodeStack.pop())) &#123;
+        if (node.nodeType === 3) &#123;
+          const nextCharIndex = charIndex + node.length;
+          if (!foundStart &amp;&amp; savedSel.start &gt;= charIndex &amp;&amp; savedSel.start &lt;= nextCharIndex) &#123;
+            range.setStart(node, savedSel.start - charIndex);
+            foundStart = true;
+          &#125;
+          if (foundStart &amp;&amp; savedSel.end &gt;= charIndex &amp;&amp; savedSel.end &lt;= nextCharIndex) &#123;
+            range.setEnd(node, savedSel.end - charIndex);
+            stop = true;
+          &#125;
+          charIndex = nextCharIndex;
+        &#125; else &#123;
+          let i = node.childNodes.length;
+          // eslint-disable-next-line no-plusplus
+          while (i--) &#123;
+            nodeStack.push(node.childNodes[i]);
+          &#125;
+        &#125;
+      &#125;
+
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    &#125; else if (document.body.createTextRange) &#123;
+      const range = document.body.createTextRange();
+      range.moveToElementText(ctrl);
+      range.collapse(true);
+      range.moveEnd(&quot;character&quot;, savedSel.end);
+      range.moveStart(&quot;character&quot;, savedSel.start);
+      range.select();
+    &#125;
+  &#125;;
+
+  // 获取光标位置
+  saveSelection = () =&gt; &#123;
+    const target = document.querySelector(&#39;#define-textarea&#39;);
+    if (window.getSelection) &#123;
+      const range = window.getSelection().getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(target);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      const start = preSelectionRange.toString().length;
+
+      return &#123;
+        start,
+        end: start + range.toString().length,
+      &#125;
+    &#125; else if (document.body.createTextRange) &#123;
+      const selectedTextRange = document.selection.createRange();
+      const preSelectionTextRange = document.body.createTextRange();
+      preSelectionTextRange.moveToElementText(target);
+      preSelectionTextRange.setEndPoint(&quot;EndToStart&quot;, selectedTextRange);
+      const start = preSelectionTextRange.text.length;
+
+      return &#123;
+        start,
+        end: start + selectedTextRange.text.length,
+      &#125;
+    &#125;
+  &#125;;
+
+  // 插入文本
+  insertText = (string,text) =&gt; &#123;
+    const &#123; cursorPos &#125; = this.state;
+    if (cursorPos &amp;&amp; string) &#123;
+      const stringContent = this.getContentFromHtml(string);
+      const preStr = stringContent.substring(0,cursorPos.start);
+      const lastStr = stringContent.substring(cursorPos.end,string.length);
+      const finalStr = (`$&#123;preStr&#125; $&#123;text&#125;$&#123;lastStr&#125;`)
+        .replace(/\s+,/g,&#39;,&#39;)
+        .replace(/,\s+/g,&#39;,&#39;)
+        .replace(/\(\s+/g,&#39;(&#39;)
+        .replace(/\s+\)/g,&#39;)&#39;); // 过滤掉， （，）前后不必要的空格
+      return finalStr
+    &#125; return text;
+  &#125;
+
+    // 提取纯文本
+    getContentFromHtml = value =&gt; &#123;
+      let target;
+      if (typeof value === &#39;string&#39;) &#123;
+        target = value || &#39;&#39;;
+      &#125; else &#123;
+        target = value.toHTML &amp;&amp; value.toHTML() || &#39;&#39;;
+      &#125;
+
+      return (
+        target ? target.replace(/&lt;\/?[a-zA-Z]+.*?&gt;/g, &#39;&#39;) : &#39;&#39;
+      )
+    &#125;
+
+  render() &#123;
+    const &#123; highlightText &#125; = this.state;
+
+    return (
+      &lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
+        &lt;div
+          style=&#123;&#123;
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            zIndex: 2,
+            backgroundColor: 'transparent',
+            padding: '4px 11px',
+            outline: 'none',
+            height: '125px',
+            overflowY: 'auto',
+            lineHeight: '1.5',
+            verticalAlign: 'bottom',
+          &#125;&#125;
+          dangerouslySetInnerHTML=&#123;&#123; __html: highlightText &#125;&#125;
+          onClick=&#123;() =&gt; &#123;
+            const posObj = this.saveSelection();
+            this.setState(&#123;
+              cursorPos: posObj,
+            &#125;, () =&gt; &#123;
+              this.restoreSelection(null, posObj);
+            &#125;)
+          &#125;&#125;
+          contentEditable=&quot;true&quot;
+          id=&quot;define-textarea&quot;
+          ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
+        /&gt;
+      &lt;/div&gt;
+    )
+  &#125;
+&#125;
+
+export default Editor
+</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/28/hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/28/hexo/" class="post-title-link" itemprop="url">hexo</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-06-28 19:43:20" itemprop="dateCreated datePublished" datetime="2021-06-28T19:43:20+08:00">2021-06-28</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:13:18" itemprop="dateModified" datetime="2021-06-29T22:13:18+08:00">2021-06-29</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="从零开始搭建hexo-blog"><a href="#从零开始搭建hexo-blog" class="headerlink" title="从零开始搭建hexo blog"></a>从零开始搭建hexo blog</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a><i class="fa fa-tags"></i>准备环境</h2><ol>
 <li>安装node</li>
 <li>安装Git</li>
 <li>安装hexo 脚手架 <pre><code class="bash">$ npm install hexo-cli -g
@@ -266,8 +816,8 @@ $ npm i
 <li>访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a></li>
 </ol>
 <p>至此一个简单的blog完成搭建</p>
-<h2 id="美化博客"><a href="#美化博客" class="headerlink" title="美化博客"></a>美化博客</h2><ol>
-<li><p>修改基本信息<br>进入 ./_config.yml 文件，配置 #side 中的title,subtitle,description…<br><img src="../images/other/hexo/side-config.png" alt="side基本配置">;<br>更多配置参考 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></p>
+<h2 id="美化博客"><a href="#美化博客" class="headerlink" title="美化博客"></a><i class="fa fa-tags"></i>美化博客</h2><ol>
+<li><p>修改基本信息<br>进入 ./_config.yml 文件，配置 #side 中的title,subtitle,description…<br><img src="../images/other/hexo/side-config.png" alt="side基本配置"><br>更多配置参考 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></p>
 </li>
 <li><p>引入博客主题</p>
 <p>  2.1. 挑选主题 （<a target="_blank" rel="noopener" href="https://hexo.io/themes/%EF%BC%89">https://hexo.io/themes/）</a></p>
@@ -293,7 +843,7 @@ custom_file_path:
 <p>3.4. 修改<code>/blog/theme/next/_config.yml</code>文件中的<code>canvas_ribbon</code>，设置<code>enabled：true</code>，渲染背景彩带效果（该效果为next自带，默认不开启）</p>
 </li>
 </ol>
-<h2 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a>创建文件</h2><ol>
+<h2 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a><i class="fa fa-tags"></i>创建文件</h2><ol>
 <li><p>创建标签</p>
 <pre><code class="bash">$ hexo new page tags
 </code></pre>
@@ -330,9 +880,9 @@ categories: 前端 // 自定义
 </ol>
 <pre><code class="bash">$ hexo s
 </code></pre>
-<h2 id="发布到GitHub"><a href="#发布到GitHub" class="headerlink" title="发布到GitHub"></a>发布到GitHub</h2><ol>
+<h2 id="发布到GitHub"><a href="#发布到GitHub" class="headerlink" title="发布到GitHub"></a><i class="fa fa-tags"></i>发布到GitHub</h2><ol>
 <li>发布之前，需要登录个人GitHub，并创建一个名为“ [用户名].github.io” 的仓库；注意：可以采用自己的用户名，但<code>.github.io</code>仓库一个账号只能拥有一个。</li>
-<li>修改本地 /_config.yml 文件（以用户名为 test为例, repository 在仓库创建成功后可直接复制）<pre><code>deploy:
+<li>修改本地 /_config.yml 文件（以用户名为 test为例, repository 在仓库创建成功后可直接复制）<pre><code class="markdown">deploy:
 type: git
 repository: git@github.com:test/test.github.io.git
 branch: master
@@ -386,7 +936,7 @@ $ ssh -T git@github.com // 验证
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -400,10 +950,16 @@ $ ssh -T git@github.com // 验证
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 21:29:05 / 修改时间：21:32:26" itemprop="dateCreated datePublished" datetime="2021-06-27T21:29:05+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 21:29:05" itemprop="dateCreated datePublished" datetime="2021-06-27T21:29:05+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:10:41" itemprop="dateModified" datetime="2021-06-29T22:10:41+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -535,7 +1091,7 @@ $ ssh -T git@github.com // 验证
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -549,10 +1105,16 @@ $ ssh -T git@github.com // 验证
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 21:27:42 / 修改时间：21:30:12" itemprop="dateCreated datePublished" datetime="2021-06-27T21:27:42+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 21:27:42" itemprop="dateCreated datePublished" datetime="2021-06-27T21:27:42+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:13:56" itemprop="dateModified" datetime="2021-06-29T22:13:56+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -573,10 +1135,10 @@ $ ssh -T git@github.com // 验证
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Proxy-和-Object-defineProperty"><a href="#Proxy-和-Object-defineProperty" class="headerlink" title="Proxy 和 Object.defineProperty"></a>Proxy 和 Object.defineProperty</h1><h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a>导言</h2><p>Proxy来自于es6</p>
+          <h1 id="Proxy-和-Object-defineProperty"><a href="#Proxy-和-Object-defineProperty" class="headerlink" title="Proxy 和 Object.defineProperty"></a>Proxy 和 Object.defineProperty</h1><h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a><i class="fa fa-tags"></i>导言</h2><p>Proxy来自于es6</p>
 <p>Object.defineProperty 来自于es5</p>
 <p>二者本质都是通过 对象的 set , get 方法实现中间拦截处理。vue的双向数据绑定可以说是基于这个特性实现的。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="proxy"><a href="#proxy" class="headerlink" title="proxy"></a>proxy</h3><pre><code class="javascript">/**
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a><i class="fa fa-tags"></i>使用</h2><h3 id="proxy"><a href="#proxy" class="headerlink" title="proxy"></a>proxy</h3><pre><code class="javascript">/**
 *  target: 要兼容的对象，可以是一个对象，数组,函数等等
 *  handler: 是一个对象，里面包含了可以监听这个对象的行为函数，
 */
@@ -630,7 +1192,7 @@ console.log(&#39;name&#39; in obj)
 <p>在获取代理对象某个属性的属性描述时触发该操作，比如在执行 <code>Object.getOwnPropertyDescriptor(proxy, &quot;foo&quot;)</code> 时会进入这个钩子函数</p>
 </li>
 </ol>
-<pre><code class="js">var obj = &#123;
+<pre><code class="javascript">var obj = &#123;
     name: &#39;zhangsan&#39;
 &#125;
 const proxy = new Proxy(obj,&#123;
@@ -655,7 +1217,7 @@ console.log(obj.name) // &#39;zhangsan&#39;
 console.log(proxy.age,obj.age) // 18
 </code></pre>
 <h3 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h3><p>上述如果用<code>Object.defineProperty </code>去重写的话：</p>
-<pre><code class="js">function observe(obj, callback) &#123;
+<pre><code class="javascript">function observe(obj, callback) &#123;
   Object.keys(obj).forEach(key =&gt; &#123;
     Object.defineProperty(obj, key, &#123;
       configurable: true,
@@ -727,7 +1289,7 @@ console.log(proxy.age,obj.age)
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -741,10 +1303,16 @@ console.log(proxy.age,obj.age)
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 21:26:15 / 修改时间：21:27:12" itemprop="dateCreated datePublished" datetime="2021-06-27T21:26:15+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 21:26:15" itemprop="dateCreated datePublished" datetime="2021-06-27T21:26:15+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:13:35" itemprop="dateModified" datetime="2021-06-29T22:13:35+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -765,9 +1333,9 @@ console.log(proxy.age,obj.age)
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Iterator和Generator"><a href="#Iterator和Generator" class="headerlink" title="Iterator和Generator"></a>Iterator和Generator</h1><h2 id="Iterator遍历器对象"><a href="#Iterator遍历器对象" class="headerlink" title="Iterator遍历器对象"></a>Iterator遍历器对象</h2><p>ES6 规定，默认的 Iterator 接口部署在数据结构的 <strong>Symbol.iterator</strong> 属性，或者说，一个数据结构只要具有<strong>Symbol.iterator</strong>属性，就可以认为是“可遍历的”（iterable）。<strong>Symbol.iterator</strong> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数。调用这个函数时，每次都会返回一个迭代器。</p>
+          <h1 id="Iterator和Generator"><a href="#Iterator和Generator" class="headerlink" title="Iterator和Generator"></a>Iterator和Generator</h1><h2 id="Iterator遍历器对象"><a href="#Iterator遍历器对象" class="headerlink" title="Iterator遍历器对象"></a><i class="fa fa-tags"></i>Iterator遍历器对象</h2><p>ES6 规定，默认的 Iterator 接口部署在数据结构的 <strong>Symbol.iterator</strong> 属性，或者说，一个数据结构只要具有<strong>Symbol.iterator</strong>属性，就可以认为是“可遍历的”（iterable）。<strong>Symbol.iterator</strong> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数。调用这个函数时，每次都会返回一个迭代器。</p>
 <ul>
-<li><h4 id="探究数组，类数组，字符串是否存在iterator"><a href="#探究数组，类数组，字符串是否存在iterator" class="headerlink" title="探究数组，类数组，字符串是否存在iterator"></a>探究数组，类数组，字符串是否存在iterator</h4></li>
+<li>探究数组，类数组，字符串是否存在iterator</li>
 </ul>
 <pre><code class="javascript">//数组：
 var arr = [1,2,3];
@@ -793,7 +1361,8 @@ console.log(o[Symbol.iterator]) // undefined
  类数组对象不存在iterator接口，需要自行定义
 </code></pre>
 <ul>
-<li><h4 id="遍历器对象的next（），return（），throw（）"><a href="#遍历器对象的next（），return（），throw（）" class="headerlink" title="遍历器对象的next（），return（），throw（）"></a>遍历器对象的next（），return（），throw（）</h4><ol>
+<li><p>遍历器对象的next（），return（），throw（）</p>
+<ol>
 <li><p>iterator必然需要 <code>next（）</code>,<code>return(),throw()</code>可选</p>
 </li>
 <li><p>假设在<code>for...of</code>循环中需要提前退出（出错或者，break），就会调用return方法</p>
@@ -828,12 +1397,14 @@ for (let line of readLinesSync(fileName)) &#123;
 </li>
 </ol>
 </li>
-<li><h4 id="for…of-实质上是依赖于iterator接口的一种循环方式"><a href="#for…of-实质上是依赖于iterator接口的一种循环方式" class="headerlink" title="for…of 实质上是依赖于iterator接口的一种循环方式"></a>for…of 实质上是依赖于iterator接口的一种循环方式</h4><p><code>for...of</code>循环自动调用它的Symbol.iterator函数来构建一个迭代器。</p>
+<li><p>for…of 实质上是依赖于iterator接口的一种循环方式</p>
+<p><code>for...of</code>循环自动调用它的Symbol.iterator函数来构建一个迭代器。</p>
 <p>如：<code>for...of</code>循环可以使用的范围包括数组、Set 和 Map 结构、某些类似数组的对象（比如<code>arguments</code>对象、DOM NodeList 对象）、Generator 对象，以及字符串。 </p>
 </li>
-<li><h4 id="for…in-读取键名，for…of读取键值，（借助数组实例的entries（），keys（））方法可以获取键名，键值对"><a href="#for…in-读取键名，for…of读取键值，（借助数组实例的entries（），keys（））方法可以获取键名，键值对" class="headerlink" title="for…in 读取键名，for…of读取键值，（借助数组实例的entries（），keys（））方法可以获取键名，键值对"></a>for…in 读取键名，for…of读取键值，（借助数组实例的entries（），keys（））方法可以获取键名，键值对</h4></li>
+<li><p>for…in 读取键名，for…of读取键值，（借助数组实例的entries（），keys（））方法可以获取键名，键值对</p>
+</li>
 </ul>
-<h2 id="Generator-生成器"><a href="#Generator-生成器" class="headerlink" title="Generator 生成器"></a>Generator 生成器</h2><p>​        生成器本身并不是 iterable  ，它可以说是一个自带迭代器的函数。虽然类似iterable，其原因是当你执行生成器，就得到了一个迭代器。</p>
+<h2 id="Generator-生成器"><a href="#Generator-生成器" class="headerlink" title="Generator 生成器"></a><i class="fa fa-tags"></i>Generator 生成器</h2><p>​        生成器本身并不是 iterable  ，它可以说是一个自带迭代器的函数。虽然类似iterable，其原因是当你执行生成器，就得到了一个迭代器。</p>
 <pre><code class="javascript">function *something() &#123;     
     var nextVal;       
     while (true) &#123;          
@@ -884,7 +1455,7 @@ for (var i of something()) &#123; if (i&gt; 500) &#123;console.log(i)&#125; &#12
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -898,10 +1469,16 @@ for (var i of something()) &#123; if (i&gt; 500) &#123;console.log(i)&#125; &#12
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 20:36:32 / 修改时间：21:25:01" itemprop="dateCreated datePublished" datetime="2021-06-27T20:36:32+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 20:36:32" itemprop="dateCreated datePublished" datetime="2021-06-27T20:36:32+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:14:11" itemprop="dateModified" datetime="2021-06-29T22:14:11+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -922,7 +1499,7 @@ for (var i of something()) &#123; if (i&gt; 500) &#123;console.log(i)&#125; &#12
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="react-fiber简介及15，16两版本Diff"><a href="#react-fiber简介及15，16两版本Diff" class="headerlink" title="react-fiber简介及15，16两版本Diff"></a>react-fiber简介及15，16两版本Diff</h1><h2 id="fiber"><a href="#fiber" class="headerlink" title="fiber"></a>fiber</h2><p>React 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权]</p>
+          <h1 id="react-fiber简介及15，16两版本Diff"><a href="#react-fiber简介及15，16两版本Diff" class="headerlink" title="react-fiber简介及15，16两版本Diff"></a>react-fiber简介及15，16两版本Diff</h1><h2 id="fiber"><a href="#fiber" class="headerlink" title="fiber"></a><i class="fa fa-tags"></i>fiber</h2><p>React 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权]</p>
 <p>因此React 16对底层做了一次重构：</p>
 <ol>
 <li>首先是基于虚拟DOM树，采用链表形式构建了一颗fiber树</li>
@@ -1031,7 +1608,7 @@ requestIdleCallback(workLoop,&#123;timeout: 300&#125;);
 <li>commit阶段做的事情是拿到<code>reconciliation</code>阶段产出的<code>EffectList</code>，即所有更新工作，提交这些更新工作并调用渲染模块（react-dom）渲染UI。</li>
 </ol>
 <p>最后通过事件触发进入到commitAllHostEffects里进行dom操作步骤。</p>
-<h2 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a>Diff</h2><h3 id="react-15-Diff"><a href="#react-15-Diff" class="headerlink" title="react 15 Diff"></a>react 15 Diff</h3><!--diff算法在 react 15版本和 react 16版本中有不同的实现。这里先整理15版本的。-->
+<h2 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a><i class="fa fa-tags"></i>Diff</h2><h3 id="react-15-Diff"><a href="#react-15-Diff" class="headerlink" title="react 15 Diff"></a>react 15 Diff</h3><!--diff算法在 react 15版本和 react 16版本中有不同的实现。这里先整理15版本的。-->
 
 <h4 id="传统的Diff以及react-15的Diff"><a href="#传统的Diff以及react-15的Diff" class="headerlink" title="传统的Diff以及react 15的Diff"></a>传统的Diff以及react 15的Diff</h4><p>关于Diff算法，react官网有这样一段介绍：</p>
 <p>传统的Diff算法通过循环递归对节点进行依次对比，效率低下，其算法复杂度达到 <code>O(n^3)</code>,其中n表示节点的个数。这就意味着，假如页面有1000个节点，那么每次就要执行上十亿次的对比。而如今的CPU每秒钟能够执行大约30亿条指令。</p>
@@ -1561,7 +2138,7 @@ return resultingFirstChild;
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1575,10 +2152,16 @@ return resultingFirstChild;
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 20:25:30 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2021-06-27T20:25:30+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 20:25:30" itemprop="dateCreated datePublished" datetime="2021-06-27T20:25:30+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 21:25:06" itemprop="dateModified" datetime="2021-06-29T21:25:06+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -1857,7 +2440,7 @@ a[500] = &quot;填充&quot;;
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1871,10 +2454,16 @@ a[500] = &quot;填充&quot;;
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 20:23:15 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2021-06-27T20:23:15+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 20:23:15" itemprop="dateCreated datePublished" datetime="2021-06-27T20:23:15+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 22:15:24" itemprop="dateModified" datetime="2021-06-29T22:15:24+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -1902,10 +2491,10 @@ a[500] = &quot;填充&quot;;
 <p>从上图看，还有一个叫做URN的。那么URN又是啥？</p>
 <p>URN:  <code>Uniform Resource Name </code>, 中文名：统一资源名称。百度说它是<code> 期望为资源提供持久的、位置无关的标识方式，并允许简单地将多个命名空间映射到单个URN命名空间</code>。 然而，很遗憾的是现在基本上见不到URN这种称呼了，可以说URN被URL取代，而也恰恰是这一点，可以 将 URI 无限类等于 URL。</p>
 <p> “URI可以分为URL,URN或同时具备locators 和names特性的一个东西。URN作用就好像一个人的名字，URL就像一个人的地址。换句话说：URN确定了东西的身份，URL提供了找到它的方式。” ——-这是维基百科上的一段话，可以很形象的总结URL,URN,URI在语义上的区别。</p>
-<h2 id="从结构上区分"><a href="#从结构上区分" class="headerlink" title="从结构上区分"></a>从结构上区分</h2><p>URL: </p>
+<h2 id="从结构上区分"><a href="#从结构上区分" class="headerlink" title="从结构上区分"></a><i class="fa fa-tags"></i>从结构上区分</h2><p>URL: </p>
 <p>1、传送协议<br>        2、层级<code>URL</code>标记符号(为[//]，固定不变)<br>        3、访问资源需要的凭证信息(可省略)<br>        4、服务器(通常为域名，有时为IP地址)<br>        5、端口号(以数字方式表示，若为默认值可省略)<br>        6、路径(以”/“字符区别路径中的每一个目录名称)<br>        7、查询(<code>GET</code>模式的参数。以？字符为起点，每个参数以&amp;隔开，再以=分开参数名称与值，通常以UTF8的URL编码，避开字符冲突的问题)<br>        8、片段(以#字符为起点)</p>
 <p>URI: </p>
-<h2 id="从抽象和具体上区分"><a href="#从抽象和具体上区分" class="headerlink" title="从抽象和具体上区分"></a>从抽象和具体上区分</h2><p>毫无疑问，URI是一种抽象的东西，它仅标识了资源，负责识别；而URL是一种具体，它具体的告诉了你怎么找，去哪找这段资源，负责定位。</p>
+<h2 id="从抽象和具体上区分"><a href="#从抽象和具体上区分" class="headerlink" title="从抽象和具体上区分"></a><i class="fa fa-tags"></i>从抽象和具体上区分</h2><p>毫无疑问，URI是一种抽象的东西，它仅标识了资源，负责识别；而URL是一种具体，它具体的告诉了你怎么找，去哪找这段资源，负责定位。</p>
 
       
     </div>
@@ -1941,7 +2530,7 @@ a[500] = &quot;填充&quot;;
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -1955,10 +2544,16 @@ a[500] = &quot;填充&quot;;
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 19:25:24 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2021-06-27T19:25:24+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 19:25:24" itemprop="dateCreated datePublished" datetime="2021-06-27T19:25:24+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 21:52:28" itemprop="dateModified" datetime="2021-06-29T21:52:28+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -2165,21 +2760,16 @@ class Route extends React.Component &#123;
 <p>通过阅读源码，可以得知，其实现类似于<code>Route</code>组件。只不过，区别在于<code>Switch</code>组件内部是遍历它的子元素集合（this.props.children或者说是Route集合），然后在遍历过程中，通过正则去匹配路由对得上的子元素，返回渲染。唯一需要注意的是，它的子元素中，不仅仅是会有Route组件，还会有<code>Redirect</code>组件。</p>
 <h2 id="3-hisotory"><a href="#3-hisotory" class="headerlink" title="3.hisotory"></a>3.hisotory</h2><h3 id="3-1-前言"><a href="#3-1-前言" class="headerlink" title="3.1 前言"></a>3.1 前言</h3><p>在了解history.js这个库之前，先对上面提到的 createHashHistory 和 createBrowserHistory贴上一段笔记：</p>
 <ul>
-<li><ul>
-<li>hashHistory带有#，#后面的内容不会发送服务器<ul>
+<li><p>hashHistory带有#，#后面的内容不会发送服务器</p>
+<ul>
 <li> 通过改变地址后面的hash来改变浏览器的历史记录, 用到了window.loaction.hash对象（存，取） </li>
 <li>类似于 a标签的锚点用法</li>
 <li>window提供了一个 onhashchange 方法，监听 hashhistory的改变</li>
 </ul>
 </li>
-</ul>
-</li>
-<li><ul>
 <li><p>browserHistory和普通的url相同，使用/，但是需要服务端支持，如果服务没有正确配置，那么直接访问url就会发生404</p>
 <ul>
 <li>类似于请求</li>
-</ul>
-</li>
 </ul>
 </li>
 <li><p> 使用的是 HTML5 的 History API，浏览器提供相应的接口来修改浏览器的历史记录 </p>
@@ -2221,9 +2811,9 @@ console.log(&quot;history.state after push:&quot;, window.history.state);
 <p>  当浏览记录出现变化时，会触发此事件  </p>
 </li>
 </ol>
-<pre><code>但是： **调用pushState和replaceState事件不会触发popstate事件，当点击后退或者前进按钮时才触发，或者调用go()方法触发;**
+<pre><code>但是： 调用pushState和replaceState事件不会触发popstate事件，当点击后退或者前进按钮时才触发，或者调用go()方法触发;
 </code></pre>
-<p>   且： <strong>假设你当前在bar.html，回撤后再go(1),再popstate中能够获取到你通过pushState时为bar.html设置的state,即它会保留state副本</strong>。</p>
+<p>   且： 假设你当前在bar.html，回撤后再go(1),再popstate中能够获取到你通过pushState时为bar.html设置的state,即它会保留state副本。</p>
 <hr>
 <p>   hash 和 browser history 在 API 方面的对比：</p>
 <table>
@@ -2484,7 +3074,7 @@ useEffect(() =&gt; &#123;
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="两忘轩">
+      <meta itemprop="name" content="埋书">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -2498,10 +3088,16 @@ useEffect(() =&gt; &#123;
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-06-27 18:11:19 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2021-06-27T18:11:19+08:00">2021-06-27</time>
+      <time title="创建时间：2021-06-27 18:11:19" itemprop="dateCreated datePublished" datetime="2021-06-27T18:11:19+08:00">2021-06-27</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-06-29 21:51:01" itemprop="dateModified" datetime="2021-06-29T21:51:01+08:00">2021-06-29</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -2544,7 +3140,7 @@ function App() &#123;
 </blockquote>
 <p>那么 combineReducers 合并reducer又是怎么用的呢?</p>
 <p>很明显这种情况下，在项目中的目录架构必然会形成这个格式</p>
-<pre><code>├── src
+<pre><code class="markdown">├── src
   ├── store
     ├── index.js
     ├── reducer1
@@ -2615,7 +3211,7 @@ export const myFirstReducer = (state = initState, action) =&gt; &#123;
 </ol>
 <p>一： 由于纯函数只依赖入参，和外界其他变量没有关系。放到具体场景里，我们需要取state里的值并根据不同的动作<br>得到不同的state。这样就必然需要将state传入，然后再抛出。action对象里则拥有着我们对应的动作，和该动作<br>需要对state不同的变化。<br>二： 在某些情况下我们的case值需要做出一些改变，可能这个时候叫这个值，下一刻就叫另一个。这种情况下我们为了<br>避免去找reducer函数直接修改，而选择将它们提取出来。单独声明 一个个常量，case后面紧跟这些常量。然后在需要改变的时候去改变定义的常量就好了。（ps:其实不仅仅在reducer中会用到这些常量）<br>三： 不论你改变或者不改变，都必须要返回。</p>
 <h3 id="3-3-dispatch"><a href="#3-3-dispatch" class="headerlink" title="3-3. dispatch"></a>3-3. dispatch</h3><p>在了解dispatch之前我们先画一张图：</p>
-<pre><code>              dispatch(action)    (previousState,action)
+<pre><code class="markdown">              dispatch(action)    (previousState,action)
 actionCreators ==========&gt;  store =========&gt; reducers
                               ||  &lt;=========          
                       state   ||    newState
@@ -2655,7 +3251,7 @@ function mapStateToProps (state, ownProps) &#123;
 export default connect(mapStateToProps)(Components);
 </code></pre>
 <p>补充一下： react-redux 提供的connect方法，使我们的组件被包裹，加工为高阶组件。它提供了四个参数<br>第一个使mapStateToProps,能够让我们从store拿到指定的reducer及其所拥有的state。。</p>
-<p>——————–未完待续…………….</p>
+<p>——————–未完待续…………….——————–</p>
 <h3 id="mapStateToProps"><a href="#mapStateToProps" class="headerlink" title="mapStateToProps"></a>mapStateToProps</h3><p>  顾名思义， 这个东西是将 state注入到当前组件的props里，方便组件从props里直观获取到redux对应reducer state里面的值。</p>
 <p>  套用网上的话来说：mapStateToProps是一个函数。它的作用就是像它的名字那样，建立一个从（外部的）state对象到（UI 组件的）props对象的映射关系。作为函数，mapStateToProps执行后应该返回一个对象，里面的每一个键值对就是一个映射。</p>
 <p>  mapStateToProps有两个参数 (state,ownProps)</p>
