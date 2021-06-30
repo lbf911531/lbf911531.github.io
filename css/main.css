@@ -2792,3 +2792,94 @@ ul.breadcrumb li:last-child {
     padding: 10px 12px;
   }
 }
+/* webkit, opera, IE9 */
+::selection { 
+  color: #00c4b6; 
+  background: unset;
+}
+/* firefox */
+::-moz-selection { 
+  color: #00c4b6;    
+  background: unset;
+}
+.post-block .post-body {
+  background-image: linear-gradient(90deg,rgba(159,219,252,.15) 3%,transparent 0)
+  ,linear-gradient(1turn,rgba(159,219,252,.15) 3%,transparent 0);
+  background-size: 20px 20px;
+  background-position: 50%;
+}
+.post-block .post-body h1,
+.post-block .post-body h2,
+.post-block .post-body h3,
+.post-block .post-body h4,
+.post-block .post-body h5,
+.post-block .post-body h6 {
+  color: #4dd0e1;
+}
+.post-block .post-body h2 {
+  position: relative;
+  margin: 30px 0;
+  padding: 12px 0px;
+  font-size: 24px;
+  display: block;
+  border-bottom: 4px solid #4dd0e1;
+}
+.post-block .post-body h2 > i {
+  margin-right: 0.5em;
+}
+.post-block .post-body h2::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  height: 10px;
+  border-top-right-radius: 24px;
+  background: linear-gradient(90deg,#fff,#4dd0e1);
+  max-width: 50vw;
+}
+.post-block .post-body h3 {
+  width: max-content;
+  position: relative;
+  border-bottom: none;
+  overflow: hidden;
+}
+.post-block .post-body h3::after {
+  position: absolute;
+  content: "";
+  display: block;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 2px solid #4dd0e1;
+  transform: translate3d(-100%,0,0);
+  animation: h3Animation 2s infinite alternate;
+}
+@keyframes h3Animation {
+  0% {
+    transform: translate3d(-100%,0,0);
+  }
+  100% {
+    transform: translate3d(0%,0,0);
+  }
+}
+.post-block .post-body code:not([class]) {
+  word-break: break-word;
+  border-radius: 2px;
+  background-color: rgba(77,208,225,.08);
+  color: #26c6da;
+  padding: .195em .4em;
+}
+.post-block .post-body strong {
+  color: indianred;
+}
+.post-block .post-body strong code {
+  color: #26c6da;
+  background: unset;
+}
+.post-block .post-body a {
+  color: #6439af;
+}
+.post-block .post-body a:hover {
+  background-color: rgba(100,57,175,0.2);
+}
