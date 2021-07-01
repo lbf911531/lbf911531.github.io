@@ -2793,18 +2793,17 @@ ul.breadcrumb li:last-child {
   }
 }
 /* webkit, opera, IE9 */
-::selection { 
-  color: #00c4b6; 
+::selection {
+  color: #00c4b6;
   background: unset;
 }
 /* firefox */
-::-moz-selection { 
-  color: #00c4b6;    
+::-moz-selection {
+  color: #00c4b6;
   background: unset;
 }
 .post-block .post-body {
-  background-image: linear-gradient(90deg,rgba(159,219,252,.15) 3%,transparent 0)
-  ,linear-gradient(1turn,rgba(159,219,252,.15) 3%,transparent 0);
+  background-image: linear-gradient(90deg, rgba(159,219,252,0.15) 3%, transparent 0), linear-gradient(1turn, rgba(159,219,252,0.15) 3%, transparent 0);
   background-size: 20px 20px;
   background-position: 50%;
 }
@@ -2836,7 +2835,7 @@ ul.breadcrumb li:last-child {
   width: 400px;
   height: 10px;
   border-top-right-radius: 24px;
-  background: linear-gradient(90deg,#fff,#4dd0e1);
+  background: linear-gradient(90deg, #fff, #4dd0e1);
   max-width: 50vw;
 }
 .post-block .post-body h3 {
@@ -2852,26 +2851,18 @@ ul.breadcrumb li:last-child {
   bottom: 0;
   width: 100%;
   border-bottom: 2px solid #4dd0e1;
-  transform: translate3d(-100%,0,0);
+  transform: translate3d(-100%, 0, 0);
   animation: h3Animation 2s infinite alternate;
-}
-@keyframes h3Animation {
-  0% {
-    transform: translate3d(-100%,0,0);
-  }
-  100% {
-    transform: translate3d(0%,0,0);
-  }
 }
 .post-block .post-body code:not([class]) {
   word-break: break-word;
   border-radius: 2px;
-  background-color: rgba(77,208,225,.08);
+  background-color: rgba(77,208,225,0.08);
   color: #26c6da;
-  padding: .195em .4em;
+  padding: 0.195em 0.4em;
 }
 .post-block .post-body strong {
-  color: indianred;
+  color: #cd5c5c;
 }
 .post-block .post-body strong code {
   color: #26c6da;
@@ -2882,4 +2873,39 @@ ul.breadcrumb li:last-child {
 }
 .post-block .post-body a:hover {
   background-color: rgba(100,57,175,0.2);
+}
+main .header-inner .site-brand-container {
+  background-image: linear-gradient(33deg, #000, #90ee90);
+}
+@-moz-keyframes h3Animation {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+@-webkit-keyframes h3Animation {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+@-o-keyframes h3Animation {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+@keyframes h3Animation {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
 }
