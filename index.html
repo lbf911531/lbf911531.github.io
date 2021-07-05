@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 <meta name="description" content="博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="埋书小楼">
@@ -75,6 +75,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -87,11 +88,37 @@
         <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
         <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
         <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -133,7 +160,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -189,6 +216,201 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/05/img-lazy-load/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/05/img-lazy-load/" class="post-title-link" itemprop="url">图片懒加载</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：20:28:34" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。 </p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><ul>
+<li><p>用户在浏览网页时，单位时间能看到的视界是有限的，亦即视口大小所在区域。</p>
+</li>
+<li><p>而<img>标签渲染图片资源，是基于<code>src</code>属性。当<code>src</code>存在值时，网页会自动发起请求获取图片资源。</p>
+</li>
+</ul>
+<p>​    基于上述两点，<img>标签上预置一个额外属性<code>data-src</code>临时存放<code>src</code>的值，判断视口所在的<img>，将<code>data-src</code>的值赋值给<code>src</code>即可。为了优化视觉效果，也可以预先加载一张loading图作为<code>src</code>的初始值占位。</p>
+<h4 id="方案一：documentElement"><a href="#方案一：documentElement" class="headerlink" title="方案一：documentElement"></a>方案一：documentElement</h4><p> 引用一张网图：<img src="https://img-blog.csdnimg.cn/20190524164645631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3cxNDE4ODk5NTMy,size_16,color_FFFFFF,t_70" alt="img"> </p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>注解</th>
+<th>计算公式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>clientWidth</td>
+<td>元素可见宽</td>
+<td>width+padding</td>
+</tr>
+<tr>
+<td>clientTop</td>
+<td>顶部边框的宽度</td>
+<td>border-top</td>
+</tr>
+<tr>
+<td>offsetWidth</td>
+<td>元素实际宽</td>
+<td>width + 左右padding + 左右boder</td>
+</tr>
+<tr>
+<td>offsetTop</td>
+<td>当前元素相对于其 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent"><code>offsetParent</code></a> (已定位父级)元素的顶部内边距的距离。</td>
+<td></td>
+</tr>
+<tr>
+<td>scrollWidth</td>
+<td>获取指定标签内容层的真实宽度</td>
+<td>可视区域宽度+被隐藏区域宽度</td>
+</tr>
+<tr>
+<td>scrollTop</td>
+<td>内容层顶部 到 可视区域顶部的距离</td>
+<td>滚动条滚动距离</td>
+</tr>
+</tbody></table>
+<p>由上得知，判断一个元素是否在视口内的公式：<br>$$<br>offsetTop - scrollTop &lt;= clientHeight<br>$$</p>
+<pre><code class="javascript">const imgs = document.querySelectorAll(&quot;img&quot;);
+window.addEventListener(&#39;scroll&#39;,() =&gt; &#123;
+    bindLazyLoadEvent(imgs);
+&#125;);
+
+function bindLazyLoadEvent(imgs) &#123;
+    for(let i =0;i&lt;imgs.length;i++) &#123;
+        lazyLoad(imgs[i])
+    &#125;
+&#125;
+
+function lazyLoad(img) &#123;
+    console.log(img.src,`$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`,&#39;-&#39;)
+    if (img.src !== `$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`) return;
+    const scrollHeight = document?.documentElement?.scrollTop || window.pageYOffset;
+    const offsetTop = img.offsetTop;
+    const clientHeight = document.documentElement.clientHeight;
+    console.log(offsetTop - scrollHeight &lt;= clientHeight,&#39;=&#39;)
+    if (offsetTop - scrollHeight &lt;= clientHeight) &#123;
+        img.src = img.getAttribute(&#39;data-src&#39;);
+    &#125;
+&#125;
+</code></pre>
+<h4 id="方案二：getBoundingClientRect"><a href="#方案二：getBoundingClientRect" class="headerlink" title="方案二：getBoundingClientRect"></a>方案二：getBoundingClientRect</h4><ol>
+<li>Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。</li>
+<li>如果是标准盒子模型，元素的尺寸等于width/height + padding + border-width的总和。</li>
+<li>如果box-sizing: border-box，元素的的尺寸等于 width/height。</li>
+</ol>
+<p>严格来说，方案二与一的思路一致，只是当前图片是否处在视口的计算方式有所区别。</p>
+<pre><code class="javascript">if (img.getBoundingClientRect().top &lt; window.innerHeight) &#123;
+  // 当前元素距离视口顶部的距离 &lt; 当前视口的高度
+  ...
+&#125;
+</code></pre>
+<p>关于上方方案一，二完整代码。还需要做一点改动，监听滚动条事件会给浏览器造成巨大的压力，滚动条事件频频触发。因此需要引入防抖。</p>
+<pre><code class="javascript">function debounce(fn,delay) &#123;
+    let timer = null;
+    if(timer) &#123;
+      clearTimeout(timer);
+    &#125; 
+    return function () &#123;
+      const context = this;
+      const args = arguments;
+      timer = setTimeout(() =&gt; &#123;
+        fn.call(context,args);
+      &#125;,delay);
+    &#125;
+  &#125;
+
+ debounce(bindLazyLoadEvent(imgs),1000);
+</code></pre>
+<h4 id="方案三：IntersectionObserver"><a href="#方案三：IntersectionObserver" class="headerlink" title="方案三：IntersectionObserver"></a>方案三：<em>IntersectionObserver</em></h4><p>交叉观察器， 一种异步观察目标元素与其祖先元素或顶级文档视窗(<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/Viewport">viewport</a>)交叉状态的方法 。 浏览器原生提供的构造函数，接受两个参数：<code>callback</code>是可见性变化时的回调函数，<code>option</code>是配置对象（该参数可选）。 </p>
+<p>callback:  一般会触发两次。一次是目标元素刚刚进入视口（开始可见），另一次是完全离开视口（开始不可见）</p>
+<p>通过该API可以替代方案一，简化代码的同时优化性能。</p>
+<pre><code class="javascript">const intersectionObserver = new IntersectionObserver(function (entries,self) &#123;
+    entries.forEach((entry) =&gt; &#123;
+        if (entry.isIntersecting) &#123;
+            let img = entry.target
+            let src = img.dataset.src
+            if (src) &#123;
+                img.src = src
+                img.removeAttribute(&#39;data-src&#39;)
+            &#125;
+            // 解除观察
+            self.unobserve(entry.target)
+        &#125;
+    &#125;)
+&#125;);
+document.querySelectorAll(&#39;img[data-src]&#39;).forEach(eImg =&gt; &#123;
+    intersectionObserver.observe(eImg);
+&#125;)
+</code></pre>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>图片懒加载有一个局限： 需要事先设定图片的尺寸。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -478,7 +700,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:32:58" itemprop="dateModified" datetime="2021-07-02T10:32:58+08:00">2021-07-02</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -508,7 +730,7 @@ $ hexo -v
 </code></pre>
 </li>
 </ol>
-<p><img src="../images/other/hexo/1.png" alt="version"></p>
+<p><img src="/images/other/hexo/1.png" alt="version"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/06/28/hexo/#more" rel="contents">
@@ -573,7 +795,7 @@ $ hexo -v
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-01 18:36:39" itemprop="dateModified" datetime="2021-07-01T18:36:39+08:00">2021-07-01</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -607,7 +829,7 @@ $ hexo -v
 <ul>
 <li>​    window.performance </li>
 </ul>
-<p><img src="../images/front-listen/timing.png" alt="1607391878316"></p>
+<p><img src="/images/front-listen/timing.png" alt="1607391878316"></p>
 </li>
 </ul>
 <p>window.performance 下的timing属性记录了重定向，DNS解析，TCP连接，SSL连接，资源加载，数据传输，TTFB网络请求耗时的相关起止时间戳。</p>
@@ -905,7 +1127,7 @@ $ hexo -v
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:01:11" itemprop="dateModified" datetime="2021-07-02T10:01:11+08:00">2021-07-02</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -932,7 +1154,7 @@ $ hexo -v
 <ol>
 <li>首先是基于虚拟DOM树，采用链表形式构建了一颗fiber树</li>
 </ol>
-<p>  <img src="../images/diff/1616311309865.png" alt="1616311309865"></p>
+<p>  <img src="/images/diff/1616311309865.png" alt="1616311309865"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/06/27/react-diff/#more" rel="contents">
@@ -997,7 +1219,7 @@ $ hexo -v
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:02:17" itemprop="dateModified" datetime="2021-07-02T10:02:17+08:00">2021-07-02</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1090,7 +1312,7 @@ JavaScript 没有真正意义上的数组，所有的数组其实是对象，其
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:01:53" itemprop="dateModified" datetime="2021-07-02T10:01:53+08:00">2021-07-02</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1115,99 +1337,10 @@ JavaScript 没有真正意义上的数组，所有的数组其实是对象，其
           <h2 id="从语义上区分"><a href="#从语义上区分" class="headerlink" title="从语义上区分"></a>从语义上区分</h2><p>URI：全称<code>Uniform Resource Identifier</code>，是统一资源标识符</p>
 <p>URL：全程<code>Uniform Resource Locator</code>，是统一资源定位符</p>
 <p>前者类似于一个id或者说是身份证一类的东西， 后者则偏向于文件路径一类，但二者同时指向的都是一个东西。只不过这个东西（资源）有两个唯一性属性，一个是id，一个是位置。我们无论用哪个属性，都能具体确定到当前资源。因此可以说 URL是URI的一个子集。</p>
-<p> <img src="../images/URL-and-URI/url.png" alt="img"> </p>
+<p> <img src="/images/URL-and-URI/url.png" alt="img"> </p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/06/27/URL-and-URI/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/react-router/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/react-router/" class="post-title-link" itemprop="url">react-router</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 19:25:24" itemprop="dateCreated datePublished" datetime="2021-06-27T19:25:24+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:01:37" itemprop="dateModified" datetime="2021-07-02T10:01:37+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <pre><code class="bash">$ npm install react-router-dom
-</code></pre>
-<h2 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1.基本使用"></a>1.基本使用</h2><p>ReactRouter提供了以下三种基本组件，通过这三种组件组合使用，可以编写一个简单的路由跳转：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/react-router/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1262,6 +1395,7 @@ JavaScript 没有真正意义上的数组，所有的数组其实是对象，其
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   
+<script src="/js/third-party/search/local-search.js"></script>
 
 
 

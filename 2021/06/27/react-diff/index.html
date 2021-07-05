@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 <meta name="description" content="react-fiber简介及15，16两版本DifffiberReact 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权] 因此React 16对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fiber and diff初探">
@@ -27,21 +27,21 @@
 <meta property="og:site_name" content="埋书小楼">
 <meta property="og:description" content="react-fiber简介及15，16两版本DifffiberReact 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权] 因此React 16对">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616311309865.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616311816104.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/190406_24idh37ad28ig61f94ea6ckb108g4_1302x472.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616510730475.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616510680063.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616928441387.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/20200809100634741.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/20200809100908844.png">
-<meta property="og:image" content="http://example.com/2021/06/27/images/diff/1616657196256.png">
+<meta property="og:image" content="http://example.com/images/diff/1616311309865.png">
+<meta property="og:image" content="http://example.com/images/diff/1616311816104.png">
+<meta property="og:image" content="http://example.com/images/diff/190406_24idh37ad28ig61f94ea6ckb108g4_1302x472.png">
+<meta property="og:image" content="http://example.com/images/diff/1616510730475.png">
+<meta property="og:image" content="http://example.com/images/diff/1616510680063.png">
+<meta property="og:image" content="http://example.com/images/diff/1616928441387.png">
+<meta property="og:image" content="http://example.com/images/diff/20200809100634741.png">
+<meta property="og:image" content="http://example.com/images/diff/20200809100908844.png">
+<meta property="og:image" content="http://example.com/images/diff/1616657196256.png">
 <meta property="article:published_time" content="2021-06-27T12:36:32.000Z">
-<meta property="article:modified_time" content="2021-07-02T02:01:11.734Z">
+<meta property="article:modified_time" content="2021-07-02T02:53:54.820Z">
 <meta property="article:author" content="书生">
 <meta property="article:tag" content="React">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/27/images/diff/1616311309865.png">
+<meta name="twitter:image" content="http://example.com/images/diff/1616311309865.png">
 
 
 <link rel="canonical" href="http://example.com/2021/06/27/react-diff/">
@@ -88,6 +88,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -100,11 +101,37 @@
         <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
         <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
         <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -147,7 +174,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -244,7 +271,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:01:11" itemprop="dateModified" datetime="2021-07-02T10:01:11+08:00">2021-07-02</time>
+        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,7 +298,7 @@
 <ol>
 <li>首先是基于虚拟DOM树，采用链表形式构建了一颗fiber树</li>
 </ol>
-<p>  <img src="../images/diff/1616311309865.png" alt="1616311309865"></p>
+<p>  <img src="/images/diff/1616311309865.png" alt="1616311309865"></p>
 <span id="more"></span> 
 <pre><code class="javascript">// 如上图，其关系可以转化成下方代码，root拥有两个子节点，第一个子节点也拥有两个子节点
 var root = &#123; type: &quot;div&quot;, key: &quot;root&quot; &#125;;
@@ -290,7 +317,7 @@ var secondSunNode = &#123; type: &quot;div&quot;, key: &quot;secondSunNode&quot;
 <p>  1.1 child: 用来指向当前节点的第一个子节点</p>
 <p>  1.2 return: 用来指向当前节点的父节点</p>
 <p>  1.3 sibling: 用来指向当前节点的兄弟节点</p>
-<p><img src="../images/diff/1616311816104.png" alt="1616311816104"></p>
+<p><img src="/images/diff/1616311816104.png" alt="1616311816104"></p>
 <pre><code class="javascript">// 这里简单的模拟一下 react 16版本调度，调和（含diff算法）的大纲过程
 // 根据 虚拟DOM 信息 构建 fiber树【workLoop】，每一个fiber节点都是一个函数/任务【performUnitOfWork】
 let nextUnitOfWork = null;
@@ -359,7 +386,7 @@ requestIdleCallback(workLoop,&#123;timeout: 300&#125;);
 </ol>
 <p>  —– 以上是react fiber的大致思路，源码层面其实就是干了一件递归改循环的事情 —–</p>
 <p>为了更加形象深入的了解fiber以及为react 16版本diff铺路，以下粘贴一段网上关于 react fiber过程的介绍。</p>
-<p> <img src="../images/diff/190406_24idh37ad28ig61f94ea6ckb108g4_1302x472.png" alt="img"> </p>
+<p> <img src="/images/diff/190406_24idh37ad28ig61f94ea6ckb108g4_1302x472.png" alt="img"> </p>
 <ol>
 <li>第一部分从 <code>ReactDOM.render()</code> 方法开始，把接收的React Element转换为Fiber节点，并为其设置优先级，记录update等。这部分主要是一些数据方面的准备工作。</li>
 <li>第二部分主要是三个函数：<code>scheduleWork</code>、<code>requestWork</code>、<code>performWork</code>，即安排工作、申请工作、正式工作三部曲。React 16 新增的异步调用的功能则在这部分实现。</li>
@@ -427,9 +454,9 @@ function newTree() &#123;
 </ol>
 <h4 id="React-patch"><a href="#React-patch" class="headerlink" title="React patch"></a>React patch</h4><p>在上述规则的基础上，通过diff算法，可以直接知道哪些节点是需要删除，哪些节点又是需要创建，哪些节点需要移动的。但是，在这种场景下，是不可能每比对一次，就调用DOM API修改一次DOM树的，这样的操作也仅仅是比原生的性能稍好一点。</p>
 <p>因此，React 15通过打补丁的方式，基于Diff算法求出一个补丁对象——<code>patch</code>,然后再重新遍历旧的树，一次性批量更新。</p>
-<h4 id="React-15-Diff-简单模拟"><a href="#React-15-Diff-简单模拟" class="headerlink" title="React 15 Diff 简单模拟"></a>React 15 Diff 简单模拟</h4><img src="../images/diff/1616510730475.png" alt="1616510730475" style="zoom:50%;" />
+<h4 id="React-15-Diff-简单模拟"><a href="#React-15-Diff-简单模拟" class="headerlink" title="React 15 Diff 简单模拟"></a>React 15 Diff 简单模拟</h4><img src="/images/diff/1616510730475.png" alt="1616510730475" style="zoom:50%;" />
 
-<img src="../images/diff/1616510680063.png" alt="1616510680063" style="zoom:50%;" />
+<img src="/images/diff/1616510680063.png" alt="1616510680063" style="zoom:50%;" />
 
 <pre><code class="javascript">// diff.js
 class Element &#123;
@@ -638,7 +665,7 @@ function doPatch(node, patches) &#123;
 </code></pre>
 <h4 id="Diff源码记录"><a href="#Diff源码记录" class="headerlink" title="Diff源码记录"></a>Diff源码记录</h4><p>之前有提及，在ReactFiberBeginWork.js/beginWork中会调用一个 reconcileChildren方法，该方法比较简单，仅判断了是否是初次渲染， 如果是初次则调用mountChildFibers，否则就执行reconcileChildFibers。</p>
 <p>而reconcileChildFibers中则又根据当前fiber节点的tag，来决定调用不同的方法更新子节点。所以从reconcileChildFibers入手。</p>
-<img src="../images/diff/1616928441387.png" alt="1616928441387" style="zoom:40%;" />
+<img src="/images/diff/1616928441387.png" alt="1616928441387" style="zoom:40%;" />
 
 <h5 id="reconcileSingleElement"><a href="#reconcileSingleElement" class="headerlink" title="reconcileSingleElement"></a>reconcileSingleElement</h5><pre><code class="javascript">//returnFiber就是 workInProgress
 // currentFirstChild就是workInProgress.alternate的child（如果存在的话） | 
@@ -832,14 +859,14 @@ return resultingFirstChild;
     &#125;
 </code></pre>
 <p> <strong>绿色线条代表复用节点且无操作，黄色代表移动操作，蓝色插入，红色删除</strong>： </p>
-<p> <img src="../images/diff/20200809100634741.png" alt="img"> </p>
+<p> <img src="/images/diff/20200809100634741.png" alt="img"> </p>
 <pre><code class="reStructuredText">新节点 key1，Map 集合中存在 key1 则取出复用，key1 老节点的 oldIndex 为 1，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 1。
 
 新节点 key2，Map 集合中存在 key2 则取出复用，key2 老节点的 oldIndex 为 2，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 2。
 
 新节点 key0，Map 集合中存在 key0 则取出复用，key0 老节点的 oldIndex 为 0，满足 oldIndex &lt; lastPlacedIndex，则将 key0 标记为插入，返回 lastPlacedIndex。
 </code></pre>
-<p> <img src="../images/diff/20200809100908844.png" alt="img"> </p>
+<p> <img src="/images/diff/20200809100908844.png" alt="img"> </p>
 <pre><code class="reStructuredText">新节点 key1，Map 集合中存在 key1 则取出复用，key1 老节点的 oldIndex 为 1，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 1。
 
 新节点 key5，Map 集合中不存在 key5 新建节点，不满足 current !== null，则将 key5 标记为插入，返回 lastPlacedIndex。
@@ -870,7 +897,7 @@ return resultingFirstChild;
 <p><a target="_blank" rel="noopener" href="https://github.com/y805939188/simple-react/blob/master/src/my-react/react-dom/react-dom.js">https://github.com/y805939188/simple-react/blob/master/src/my-react/react-dom/react-dom.js</a></p>
 <p>** <a target="_blank" rel="noopener" href="http://www.ayqy.net/blog/dive-into-react-fiber/">http://www.ayqy.net/blog/dive-into-react-fiber/</a></p>
 <p><del>记录一下（**标记的都是需要后面花时间再看的）</del></p>
-<p><img src="../images/diff/1616657196256.png" alt="1616657196256"></p>
+<p><img src="/images/diff/1616657196256.png" alt="1616657196256"></p>
 
     </div>
 
@@ -951,6 +978,7 @@ return resultingFirstChild;
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
   
+<script src="/js/third-party/search/local-search.js"></script>
 
 
 
