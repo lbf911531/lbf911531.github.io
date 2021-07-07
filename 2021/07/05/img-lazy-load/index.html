@@ -20,16 +20,16 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="前言图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。  实现思路 用户在浏览网页时，单位时间能看到的视界是有限的，亦即视口大小所在区域。  而标签渲染图片资源，是基于src属性。当src存在值">
+<meta name="description" content="前言图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。  实现思路">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图片懒加载">
 <meta property="og:url" content="http://example.com/2021/07/05/img-lazy-load/index.html">
 <meta property="og:site_name" content="埋书小楼">
-<meta property="og:description" content="前言图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。  实现思路 用户在浏览网页时，单位时间能看到的视界是有限的，亦即视口大小所在区域。  而标签渲染图片资源，是基于src属性。当src存在值">
+<meta property="og:description" content="前言图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。  实现思路">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190524164645631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3cxNDE4ODk5NTMy,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2021-07-05T12:14:47.000Z">
-<meta property="article:modified_time" content="2021-07-05T12:28:34.655Z">
+<meta property="article:modified_time" content="2021-07-05T14:08:08.098Z">
 <meta property="article:author" content="书生">
 <meta property="article:tag" content="原生JS">
 <meta name="twitter:card" content="summary">
@@ -188,9 +188,6 @@
       <span class="links-of-author-item">
         <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
-      <span class="links-of-author-item">
-        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
@@ -257,7 +254,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：20:28:34" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
+      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：22:08:08" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -280,10 +277,11 @@
     
     <div class="post-body" itemprop="articleBody">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。 </p>
-<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><ul>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><span id="more"></span>
+<ul>
 <li><p>用户在浏览网页时，单位时间能看到的视界是有限的，亦即视口大小所在区域。</p>
 </li>
-<li><p>而<img>标签渲染图片资源，是基于<code>src</code>属性。当<code>src</code>存在值时，网页会自动发起请求获取图片资源。</p>
+<li><p>而img标签渲染图片资源，是基于<code>src</code>属性。当<code>src</code>存在值时，网页会自动发起请求获取图片资源。</p>
 </li>
 </ul>
 <p>​    基于上述两点，<img>标签上预置一个额外属性<code>data-src</code>临时存放<code>src</code>的值，判断视口所在的<img>，将<code>data-src</code>的值赋值给<code>src</code>即可。为了优化视觉效果，也可以预先加载一张loading图作为<code>src</code>的初始值占位。</p>
@@ -328,78 +326,79 @@
 </tr>
 </tbody></table>
 <p>由上得知，判断一个元素是否在视口内的公式：<br>$$<br>offsetTop - scrollTop &lt;= clientHeight<br>$$</p>
-<pre><code class="javascript">const imgs = document.querySelectorAll(&quot;img&quot;);
-window.addEventListener(&#39;scroll&#39;,() =&gt; &#123;
-    bindLazyLoadEvent(imgs);
-&#125;);
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> imgs <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">"img"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'scroll'</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token function">bindLazyLoadEvent</span><span class="token punctuation">(</span>imgs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-function bindLazyLoadEvent(imgs) &#123;
-    for(let i =0;i&lt;imgs.length;i++) &#123;
-        lazyLoad(imgs[i])
-    &#125;
-&#125;
+<span class="token keyword">function</span> <span class="token function">bindLazyLoadEvent</span><span class="token punctuation">(</span><span class="token parameter">imgs</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>imgs<span class="token punctuation">.</span>length<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">lazyLoad</span><span class="token punctuation">(</span>imgs<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
 
-function lazyLoad(img) &#123;
-    console.log(img.src,`$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`,&#39;-&#39;)
-    if (img.src !== `$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`) return;
-    const scrollHeight = document?.documentElement?.scrollTop || window.pageYOffset;
-    const offsetTop = img.offsetTop;
-    const clientHeight = document.documentElement.clientHeight;
-    console.log(offsetTop - scrollHeight &lt;= clientHeight,&#39;=&#39;)
-    if (offsetTop - scrollHeight &lt;= clientHeight) &#123;
-        img.src = img.getAttribute(&#39;data-src&#39;);
-    &#125;
-&#125;
-</code></pre>
+<span class="token keyword">function</span> <span class="token function">lazyLoad</span><span class="token punctuation">(</span><span class="token parameter">img</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>img<span class="token punctuation">.</span>src<span class="token punctuation">,</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>origin<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>loadingImg<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span><span class="token string">'-'</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>img<span class="token punctuation">.</span>src <span class="token operator">!==</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>origin<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>loadingImg<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> scrollHeight <span class="token operator">=</span> document<span class="token operator">?.</span>documentElement<span class="token operator">?.</span>scrollTop <span class="token operator">||</span> window<span class="token punctuation">.</span>pageYOffset<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> offsetTop <span class="token operator">=</span> img<span class="token punctuation">.</span>offsetTop<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> clientHeight <span class="token operator">=</span> document<span class="token punctuation">.</span>documentElement<span class="token punctuation">.</span>clientHeight<span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>offsetTop <span class="token operator">-</span> scrollHeight <span class="token operator">&lt;=</span> clientHeight<span class="token punctuation">,</span><span class="token string">'='</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>offsetTop <span class="token operator">-</span> scrollHeight <span class="token operator">&lt;=</span> clientHeight<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        img<span class="token punctuation">.</span>src <span class="token operator">=</span> img<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token string">'data-src'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="方案二：getBoundingClientRect"><a href="#方案二：getBoundingClientRect" class="headerlink" title="方案二：getBoundingClientRect"></a>方案二：getBoundingClientRect</h4><ol>
 <li>Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。</li>
 <li>如果是标准盒子模型，元素的尺寸等于width/height + padding + border-width的总和。</li>
 <li>如果box-sizing: border-box，元素的的尺寸等于 width/height。</li>
 </ol>
 <p>严格来说，方案二与一的思路一致，只是当前图片是否处在视口的计算方式有所区别。</p>
-<pre><code class="javascript">if (img.getBoundingClientRect().top &lt; window.innerHeight) &#123;
-  // 当前元素距离视口顶部的距离 &lt; 当前视口的高度
-  ...
-&#125;
-</code></pre>
-<p>关于上方方案一，二完整代码。还需要做一点改动，监听滚动条事件会给浏览器造成巨大的压力，滚动条事件频频触发。因此需要引入防抖。</p>
-<pre><code class="javascript">function debounce(fn,delay) &#123;
-    let timer = null;
-    if(timer) &#123;
-      clearTimeout(timer);
-    &#125; 
-    return function () &#123;
-      const context = this;
-      const args = arguments;
-      timer = setTimeout(() =&gt; &#123;
-        fn.call(context,args);
-      &#125;,delay);
-    &#125;
-  &#125;
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">if</span> <span class="token punctuation">(</span>img<span class="token punctuation">.</span><span class="token function">getBoundingClientRect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>top <span class="token operator">&lt;</span> window<span class="token punctuation">.</span>innerHeight<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 当前元素距离视口顶部的距离 &lt; 当前视口的高度</span>
+  <span class="token operator">...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
- debounce(bindLazyLoadEvent(imgs),1000);
-</code></pre>
+
+<p>关于上方方案一，二完整代码。还需要做一点改动，监听滚动条事件会给浏览器造成巨大的压力，滚动条事件频频触发。因此需要引入防抖。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">debounce</span><span class="token punctuation">(</span><span class="token parameter">fn<span class="token punctuation">,</span>delay</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> timer <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>timer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token function">clearTimeout</span><span class="token punctuation">(</span>timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> 
+    <span class="token keyword">return</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> args <span class="token operator">=</span> arguments<span class="token punctuation">;</span>
+      timer <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token function">fn</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>delay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+
+ <span class="token function">debounce</span><span class="token punctuation">(</span><span class="token function">bindLazyLoadEvent</span><span class="token punctuation">(</span>imgs<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="方案三：IntersectionObserver"><a href="#方案三：IntersectionObserver" class="headerlink" title="方案三：IntersectionObserver"></a>方案三：<em>IntersectionObserver</em></h4><p>交叉观察器， 一种异步观察目标元素与其祖先元素或顶级文档视窗(<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/Viewport">viewport</a>)交叉状态的方法 。 浏览器原生提供的构造函数，接受两个参数：<code>callback</code>是可见性变化时的回调函数，<code>option</code>是配置对象（该参数可选）。 </p>
 <p>callback:  一般会触发两次。一次是目标元素刚刚进入视口（开始可见），另一次是完全离开视口（开始不可见）</p>
 <p>通过该API可以替代方案一，简化代码的同时优化性能。</p>
-<pre><code class="javascript">const intersectionObserver = new IntersectionObserver(function (entries,self) &#123;
-    entries.forEach((entry) =&gt; &#123;
-        if (entry.isIntersecting) &#123;
-            let img = entry.target
-            let src = img.dataset.src
-            if (src) &#123;
-                img.src = src
-                img.removeAttribute(&#39;data-src&#39;)
-            &#125;
-            // 解除观察
-            self.unobserve(entry.target)
-        &#125;
-    &#125;)
-&#125;);
-document.querySelectorAll(&#39;img[data-src]&#39;).forEach(eImg =&gt; &#123;
-    intersectionObserver.observe(eImg);
-&#125;)
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> intersectionObserver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntersectionObserver</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">entries<span class="token punctuation">,</span>self</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    entries<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">entry</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>isIntersecting<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">let</span> img <span class="token operator">=</span> entry<span class="token punctuation">.</span>target
+            <span class="token keyword">let</span> src <span class="token operator">=</span> img<span class="token punctuation">.</span>dataset<span class="token punctuation">.</span>src
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>src<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                img<span class="token punctuation">.</span>src <span class="token operator">=</span> src
+                img<span class="token punctuation">.</span><span class="token function">removeAttribute</span><span class="token punctuation">(</span><span class="token string">'data-src'</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">// 解除观察</span>
+            self<span class="token punctuation">.</span><span class="token function">unobserve</span><span class="token punctuation">(</span>entry<span class="token punctuation">.</span>target<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'img[data-src]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">eImg</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    intersectionObserver<span class="token punctuation">.</span><span class="token function">observe</span><span class="token punctuation">(</span>eImg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>图片懒加载有一个局限： 需要事先设定图片的尺寸。</p>
 
     </div>

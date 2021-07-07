@@ -190,9 +190,6 @@
       <span class="links-of-author-item">
         <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
-      <span class="links-of-author-item">
-        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
@@ -290,22 +287,16 @@
         <h1 id="从零开始搭建hexo-blog"><a href="#从零开始搭建hexo-blog" class="headerlink" title="从零开始搭建hexo blog"></a>从零开始搭建hexo blog</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a><i class="fa fa-tags"></i>准备环境</h2><ol>
 <li>安装node</li>
 <li>安装Git</li>
-<li>安装hexo 脚手架 <pre><code class="bash">$ npm install hexo-cli -g
-$ hexo -v
-</code></pre>
-</li>
+<li>安装hexo 脚手架 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
+$ hexo -v<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
 </ol>
 <p><img src="/images/other/hexo/1.png" alt="version"></p>
 <span id="more"></span> 
 <ol start="4">
-<li>创建一个空白文件夹，如/blog<pre><code class="bash">$ cd /blog
+<li>创建一个空白文件夹，如/blog<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> /blog
 $ hexo init
-$ npm i
-</code></pre>
-</li>
-<li>启动服务器<pre><code class="bash">$ hexo s
-</code></pre>
-</li>
+$ <span class="token function">npm</span> i<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li>启动服务器<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo s<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a></li>
 </ol>
 <p>至此一个简单的blog完成搭建</p>
@@ -316,81 +307,67 @@ $ npm i
 <p>  2.1. 挑选主题 （<a target="_blank" rel="noopener" href="https://hexo.io/themes/%EF%BC%89">https://hexo.io/themes/）</a></p>
 <p>  2.2. 安装主题插件,成功后会在 /blog/themes 下生成next目录（个人采用了hexo-theme-next）</p>
 <p>  2.3. 之后访问_config.yml文件，修改theme: next，（theme的值需要和clone创建的文件夹名一致）</p>
-<pre><code class="bash">$ git clone https://github.com/next-theme/hexo-theme-next themes/next
-</code></pre>
-</li>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">git</span> clone https://github.com/next-theme/hexo-theme-next themes/next<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ol>
 <ol start="3">
 <li><p>引入canvas-next 粒子动态背景</p>
 <p>3.1.  <code>/blog/source/_data/footer.njk</code>，如果没有，则按照该pah创建</p>
 <p>3.2. 复制下图中script标签全内容到 <code>footer.njk</code><br><img src="/images/other/hexo/canvas-next.png" alt="canvas-next"></p>
 <p>3.3. 修改<code>/blog/theme/next/_config.yml</code>文件中的<code>custom_file_path:</code>，解开 footer的注释</p>
-<pre><code class="yaml"># Define custom file paths.
-# Create your custom files in site directory `source/_data` and uncomment needed files below.
-custom_file_path:
-  # ...
-  footer: source/_data/footer.njk
-  # ...
-</code></pre>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># Define custom file paths.</span>
+<span class="token comment"># Create your custom files in site directory `source/_data` and uncomment needed files below.</span>
+<span class="token key atrule">custom_file_path</span><span class="token punctuation">:</span>
+  <span class="token comment"># ...</span>
+  <span class="token key atrule">footer</span><span class="token punctuation">:</span> source/_data/footer.njk
+  <span class="token comment"># ...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>详情参考 <a target="_blank" rel="noopener" href="https://github.com/theme-next/theme-next-canvas-nest">https://github.com/theme-next/theme-next-canvas-nest</a></p>
 <p>3.4. 修改<code>/blog/theme/next/_config.yml</code>文件中的<code>canvas_ribbon</code>，设置<code>enabled：true</code>，渲染背景彩带效果（该效果为next自带，默认不开启）</p>
 </li>
 </ol>
 <h2 id="创建文件"><a href="#创建文件" class="headerlink" title="创建文件"></a><i class="fa fa-tags"></i>创建文件</h2><ol>
 <li><p>创建标签</p>
-<pre><code class="bash">$ hexo new page tags
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new page tags<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>之后，会在 <code>/blog/source</code>下自动创建<code>tags/index.md</code>，配置index.md如下</p>
-<pre><code class="markdown">title: tags
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">title: tags
 date: 2017-12-02 21:01:24
-type: &quot;tags&quot;
-</code></pre>
-</li>
+type: "tags"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
 <li><p>创建分类</p>
-<pre><code class="bash">$ hexo new page categories
-</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new page categories<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>与创建标签一致，但配置<code>type = categories</code></p>
 </li>
 <li><p>创建md文件</p>
-<pre><code class="bas">$ hexo new [file]
-</code></pre>
+<pre class="line-numbers language-bas" data-language="bas"><code class="language-bas">$ hexo new [file]<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>之后，会在<code>/blog/souce/_post</code>下生成<code>[file].md</code>，配置：</p>
-<pre><code class="markdown">---
-title: [file]
-date: 2021-06-28 19:43:20
-tags: other // 自定义
-categories: 前端 // 自定义
----
-...
-</code></pre>
-</li>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
+<span class="token font-matter yaml language-yaml"><span class="token key atrule">title</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>file<span class="token punctuation">]</span>
+<span class="token key atrule">date</span><span class="token punctuation">:</span> <span class="token datetime number">2021-06-28 19:43:20</span>
+<span class="token key atrule">tags</span><span class="token punctuation">:</span> other // 自定义
+<span class="token key atrule">categories</span><span class="token punctuation">:</span> 前端 // 自定义</span>
+<span class="token punctuation">---</span></span>
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 <li><p>编译md为html</p>
-<pre><code class="bash">$ hexo g
-</code></pre>
-</li>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo g<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li><p> 本地预览效果 </p>
 </li>
 </ol>
-<pre><code class="bash">$ hexo s
-</code></pre>
+   <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo s<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <h2 id="发布到GitHub"><a href="#发布到GitHub" class="headerlink" title="发布到GitHub"></a><i class="fa fa-tags"></i>发布到GitHub</h2><ol>
 <li>发布之前，需要登录个人GitHub，并创建一个名为“ [用户名].github.io” 的仓库；注意：可以采用自己的用户名，但<code>.github.io</code>仓库一个账号只能拥有一个。</li>
-<li>修改本地 /_config.yml 文件（以用户名为 test为例, repository 在仓库创建成功后可直接复制）<pre><code class="markdown">deploy:
-type: git
-repository: git@github.com:test/test.github.io.git
-branch: master
-</code></pre>
-</li>
-<li>如果个人Git账号没有配置SSH，请先配置SSH<pre><code class="bash">$ cd ~/.ssh
-$ ls  // id_rsa.pub 如果存在则跳过 ssh-keygen -t rsa -C
+<li>修改本地 /_config.yml 文件（以用户名为 test为例, repository 在仓库创建成功后可直接复制）<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">deploy:
+  type: git
+  repository: git@github.com:test/test.github.io.git
+  branch: master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>如果个人Git账号没有配置SSH，请先配置SSH<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> ~/.ssh
+$ <span class="token function">ls</span>  // id_rsa.pub 如果存在则跳过 ssh-keygen -t rsa -C
 $ ssh-keygen -t rsa -C your.email  // 如果没有该文件
-$ cat id_rsa.pub // 然后拷贝文件内容，到Git上新建SSH
-$ ssh -T git@github.com // 验证
-</code></pre>
-</li>
-<li>本地安装hexo-deployer-git<pre><code class="bash">$ npm install hexo-deployer-git --save
-</code></pre>
-</li>
+$ <span class="token function">cat</span> id_rsa.pub // 然后拷贝文件内容，到Git上新建SSH
+$ <span class="token function">ssh</span> -T git@github.com // 验证<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>本地安装hexo-deployer-git<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git --save<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>本地执行 hexo d 即可</li>
 <li>线上访问 test.github.io 即可浏览个人搭建的博客</li>
 </ol>

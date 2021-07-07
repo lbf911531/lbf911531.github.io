@@ -186,9 +186,6 @@
       <span class="links-of-author-item">
         <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
-      <span class="links-of-author-item">
-        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
@@ -312,163 +309,163 @@
 </tbody></table>
 <h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a><i class="fa fa-tags"></i>实践</h2><h3 id="实践-‘思路一’"><a href="#实践-‘思路一’" class="headerlink" title="实践-‘思路一’"></a>实践-‘思路一’</h3><p>既然是踩坑，就先从第一条思路开始尝试</p>
 <span id="more"></span> 
-<pre><code class="html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
 
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-  &lt;title&gt;Document&lt;/title&gt;
-  &lt;style&gt;
-    .textarea-box &#123;
-      position: relative;
-      width: 300px;
-      height: 300px;
-    &#125;
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>width=device-width, initial-scale=1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Document<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+    <span class="token selector">.textarea-box</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+      <span class="token property">width</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span>
+      <span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    .inner &#123;
-      width: 300px;
-      height: 300px;
-      font: 400 14px Arial;
-      color: #ffffff;
-      /* caret-color: #000; */
-    &#125;
+    <span class="token selector">.inner</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">width</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span>
+      <span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span>
+      <span class="token property">font</span><span class="token punctuation">:</span> 400 14px Arial<span class="token punctuation">;</span>
+      <span class="token property">color</span><span class="token punctuation">:</span> #ffffff<span class="token punctuation">;</span>
+      <span class="token comment">/* caret-color: #000; */</span>
+    <span class="token punctuation">&#125;</span>
 
-    .out &#123;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 30px;
-      box-sizing: border-box;
-      padding: 3px;
-      color: #000;
-      z-index: 2;
-      background: transparent;
-      font: 400 14px Arial;
-    &#125;
-  &lt;/style&gt;
-&lt;/head&gt;
+    <span class="token selector">.out</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+      <span class="token property">top</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+      <span class="token property">bottom</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+      <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+      <span class="token property">right</span><span class="token punctuation">:</span> 30px<span class="token punctuation">;</span>
+      <span class="token property">box-sizing</span><span class="token punctuation">:</span> border-box<span class="token punctuation">;</span>
+      <span class="token property">padding</span><span class="token punctuation">:</span> 3px<span class="token punctuation">;</span>
+      <span class="token property">color</span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+      <span class="token property">z-index</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+      <span class="token property">background</span><span class="token punctuation">:</span> transparent<span class="token punctuation">;</span>
+      <span class="token property">font</span><span class="token punctuation">:</span> 400 14px Arial<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
 
-&lt;body&gt;
-  &lt;div class=&quot;textarea-box&quot;&gt;
-    &lt;div class=&quot;out&quot; onclick=&#39;inner.focus()&#39;&gt;&lt;/div&gt;
-    &lt;textarea class=&quot;inner&quot; id=&quot;inner&quot;&gt;&lt;/textarea&gt;
-  &lt;/div&gt;
-  &lt;script&gt;
-    window.onload = function () &#123;
-      document.querySelector(&#39;.inner&#39;).addEventListener(&#39;input&#39;, function (e) &#123;
-        document.querySelector(&#39;.out&#39;).innerHTML = e.target.value.replace(/2/g, &#39;&lt;span style=&quot;color: red;&quot;&gt;2&lt;/span&gt;&#39;)
-      &#125;)
-    &#125;
-  &lt;/script&gt;
-&lt;/body&gt;
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>textarea-box<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>out<span class="token punctuation">"</span></span> <span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>inner.focus()<span class="token punctuation">'</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>textarea</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inner<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inner<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>textarea</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+    window<span class="token punctuation">.</span><span class="token function-variable function">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.inner'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'input'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.out'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">2</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'&lt;span style="color: red;">2&lt;/span>'</span><span class="token punctuation">)</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+  </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
 
-&lt;/html&gt;
-</code></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>然后就会发现第一个问题： <code>光标看不见了</code>！！光标默认跟随了编辑器内容颜色，因为 div[class=’inner’]文本颜色变成了白色，且背景色为白色，因此光标也是白色了。</p>
-<pre><code class="markdown">解决：  ”caret-color “   // caret-color 属性用来定义插入光标（caret）的颜色
-通过给 div[class=&#39;inner&#39;] 设置caret-color: #000; 光标就又可以看见了
-</code></pre>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">解决：  ”caret-color “   // caret-color 属性用来定义插入光标（caret）的颜色
+通过给 div[class='inner'] 设置caret-color: #000; 光标就又可以看见了<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
 <p>光标可见的问题虽然解决了，但随之出现了另一个问题：无法随意在文本中插入光标。</p>
 <p>（ps:第一个方案走到这里就暂时停了……）</p>
 <h3 id="实践-‘思路二’"><a href="#实践-‘思路二’" class="headerlink" title="实践-‘思路二’"></a>实践-‘思路二’</h3><p>相比于第一条路，给div加上 contentEditable属性，比起通过样式调整div模拟成textarea更便捷</p>
 <p>（ps: 以下代码皆为react + jsx语法）</p>
-<pre><code class="jsx">&lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
-  &lt;div
-    style=&#123;&#123;
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      left: 0,
-      bottom: 0,
-      zIndex: 2,
-      backgroundColor: 'transparent',
-      padding: '4px 11px',
-      outline: 'none',
-      height: '125px',
-      overflowY: 'auto',
-      lineHeight: '1.5',
-      verticalAlign: 'bottom',
-    &#125;&#125;
-    contentEditable=&quot;true&quot;
-    id=&quot;define-textarea&quot;
-    ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
-  /&gt;
-&lt;/div&gt;
-</code></pre>
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> position<span class="token operator">:</span> <span class="token string">'relative'</span><span class="token punctuation">,</span> width<span class="token operator">:</span> <span class="token string">'100%'</span><span class="token punctuation">,</span> height<span class="token operator">:</span> <span class="token string">'125px'</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+  </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+    <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>
+      position<span class="token operator">:</span> <span class="token string">'absolute'</span><span class="token punctuation">,</span>
+      top<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      right<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      left<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      bottom<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      zIndex<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+      backgroundColor<span class="token operator">:</span> <span class="token string">'transparent'</span><span class="token punctuation">,</span>
+      padding<span class="token operator">:</span> <span class="token string">'4px 11px'</span><span class="token punctuation">,</span>
+      outline<span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">,</span>
+      height<span class="token operator">:</span> <span class="token string">'125px'</span><span class="token punctuation">,</span>
+      overflowY<span class="token operator">:</span> <span class="token string">'auto'</span><span class="token punctuation">,</span>
+      lineHeight<span class="token operator">:</span> <span class="token string">'1.5'</span><span class="token punctuation">,</span>
+      verticalAlign<span class="token operator">:</span> <span class="token string">'bottom'</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+    <span class="token attr-name">contentEditable</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
+    <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>define-textarea<span class="token punctuation">"</span></span>
+    <span class="token attr-name">ref</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token parameter">ref</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>textArea <span class="token operator">=</span> ref <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+  <span class="token punctuation">/></span></span><span class="token plain-text">
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>走到这里就续借了第一条思路遗留的问题，在这里可以点击区域插入光标。做到了模拟textarea的效果。</p>
 <h4 id="模拟onChange"><a href="#模拟onChange" class="headerlink" title="模拟onChange"></a>模拟onChange</h4><p>在基本实现了模拟textarea的基础上，我们需要获取文本值。即类似于要模拟出表单控件都有的方法：onChange。</p>
 <p>然而很遗憾： 走邪道总是崎岖的。HTML中contentEditable属性并不支持它。</p>
 <p>事实上，在原生的HTML中，onChange仅支持  input, select,textarea( <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Events/input">https://developer.mozilla.org/zh-CN/docs/Web/Events/input</a> )</p>
 <p>那么问题来了，onChange是文本的变化，文本在什么时候会变化？敲击键盘的时候（ps：还有复制粘贴，js强制插入文本；这里不做深入的兼容）。因此，键盘事件成了一条思路。我们可以监听<code>keyup</code>事件。【<code>keydown</code>,比起键弹起，键按下到弹起前的两种事件在这里一点都不合适，你不知道什么时候结束了敲击】</p>
-<pre><code class="javascript">this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue);
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"keyup"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleGetValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-handleGetValue = e =&gt; &#123;
-  const &#123; onChange &#125; = this.props;
-  const &#123; innerText, innerHTML &#125; = e.target;
-  console.log(innerText, innerHTML);
-&#125;
-</code></pre>
+<span class="token function-variable function">handleGetValue</span> <span class="token operator">=</span> <span class="token parameter">e</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> onChange <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>props<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> innerText<span class="token punctuation">,</span> innerHTML <span class="token punctuation">&#125;</span> <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>innerText<span class="token punctuation">,</span> innerHTML<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h4 id="回写文本"><a href="#回写文本" class="headerlink" title="回写文本"></a>回写文本</h4><p>模拟了onChange之后，我们就能拿到文本值。同时抛出使用。这时候要想起一件事情——模拟的初衷在于高亮。高亮意味着，要对拿到的文本做关键字匹配，然后替换其为html片段，加入color样式。</p>
 <p>然后让我们完善整合一下上面的代码：</p>
-<pre><code class="jsx">  componentDidMount() &#123;
-    const &#123; highlightText &#125; = this.props;
-    this.setState(&#123; highlightText &#125;)
-    // keyup事件模拟input的onChange事件
-    this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue)
-  &#125;  
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx"><span class="token function">componentDidMount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>props<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+  <span class="token comment">// keyup事件模拟input的onChange事件</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"keyup"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleGetValue<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>  
 
-  componentWillReceiveProps(nextProps) &#123;
-    const &#123; highlightText &#125; = nextProps;
-    this.setState(&#123; highlightText &#125;)
-  &#125;
+<span class="token function">componentWillReceiveProps</span><span class="token punctuation">(</span><span class="token parameter">nextProps</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> nextProps<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
 
-  // 等同onchange
-  handleGetValue = e =&gt; &#123;
-    const &#123; onChange &#125; = this.props;
-    const &#123; innerText, innerHTML &#125; = e.target;
-    if (onChange) &#123;
-      this.setState(&#123;
-        cursorPos: posObj,
-      &#125;, () =&gt; &#123;
-        // innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串
-        const string = !innerText || (innerHTML === &#39;&lt;br&gt;&#39;) ? &#39;&#39; : innerText;
-        onChange(string)
-      &#125;)
-    &#125;
-  &#125;
+<span class="token comment">// 等同onchange</span>
+<span class="token function-variable function">handleGetValue</span> <span class="token operator">=</span> <span class="token parameter">e</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> onChange <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>props<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> innerText<span class="token punctuation">,</span> innerHTML <span class="token punctuation">&#125;</span> <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>onChange<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+      cursorPos<span class="token operator">:</span> posObj<span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">// innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串</span>
+      <span class="token keyword">const</span> string <span class="token operator">=</span> <span class="token operator">!</span>innerText <span class="token operator">||</span> <span class="token punctuation">(</span>innerHTML <span class="token operator">===</span> <span class="token string">'&lt;br>'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> innerText<span class="token punctuation">;</span>
+      <span class="token function">onChange</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
 
-  render() &#123;
-    const &#123; highlightText &#125; = this.state;
+<span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">;</span>
 
-    return (
-      &lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
-        &lt;div
-          style=&#123;&#123;
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            zIndex: 2,
-            backgroundColor: 'transparent',
-            padding: '4px 11px',
-            outline: 'none',
-            height: '125px',
-            overflowY: 'auto',
-            lineHeight: '1.5',
-            verticalAlign: 'bottom',
-          &#125;&#125;
-          dangerouslySetInnerHTML=&#123;&#123; __html: highlightText &#125;&#125;
-          contentEditable=&quot;true&quot;
-          id=&quot;define-textarea&quot;
-          ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
-        /&gt;
-      &lt;/div&gt;
-    )
-  &#125;
-</code></pre>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> position<span class="token operator">:</span> <span class="token string">'relative'</span><span class="token punctuation">,</span> width<span class="token operator">:</span> <span class="token string">'100%'</span><span class="token punctuation">,</span> height<span class="token operator">:</span> <span class="token string">'125px'</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+        <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>
+          position<span class="token operator">:</span> <span class="token string">'absolute'</span><span class="token punctuation">,</span>
+          top<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+          right<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+          left<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+          bottom<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+          zIndex<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+          backgroundColor<span class="token operator">:</span> <span class="token string">'transparent'</span><span class="token punctuation">,</span>
+          padding<span class="token operator">:</span> <span class="token string">'4px 11px'</span><span class="token punctuation">,</span>
+          outline<span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">,</span>
+          height<span class="token operator">:</span> <span class="token string">'125px'</span><span class="token punctuation">,</span>
+          overflowY<span class="token operator">:</span> <span class="token string">'auto'</span><span class="token punctuation">,</span>
+          lineHeight<span class="token operator">:</span> <span class="token string">'1.5'</span><span class="token punctuation">,</span>
+          verticalAlign<span class="token operator">:</span> <span class="token string">'bottom'</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+        <span class="token attr-name">dangerouslySetInnerHTML</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> __html<span class="token operator">:</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+        <span class="token attr-name">contentEditable</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
+        <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>define-textarea<span class="token punctuation">"</span></span>
+        <span class="token attr-name">ref</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token parameter">ref</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>textArea <span class="token operator">=</span> ref <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+      <span class="token punctuation">/></span></span><span class="token plain-text">
+    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>但这时候，如果你仔细一点，就会发现两个大坑！！</p>
 <ul>
 <li><p>第一： 光标永远在最开始的地方闪烁，而不是文本的末尾；</p>
@@ -480,281 +477,282 @@ handleGetValue = e =&gt; &#123;
 <p>因此，对于第二问题：我们引入一个新东西： <code>compositionstart</code>，<code>compositionend</code></p>
 <p> <code>compositionstart</code> 事件触发于一段文字的输入之前（类似于 <code>keydown</code> 事件，但是该事件仅在若干可见字符的输入之前，而这些可见字符的输入可能需要一连串的键盘操作、语音识别或者点击输入法的备选词）。 详情参照 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/Events/compositionstart">https://developer.mozilla.org/zh-CN/docs/Web/Events/compositionstart</a> </p>
 <p>通过 <code>compositionstart</code>，<code>compositionend</code>搭配使用，我们可以为onChange加一道锁，当发现进入了中文拼写时，锁置为true，直到拼音完成前的过程中，禁止掉onChange的回抛。</p>
-<pre><code class="jsx"> this.textArea.addEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue);
- this.textArea.addEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse);
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx"><span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionstart"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagTrue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionend"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagFalse<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
- handleSetFlagTrue = () =&gt; &#123; this.flag = true; &#125;
+<span class="token function-variable function">handleSetFlagTrue</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>flag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
 
- handleSetFlagFalse = () =&gt; &#123; this.flag = false; &#125;
-</code></pre>
+<span class="token function-variable function">handleSetFlagFalse</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>再来就是第一个问题： 我们需要记录一下上一次onChange时光标的位置，然后在下一次onChange之前，将光标手动移到该位置上。这样就可以保证了光标不会回到最开始的地方闪烁。</p>
-<pre><code class="javascript">  // 获取光标位置
-  saveSelection = () =&gt; &#123;
-    const target = document.querySelector(&#39;#define-textarea&#39;);
-    if (window.getSelection) &#123;
-      const range = window.getSelection().getRangeAt(0);
-      const preSelectionRange = range.cloneRange();
-      preSelectionRange.selectNodeContents(target);
-      preSelectionRange.setEnd(range.startContainer, range.startOffset);
-      const start = preSelectionRange.toString().length;
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 获取光标位置</span>
+<span class="token function-variable function">saveSelection</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> target <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#define-textarea'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>getSelection<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> range <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">getSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getRangeAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> preSelectionRange <span class="token operator">=</span> range<span class="token punctuation">.</span><span class="token function">cloneRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    preSelectionRange<span class="token punctuation">.</span><span class="token function">selectNodeContents</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    preSelectionRange<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>range<span class="token punctuation">.</span>startContainer<span class="token punctuation">,</span> range<span class="token punctuation">.</span>startOffset<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> start <span class="token operator">=</span> preSelectionRange<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
 
-      return &#123;
-        start,
-        end: start + range.toString().length,
-      &#125;
-    &#125; else if (document.body.createTextRange) &#123;
-      const selectedTextRange = document.selection.createRange();
-      const preSelectionTextRange = document.body.createTextRange();
-      preSelectionTextRange.moveToElementText(target);
-      preSelectionTextRange.setEndPoint(&quot;EndToStart&quot;, selectedTextRange);
-      const start = preSelectionTextRange.text.length;
+    <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+      start<span class="token punctuation">,</span>
+      end<span class="token operator">:</span> start <span class="token operator">+</span> range<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>createTextRange<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> selectedTextRange <span class="token operator">=</span> document<span class="token punctuation">.</span>selection<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> preSelectionTextRange <span class="token operator">=</span> document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">createTextRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    preSelectionTextRange<span class="token punctuation">.</span><span class="token function">moveToElementText</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    preSelectionTextRange<span class="token punctuation">.</span><span class="token function">setEndPoint</span><span class="token punctuation">(</span><span class="token string">"EndToStart"</span><span class="token punctuation">,</span> selectedTextRange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> start <span class="token operator">=</span> preSelectionTextRange<span class="token punctuation">.</span>text<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
 
-      return &#123;
-        start,
-        end: start + selectedTextRange.text.length,
-      &#125;
-    &#125;
-  &#125;;
-</code></pre>
+    <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+      start<span class="token punctuation">,</span>
+      end<span class="token operator">:</span> start <span class="token operator">+</span> selectedTextRange<span class="token punctuation">.</span>text<span class="token punctuation">.</span>length<span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>同时这也能够让我们在文本中随意插入光标。</p>
 <p>到这里为止，基本上，实现了div的contentEditable属性模拟textarea，并高亮的目的。</p>
 <p>如果要延申到富文本编辑器的话，可以考虑 <code>window.execCommond</code>实现复制，粘贴，回退….</p>
 <p>以下贴上完整代码（ps:毫无疑问，简单的模拟还有很多bug和需求都没实现，这些都将在后续文档中逐步补充完善）</p>
-<pre><code class="jsx">
-import React from &#39;react&#39;;
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx">
+<span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">'react'</span><span class="token punctuation">;</span>
 
-class Editor extends React.Component &#123;
-  constructor(props) &#123;
-    super(props);
-    this.state = &#123;
-      highlightText: null,
-      cursorPos: 0,
-    &#125;
-    this.flag = false;
-    this.clock = true;
-  &#125;
+<span class="token keyword">class</span> <span class="token class-name">Editor</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">props</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>state <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+      highlightText<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+      cursorPos<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>clock <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
 
-  componentDidMount() &#123;
-    const &#123; highlightText &#125; = this.props;
-    this.setState(&#123; highlightText &#125;)
-    // keyup事件模拟input的onChange事件
-    this.textArea.addEventListener(&quot;keyup&quot;, this.handleGetValue)
-    /**
+  <span class="token function">componentDidMount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>props<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token comment">// keyup事件模拟input的onChange事件</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"keyup"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleGetValue<span class="token punctuation">)</span>
+    <span class="token comment">/**
      * compositionstart，compositionend
      * 是为了处理输入中文时，将拼音回写到了文本区中，监听二者事件加一个锁，
      * 在完成中文之前，不执行keyup的回调
-     */
-    this.textArea.addEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue)
-    this.textArea.addEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse)
-  &#125;
+     */</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionstart"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagTrue<span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionend"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagFalse<span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
 
-  componentWillReceiveProps(nextProps) &#123;
-    const &#123; highlightText &#125; = nextProps;
-    this.setState(&#123; highlightText &#125;, () =&gt; &#123;
+  <span class="token function">componentWillReceiveProps</span><span class="token punctuation">(</span><span class="token parameter">nextProps</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> nextProps<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
 
-      const &#123; cursorPos &#125; = this.state;
-      this.restoreSelection(null, cursorPos);
-    &#125;)
-  &#125;
+      <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> cursorPos <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">restoreSelection</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> cursorPos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
 
-  componentWillUnmount() &#123;
-    this.textArea.removeEventListener(&quot;keyup&quot;, this.handleGetValue)
-    this.textArea.removeEventListener(&quot;compositionstart&quot;, this.handleSetFlagTrue)
-    this.textArea.removeEventListener(&quot;compositionend&quot;, this.handleSetFlagFalse)
-    this.setState = () =&gt; &#123; &#125;
-  &#125;
+  <span class="token function">componentWillUnmount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">"keyup"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleGetValue<span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionstart"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagTrue<span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>textArea<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">"compositionend"</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handleSetFlagFalse<span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function-variable function">setState</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
 
-  // 等同onchange
-  handleGetValue = e =&gt; &#123;
-    const &#123; onChange &#125; = this.props;
-    const &#123; innerText, innerHTML &#125; = e.target;
-    if (onChange &amp;&amp; !this.flag) &#123;
-      const posObj = this.saveSelection();
-      this.setState(&#123;
-        cursorPos: posObj,
-      &#125;, () =&gt; &#123;
-        // innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串
-        const string = !innerText || (innerHTML === &#39;&lt;br&gt;&#39;) ? &#39;&#39; : innerText;
-        onChange(string)
-      &#125;)
-    &#125;
-  &#125;
+  <span class="token comment">// 等同onchange</span>
+  <span class="token function-variable function">handleGetValue</span> <span class="token operator">=</span> <span class="token parameter">e</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> onChange <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>props<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> innerText<span class="token punctuation">,</span> innerHTML <span class="token punctuation">&#125;</span> <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>onChange <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>flag<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> posObj <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">saveSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        cursorPos<span class="token operator">:</span> posObj<span class="token punctuation">,</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// innerText虽然输出在控制台，看不见值却又存在，有可能是 ‘↵ ’, 因此判断如果是该情况，给出一个 空串</span>
+        <span class="token keyword">const</span> string <span class="token operator">=</span> <span class="token operator">!</span>innerText <span class="token operator">||</span> <span class="token punctuation">(</span>innerHTML <span class="token operator">===</span> <span class="token string">'&lt;br>'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> innerText<span class="token punctuation">;</span>
+        <span class="token function">onChange</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
 
-  handleSetFlagTrue = () =&gt; &#123; this.flag = true; &#125;
+  <span class="token function-variable function">handleSetFlagTrue</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>flag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
 
-  handleSetFlagFalse = () =&gt; &#123; this.flag = false; &#125;
+  <span class="token function-variable function">handleSetFlagFalse</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
 
-  // 强制将光标挪动到文本最后
-  keepLastIndex = () =&gt; &#123;
-    const target = document.querySelector(&quot;#define-textarea&quot;);
-    if (window.getSelection) &#123;// ie11 10 9 ff safari
-      target.focus(); // 解决ff不获取焦点无法定位问题
-      const range = window.getSelection();// 创建range
-      range.selectAllChildren(target);// range 选择obj下所有子内容
-      range.collapseToEnd();// 光标移至最后
-    &#125;
-    else if (document.selection) &#123;// ie10 9 8 7 6 5
-      const range = document.selection.createRange();// 创建选择对象
-      range.moveToElementText(target);// range定位到obj
-      range.collapse(false);// 光标移至最后
-      range.select();
-    &#125;
+  <span class="token comment">// 强制将光标挪动到文本最后</span>
+  <span class="token function-variable function">keepLastIndex</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> target <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"#define-textarea"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>getSelection<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">// ie11 10 9 ff safari</span>
+      target<span class="token punctuation">.</span><span class="token function">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 解决ff不获取焦点无法定位问题</span>
+      <span class="token keyword">const</span> range <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">getSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 创建range</span>
+      range<span class="token punctuation">.</span><span class="token function">selectAllChildren</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// range 选择obj下所有子内容</span>
+      range<span class="token punctuation">.</span><span class="token function">collapseToEnd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 光标移至最后</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>selection<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">// ie10 9 8 7 6 5</span>
+      <span class="token keyword">const</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span>selection<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 创建选择对象</span>
+      range<span class="token punctuation">.</span><span class="token function">moveToElementText</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// range定位到obj</span>
+      range<span class="token punctuation">.</span><span class="token function">collapse</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 光标移至最后</span>
+      range<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    this.setState(&#123;
-      cursorPos: this.saveSelection(),
-    &#125;);
-  &#125;
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+      cursorPos<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">saveSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
 
-  /**
+  <span class="token comment">/**
   * 设置光标位置
   * @param ctrl  需要设置对象
   * @param savedSel 对象中内容的光标的所在位置&#123;start: ,end: &#125;
-  */
-  restoreSelection = (target, savedSel) =&gt; &#123;
-    const ctrl = document.querySelector(&#39;#define-textarea&#39;)
-    if (document.createRange) &#123;
-      let charIndex = 0;
-      const range = document.createRange();
-      range.setStart(ctrl, 0);
-      range.collapse(true);
-      const nodeStack = [ctrl];
-      let node;
-      let foundStart = false;
-      let stop = false;
+  */</span>
+  <span class="token function-variable function">restoreSelection</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">target<span class="token punctuation">,</span> savedSel</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> ctrl <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#define-textarea'</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>createRange<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">let</span> charIndex <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>ctrl<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">collapse</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> nodeStack <span class="token operator">=</span> <span class="token punctuation">[</span>ctrl<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">let</span> node<span class="token punctuation">;</span>
+      <span class="token keyword">let</span> foundStart <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+      <span class="token keyword">let</span> stop <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
 
-      while (!stop &amp;&amp; (node = nodeStack.pop())) &#123;
-        if (node.nodeType === 3) &#123;
-          const nextCharIndex = charIndex + node.length;
-          if (!foundStart &amp;&amp; savedSel.start &gt;= charIndex &amp;&amp; savedSel.start &lt;= nextCharIndex) &#123;
-            range.setStart(node, savedSel.start - charIndex);
-            foundStart = true;
-          &#125;
-          if (foundStart &amp;&amp; savedSel.end &gt;= charIndex &amp;&amp; savedSel.end &lt;= nextCharIndex) &#123;
-            range.setEnd(node, savedSel.end - charIndex);
-            stop = true;
-          &#125;
-          charIndex = nextCharIndex;
-        &#125; else &#123;
-          let i = node.childNodes.length;
-          // eslint-disable-next-line no-plusplus
-          while (i--) &#123;
-            nodeStack.push(node.childNodes[i]);
-          &#125;
-        &#125;
-      &#125;
+      <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>stop <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>node <span class="token operator">=</span> nodeStack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">.</span>nodeType <span class="token operator">===</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+          <span class="token keyword">const</span> nextCharIndex <span class="token operator">=</span> charIndex <span class="token operator">+</span> node<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>foundStart <span class="token operator">&amp;&amp;</span> savedSel<span class="token punctuation">.</span>start <span class="token operator">>=</span> charIndex <span class="token operator">&amp;&amp;</span> savedSel<span class="token punctuation">.</span>start <span class="token operator">&lt;=</span> nextCharIndex<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>node<span class="token punctuation">,</span> savedSel<span class="token punctuation">.</span>start <span class="token operator">-</span> charIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            foundStart <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>foundStart <span class="token operator">&amp;&amp;</span> savedSel<span class="token punctuation">.</span>end <span class="token operator">>=</span> charIndex <span class="token operator">&amp;&amp;</span> savedSel<span class="token punctuation">.</span>end <span class="token operator">&lt;=</span> nextCharIndex<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            range<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>node<span class="token punctuation">,</span> savedSel<span class="token punctuation">.</span>end <span class="token operator">-</span> charIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            stop <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+          charIndex <span class="token operator">=</span> nextCharIndex<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+          <span class="token keyword">let</span> i <span class="token operator">=</span> node<span class="token punctuation">.</span>childNodes<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+          <span class="token comment">// eslint-disable-next-line no-plusplus</span>
+          <span class="token keyword">while</span> <span class="token punctuation">(</span>i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            nodeStack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span>childNodes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">&#125;</span>
 
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    &#125; else if (document.body.createTextRange) &#123;
-      const range = document.body.createTextRange();
-      range.moveToElementText(ctrl);
-      range.collapse(true);
-      range.moveEnd(&quot;character&quot;, savedSel.end);
-      range.moveStart(&quot;character&quot;, savedSel.start);
-      range.select();
-    &#125;
-  &#125;;
+      <span class="token keyword">const</span> sel <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">getSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      sel<span class="token punctuation">.</span><span class="token function">removeAllRanges</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      sel<span class="token punctuation">.</span><span class="token function">addRange</span><span class="token punctuation">(</span>range<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>createTextRange<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">createTextRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">moveToElementText</span><span class="token punctuation">(</span>ctrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">collapse</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">moveEnd</span><span class="token punctuation">(</span><span class="token string">"character"</span><span class="token punctuation">,</span> savedSel<span class="token punctuation">.</span>end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">moveStart</span><span class="token punctuation">(</span><span class="token string">"character"</span><span class="token punctuation">,</span> savedSel<span class="token punctuation">.</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      range<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
 
-  // 获取光标位置
-  saveSelection = () =&gt; &#123;
-    const target = document.querySelector(&#39;#define-textarea&#39;);
-    if (window.getSelection) &#123;
-      const range = window.getSelection().getRangeAt(0);
-      const preSelectionRange = range.cloneRange();
-      preSelectionRange.selectNodeContents(target);
-      preSelectionRange.setEnd(range.startContainer, range.startOffset);
-      const start = preSelectionRange.toString().length;
+  <span class="token comment">// 获取光标位置</span>
+  <span class="token function-variable function">saveSelection</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> target <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#define-textarea'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>getSelection<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> range <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">getSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getRangeAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> preSelectionRange <span class="token operator">=</span> range<span class="token punctuation">.</span><span class="token function">cloneRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      preSelectionRange<span class="token punctuation">.</span><span class="token function">selectNodeContents</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      preSelectionRange<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>range<span class="token punctuation">.</span>startContainer<span class="token punctuation">,</span> range<span class="token punctuation">.</span>startOffset<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> start <span class="token operator">=</span> preSelectionRange<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
 
-      return &#123;
-        start,
-        end: start + range.toString().length,
-      &#125;
-    &#125; else if (document.body.createTextRange) &#123;
-      const selectedTextRange = document.selection.createRange();
-      const preSelectionTextRange = document.body.createTextRange();
-      preSelectionTextRange.moveToElementText(target);
-      preSelectionTextRange.setEndPoint(&quot;EndToStart&quot;, selectedTextRange);
-      const start = preSelectionTextRange.text.length;
+      <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+        start<span class="token punctuation">,</span>
+        end<span class="token operator">:</span> start <span class="token operator">+</span> range<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">,</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>createTextRange<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> selectedTextRange <span class="token operator">=</span> document<span class="token punctuation">.</span>selection<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> preSelectionTextRange <span class="token operator">=</span> document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">createTextRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      preSelectionTextRange<span class="token punctuation">.</span><span class="token function">moveToElementText</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      preSelectionTextRange<span class="token punctuation">.</span><span class="token function">setEndPoint</span><span class="token punctuation">(</span><span class="token string">"EndToStart"</span><span class="token punctuation">,</span> selectedTextRange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> start <span class="token operator">=</span> preSelectionTextRange<span class="token punctuation">.</span>text<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
 
-      return &#123;
-        start,
-        end: start + selectedTextRange.text.length,
-      &#125;
-    &#125;
-  &#125;;
+      <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+        start<span class="token punctuation">,</span>
+        end<span class="token operator">:</span> start <span class="token operator">+</span> selectedTextRange<span class="token punctuation">.</span>text<span class="token punctuation">.</span>length<span class="token punctuation">,</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
 
-  // 插入文本
-  insertText = (string,text) =&gt; &#123;
-    const &#123; cursorPos &#125; = this.state;
-    if (cursorPos &amp;&amp; string) &#123;
-      const stringContent = this.getContentFromHtml(string);
-      const preStr = stringContent.substring(0,cursorPos.start);
-      const lastStr = stringContent.substring(cursorPos.end,string.length);
-      const finalStr = (`$&#123;preStr&#125; $&#123;text&#125;$&#123;lastStr&#125;`)
-        .replace(/\s+,/g,&#39;,&#39;)
-        .replace(/,\s+/g,&#39;,&#39;)
-        .replace(/\(\s+/g,&#39;(&#39;)
-        .replace(/\s+\)/g,&#39;)&#39;); // 过滤掉， （，）前后不必要的空格
-      return finalStr
-    &#125; return text;
-  &#125;
+  <span class="token comment">// 插入文本</span>
+  <span class="token function-variable function">insertText</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">string<span class="token punctuation">,</span>text</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> cursorPos <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cursorPos <span class="token operator">&amp;&amp;</span> string<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> stringContent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getContentFromHtml</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> preStr <span class="token operator">=</span> stringContent<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>cursorPos<span class="token punctuation">.</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> lastStr <span class="token operator">=</span> stringContent<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>cursorPos<span class="token punctuation">.</span>end<span class="token punctuation">,</span>string<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> finalStr <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>preStr<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>text<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>lastStr<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">\s+,</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span><span class="token string">','</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">,\s+</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span><span class="token string">','</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">\(\s+</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span><span class="token string">'('</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">\s+\)</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span><span class="token string">')'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 过滤掉， （，）前后不必要的空格</span>
+      <span class="token keyword">return</span> finalStr
+    <span class="token punctuation">&#125;</span> <span class="token keyword">return</span> text<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
 
-    // 提取纯文本
-    getContentFromHtml = value =&gt; &#123;
-      let target;
-      if (typeof value === &#39;string&#39;) &#123;
-        target = value || &#39;&#39;;
-      &#125; else &#123;
-        target = value.toHTML &amp;&amp; value.toHTML() || &#39;&#39;;
-      &#125;
+    <span class="token comment">// 提取纯文本</span>
+    <span class="token function-variable function">getContentFromHtml</span> <span class="token operator">=</span> <span class="token parameter">value</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">let</span> target<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> value <span class="token operator">===</span> <span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        target <span class="token operator">=</span> value <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        target <span class="token operator">=</span> value<span class="token punctuation">.</span>toHTML <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token function">toHTML</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
 
-      return (
-        target ? target.replace(/&lt;\/?[a-zA-Z]+.*?&gt;/g, &#39;&#39;) : &#39;&#39;
-      )
-    &#125;
+      <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        target <span class="token operator">?</span> target<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">&lt;\/?[a-zA-Z]+.*?></span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token string">''</span>
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
 
-  render() &#123;
-    const &#123; highlightText &#125; = this.state;
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> highlightText <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">;</span>
 
-    return (
-      &lt;div style=&#123;&#123; position: 'relative', width: '100%', height: '125px' &#125;&#125;&gt;
-        &lt;div
-          style=&#123;&#123;
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            zIndex: 2,
-            backgroundColor: 'transparent',
-            padding: '4px 11px',
-            outline: 'none',
-            height: '125px',
-            overflowY: 'auto',
-            lineHeight: '1.5',
-            verticalAlign: 'bottom',
-          &#125;&#125;
-          dangerouslySetInnerHTML=&#123;&#123; __html: highlightText &#125;&#125;
-          onClick=&#123;() =&gt; &#123;
-            const posObj = this.saveSelection();
-            this.setState(&#123;
-              cursorPos: posObj,
-            &#125;, () =&gt; &#123;
-              this.restoreSelection(null, posObj);
-            &#125;)
-          &#125;&#125;
-          contentEditable=&quot;true&quot;
-          id=&quot;define-textarea&quot;
-          ref=&#123;ref =&gt; &#123; this.textArea = ref &#125;&#125;
-        /&gt;
-      &lt;/div&gt;
-    )
-  &#125;
-&#125;
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> position<span class="token operator">:</span> <span class="token string">'relative'</span><span class="token punctuation">,</span> width<span class="token operator">:</span> <span class="token string">'100%'</span><span class="token punctuation">,</span> height<span class="token operator">:</span> <span class="token string">'125px'</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+          <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>
+            position<span class="token operator">:</span> <span class="token string">'absolute'</span><span class="token punctuation">,</span>
+            top<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            right<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            left<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            bottom<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            zIndex<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+            backgroundColor<span class="token operator">:</span> <span class="token string">'transparent'</span><span class="token punctuation">,</span>
+            padding<span class="token operator">:</span> <span class="token string">'4px 11px'</span><span class="token punctuation">,</span>
+            outline<span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">,</span>
+            height<span class="token operator">:</span> <span class="token string">'125px'</span><span class="token punctuation">,</span>
+            overflowY<span class="token operator">:</span> <span class="token string">'auto'</span><span class="token punctuation">,</span>
+            lineHeight<span class="token operator">:</span> <span class="token string">'1.5'</span><span class="token punctuation">,</span>
+            verticalAlign<span class="token operator">:</span> <span class="token string">'bottom'</span><span class="token punctuation">,</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+          <span class="token attr-name">dangerouslySetInnerHTML</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> __html<span class="token operator">:</span> highlightText <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+          <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">const</span> posObj <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">saveSelection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+              cursorPos<span class="token operator">:</span> posObj<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+              <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">restoreSelection</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> posObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+          <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+          <span class="token attr-name">contentEditable</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
+          <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>define-textarea<span class="token punctuation">"</span></span>
+          <span class="token attr-name">ref</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">&#123;</span><span class="token parameter">ref</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>textArea <span class="token operator">=</span> ref <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></span>
+        <span class="token punctuation">/></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
 
-export default Editor
-</code></pre>
+<span class="token keyword">export</span> <span class="token keyword">default</span> Editor
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 
     </div>
 

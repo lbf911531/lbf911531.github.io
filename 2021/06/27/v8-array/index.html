@@ -191,9 +191,6 @@
       <span class="links-of-author-item">
         <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
-      <span class="links-of-author-item">
-        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
@@ -290,10 +287,10 @@
     <div class="post-body" itemprop="articleBody">
         <p>题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?</p>
 <p>答： 基本没有</p>
-<pre><code class="reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
+<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
 
-JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。
-</code></pre>
+JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <p>由上述问题，引发关于数组底层实现的概念介绍：</p>
 <span id="more"></span> 
 <h2 id="1-js中的数组"><a href="#1-js中的数组" class="headerlink" title="1. js中的数组"></a>1. js中的数组</h2><ul>
@@ -310,58 +307,58 @@ JavaScript 没有真正意义上的数组，所有的数组其实是对象，其
 <p>JSArray继承自JSObject,这也印证了一句<code>js中数组也是对象</code>。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/v8/v8/blob/master/src/objects/js-array.h">https://github.com/v8/v8/blob/master/src/objects/js-array.h</a></p>
 <p>注意截图中的注释，其翻译成中文意即：</p>
-<pre><code class="json">JSArray描述了JavaScript数组
-这样的数组可以有两种模式:
+<pre class="line-numbers language-json" data-language="json"><code class="language-json">JSArray描述了JavaScript数组
+这样的数组可以有两种模式<span class="token operator">:</span>
 -快速，后备存储是一个FixedArray和length &lt;= elements.length();
-请注意:push和pop可以用来增加和缩小数组。
--慢，后备存储是一个HashTable与数字作为键
-</code></pre>
+请注意<span class="token operator">:</span>push和pop可以用来增加和缩小数组。
+-慢，后备存储是一个HashTable与数字作为键<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>大概就是说，数组分为两种模式，一种是快速模式，它是基于fixedArray实现存储的；另一种是慢数组模式，它是基于HashTable实现存储。</p>
 <p>既然有两种模式，那么就可以引申出第一个问题： 谁是默认情况下使用的模式？</p>
 <p>答： <code>快数组模式</code>。</p>
-<pre><code class="javascript">var a = [8,1,2];
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-// 打印 a的字节码：
-- map = 0x939ebe04359 [FastProperties]
-- prototype = 0x27e86e126289
-- elements = 0xe70c791d4e9 &lt;FixedArray[3]&gt; [FAST_SMI_ELEMENTS (COW)]
-- length = 3
-- properties = 0x2b609d202241 &lt;FixedArray[0]&gt; &#123;
-#length: 0x2019c3e58da9 &lt;AccessorInfo&gt; (const accessor descriptor)
-&#125;
-- elements= 0xe70c791d4e9 &lt;FixedArray[3]&gt; &#123;
-0: 8
-1: 1
-2: 2
-&#125;
-</code></pre>
+<span class="token comment">// 打印 a的字节码：</span>
+<span class="token operator">-</span> map <span class="token operator">=</span> <span class="token number">0x939ebe04359</span> <span class="token punctuation">[</span>FastProperties<span class="token punctuation">]</span>
+<span class="token operator">-</span> prototype <span class="token operator">=</span> <span class="token number">0x27e86e126289</span>
+<span class="token operator">-</span> elements <span class="token operator">=</span> <span class="token number">0xe70c791d4e9</span> <span class="token operator">&lt;</span>FixedArray<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">></span> <span class="token punctuation">[</span><span class="token constant">FAST_SMI_ELEMENTS</span> <span class="token punctuation">(</span><span class="token constant">COW</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token operator">-</span> length <span class="token operator">=</span> <span class="token number">3</span>
+<span class="token operator">-</span> properties <span class="token operator">=</span> <span class="token number">0x2b609d202241</span> <span class="token operator">&lt;</span>FixedArray<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
+#length<span class="token operator">:</span> <span class="token number">0x2019c3e58da9</span> <span class="token operator">&lt;</span>AccessorInfo<span class="token operator">></span> <span class="token punctuation">(</span><span class="token keyword">const</span> accessor descriptor<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span class="token operator">-</span> elements<span class="token operator">=</span> <span class="token number">0xe70c791d4e9</span> <span class="token operator">&lt;</span>FixedArray<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
+<span class="token number">0</span><span class="token operator">:</span> <span class="token number">8</span>
+<span class="token number">1</span><span class="token operator">:</span> <span class="token number">1</span>
+<span class="token number">2</span><span class="token operator">:</span> <span class="token number">2</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>引申：网上有一段资料， V8里面所有的数据类型的根父类都是Object，Object派生HeapObject，提供存储基本功能，往下的JSReceiver用于原型查找，再往下的JSObject就是JS里面的Object，Array/Function/Date等继承于JSObject。左边的FixedArray是实际存储数据的地方。 </p>
 <p> <img src="/images/v8-array/1.png" alt="img"> </p>
 <h3 id="2-2-快数组（FastElements）"><a href="#2-2-快数组（FastElements）" class="headerlink" title="2.2 快数组（FastElements）"></a>2.2 快数组（FastElements）</h3><p> 快数组是一种线性的存储方式，内部存储是连续的内存，新创建的空数组，默认的存储方式是快数组，快数组长度是可变的，可以根据元素的增加和删除来动态调整存储空间大小，内部是通过扩容和收缩机制实现。 </p>
-<pre><code class="javascript">// v8/src/objects/js-array.h 
-// Number of element slots to pre-allocate for an empty array.
-  static const int kPreallocatedArrayElements = 4;
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// v8/src/objects/js-array.h </span>
+<span class="token comment">// Number of element slots to pre-allocate for an empty array.</span>
+  <span class="token keyword">static</span> <span class="token keyword">const</span> int kPreallocatedArrayElements <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <p>数组初始化时会默认产生4个插槽。</p>
 <h4 id="2-2-1-扩容"><a href="#2-2-1-扩容" class="headerlink" title="2.2.1 扩容"></a>2.2.1 扩容</h4><p>当执行push等操作时，如果发现内存不够时：</p>
-<pre><code class="javascript">// v8/src/objects/js-objects.h // 计算扩容后的容量
-static const uint32_t kMinAddedElementsCapacity = 16;
-// Computes the new capacity when expanding the elements of a JSObject.
-static uint32_t NewElementsCapacity(uint32_t old_capacity) &#123;
-    // (old_capacity + 50%) + kMinAddedElementsCapacity
-    return old_capacity + (old_capacity &gt;&gt; 1) + kMinAddedElementsCapacity;
-&#125;
-// code-stub-assembler.cc
-Node* CodeStubAssembler::CalculateNewElementsCapacity(Node* old_capacity,
-                                                      ParameterMode mode) &#123;
-  CSA_SLOW_ASSERT(this, MatchesParameterMode(old_capacity, mode));
-  Node* half_old_capacity = WordOrSmiShr(old_capacity, 1, mode);
-  Node* new_capacity = IntPtrOrSmiAdd(half_old_capacity, old_capacity, mode);
-  Node* padding =
-      IntPtrOrSmiConstant(JSObject::kMinAddedElementsCapacity, mode);
-  return IntPtrOrSmiAdd(new_capacity, padding, mode);
-&#125;
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// v8/src/objects/js-objects.h // 计算扩容后的容量</span>
+<span class="token keyword">static</span> <span class="token keyword">const</span> uint32_t kMinAddedElementsCapacity <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">;</span>
+<span class="token comment">// Computes the new capacity when expanding the elements of a JSObject.</span>
+<span class="token keyword">static</span> uint32_t <span class="token function">NewElementsCapacity</span><span class="token punctuation">(</span><span class="token parameter">uint32_t old_capacity</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// (old_capacity + 50%) + kMinAddedElementsCapacity</span>
+    <span class="token keyword">return</span> old_capacity <span class="token operator">+</span> <span class="token punctuation">(</span>old_capacity <span class="token operator">>></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> kMinAddedElementsCapacity<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// code-stub-assembler.cc</span>
+Node<span class="token operator">*</span> CodeStubAssembler<span class="token operator">:</span><span class="token operator">:</span><span class="token function">CalculateNewElementsCapacity</span><span class="token punctuation">(</span><span class="token parameter">Node<span class="token operator">*</span> old_capacity<span class="token punctuation">,</span>
+                                                      ParameterMode mode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token constant">CSA_SLOW_ASSERT</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token function">MatchesParameterMode</span><span class="token punctuation">(</span>old_capacity<span class="token punctuation">,</span> mode<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Node<span class="token operator">*</span> half_old_capacity <span class="token operator">=</span> <span class="token function">WordOrSmiShr</span><span class="token punctuation">(</span>old_capacity<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> mode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Node<span class="token operator">*</span> new_capacity <span class="token operator">=</span> <span class="token function">IntPtrOrSmiAdd</span><span class="token punctuation">(</span>half_old_capacity<span class="token punctuation">,</span> old_capacity<span class="token punctuation">,</span> mode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Node<span class="token operator">*</span> padding <span class="token operator">=</span>
+      <span class="token function">IntPtrOrSmiConstant</span><span class="token punctuation">(</span>JSObject<span class="token operator">:</span><span class="token operator">:</span>kMinAddedElementsCapacity<span class="token punctuation">,</span> mode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token function">IntPtrOrSmiAdd</span><span class="token punctuation">(</span>new_capacity<span class="token punctuation">,</span> padding<span class="token punctuation">,</span> mode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>换算一下就是：</p>
 <p><code>old_capacity + old_capacity / 2 + 16</code> ；即原内存大小的1.5倍 加上16。</p>
 <p>所以，扩容可以分为以下几步：</p>
@@ -373,119 +370,120 @@ Node* CodeStubAssembler::CalculateNewElementsCapacity(Node* old_capacity,
 <li>数组的 length + 1</li>
 <li>返回 length</li>
 </ul>
-<h4 id="2-2-2-收缩"><a href="#2-2-2-收缩" class="headerlink" title="2.2.2 收缩"></a>2.2.2 收缩</h4><pre><code class="javascript"> if (2 * length + JSObject::kMinAddedElementsCapacity &lt;= capacity) &#123;
-     // 可以理解成 2 * length + 16 &lt;= capacity，也就是 当前元素数量的2倍 + 16 小于数组预定内存大小
+<h4 id="2-2-2-收缩"><a href="#2-2-2-收缩" class="headerlink" title="2.2.2 收缩"></a>2.2.2 收缩</h4><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">*</span> length <span class="token operator">+</span> JSObject<span class="token operator">:</span><span class="token operator">:</span>kMinAddedElementsCapacity <span class="token operator">&lt;=</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token comment">// 可以理解成 2 * length + 16 &lt;= capacity，也就是 当前元素数量的2倍 + 16 小于数组预定内存大小</span>
      
-     // If more than half the elements won&#39;t be used, trim the array.
-     // Do not trim from short arrays to prevent frequent trimming on
-     // repeated pop operations.
-     // Leave some space to allow for subsequent push operations.
+     <span class="token comment">// If more than half the elements won't be used, trim the array.</span>
+     <span class="token comment">// Do not trim from short arrays to prevent frequent trimming on</span>
+     <span class="token comment">// repeated pop operations.</span>
+     <span class="token comment">// Leave some space to allow for subsequent push operations.</span>
      
-     // 判断： 根据length + 1 和old_length 决定是收缩空余的一半，还是全部收缩掉
-     int elements_to_trim = length + 1 == old_length
-         ? (capacity - length) / 2
-     : capacity - length;
-     isolate-&gt;heap()-&gt;RightTrimFixedArray(*backing_store, elements_to_trim);
-     // Fill the non-trimmed elements with holes.
-     BackingStore::cast(*backing_store)
-         .FillWithHoles(length,
-                        std::min(old_length, capacity - elements_to_trim));
- &#125; else &#123;
-    // Otherwise, fill the unused tail with holes.
-    // 反之，用 空洞对象 填充(holes对象指的是数组中分配了空间，但是没有存放元素的位置)
-    BackingStore::cast(*backing_store)-&gt;FillWithHoles(length, old_length);
-&#125;
-</code></pre>
+     <span class="token comment">// 判断： 根据length + 1 和old_length 决定是收缩空余的一半，还是全部收缩掉</span>
+     int elements_to_trim <span class="token operator">=</span> length <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">==</span> old_length
+         <span class="token operator">?</span> <span class="token punctuation">(</span>capacity <span class="token operator">-</span> length<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span>
+     <span class="token operator">:</span> capacity <span class="token operator">-</span> length<span class="token punctuation">;</span>
+     isolate<span class="token operator">-</span><span class="token operator">></span><span class="token function">heap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">RightTrimFixedArray</span><span class="token punctuation">(</span><span class="token operator">*</span>backing_store<span class="token punctuation">,</span> elements_to_trim<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">// Fill the non-trimmed elements with holes.</span>
+     BackingStore<span class="token operator">:</span><span class="token operator">:</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token operator">*</span>backing_store<span class="token punctuation">)</span>
+         <span class="token punctuation">.</span><span class="token function">FillWithHoles</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span>
+                        std<span class="token operator">:</span><span class="token operator">:</span><span class="token function">min</span><span class="token punctuation">(</span>old_length<span class="token punctuation">,</span> capacity <span class="token operator">-</span> elements_to_trim<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Otherwise, fill the unused tail with holes.</span>
+    <span class="token comment">// 反之，用 空洞对象 填充(holes对象指的是数组中分配了空间，但是没有存放元素的位置)</span>
+    BackingStore<span class="token operator">:</span><span class="token operator">:</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token operator">*</span>backing_store<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">FillWithHoles</span><span class="token punctuation">(</span>length<span class="token punctuation">,</span> old_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>执行pop操作后， 如果超过一半的元素没有被使用，则修剪数组。</p>
 <h4 id="2-2-3-holes"><a href="#2-2-3-holes" class="headerlink" title="2.2.3 holes"></a>2.2.3 holes</h4><p> 对于<code>HOLES</code>，在<code>Fast Elements</code>模式中有一个扩展，称为<code>Fast Holey Elements</code>模式 。</p>
 <p>意思是值，在连续内存中，部分索引存有数据，而另一部分索引不存在数据。用代码解释是：</p>
-<pre><code class="javascript">var a = [2,3,4];
-a[100] = 5;
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+a<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
 <p>访问a[5]时，得到的是undefined，而在控制台打印a时，也可以看到，输出的值中存在 <code>empty</code>这样的关键字。</p>
 <h3 id="2-3-慢数组（SlowElements）"><a href="#2-3-慢数组（SlowElements）" class="headerlink" title="2.3 慢数组（SlowElements）"></a>2.3 慢数组（SlowElements）</h3><p> 慢数组是一种字典的内存形式。不用开辟大块连续的存储空间，节省了内存，但是由于需要维护这样一个<code>HashTable</code>，其效率会比快数组低，<code>V8</code>中是以<code>Dictionary</code>的结构实现的慢数组。</p>
-<pre><code class="c++">// src/objects/dictionary.h
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; src&#x2F;objects&#x2F;dictionary.h
 class EXPORT_TEMPLATE_DECLARE(V8_EXPORT_PRIVATE) Dictionary
     : public HashTable&lt;Derived, Shape&gt; &#123;
-  using DerivedHashTable = HashTable&lt;Derived, Shape&gt;;
+  using DerivedHashTable &#x3D; HashTable&lt;Derived, Shape&gt;;
 
  public:
-  using Key = typename Shape::Key;
-  // Returns the value at entry.
+  using Key &#x3D; typename Shape::Key;
+  &#x2F;&#x2F; Returns the value at entry.
   inline Object ValueAt(InternalIndex entry);
   inline Object ValueAt(const Isolate* isolate, InternalIndex entry);
   
-  // ...
-&#125;;
-</code></pre>
+  &#x2F;&#x2F; ...
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h3 id="2-4-快慢数组转化及区别"><a href="#2-4-快慢数组转化及区别" class="headerlink" title="2.4 快慢数组转化及区别"></a>2.4 快慢数组转化及区别</h3><p> 在V8中JSArray继承于JSObject。当设置属性的时候，会依次执行 <code>Object::SetProperty</code> 、 <code>Object::AddDataProperty</code> 、 <code>JSObject::AddDataElement</code> 、 <code>ShouldConvertToSlowElements</code> 。</p>
 <h4 id="2-4-1-快-gt-慢"><a href="#2-4-1-快-gt-慢" class="headerlink" title="2.4.1 快 =&gt; 慢"></a>2.4.1 快 =&gt; 慢</h4><p> 快数组转换为慢数组主要有以下两种情况： </p>
-<pre><code class="c++">// If the fast-case backing storage takes up much more memory than a dictionary
-// backing storage would, the object should have slow elements.
-// static
-// 如果快速备份存储比字典占用更多的内存
-// 备份存储，对象应该有慢元素。
-// 静态
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; If the fast-case backing storage takes up much more memory than a dictionary
+&#x2F;&#x2F; backing storage would, the object should have slow elements.
+&#x2F;&#x2F; static
+&#x2F;&#x2F; 如果快速备份存储比字典占用更多的内存
+&#x2F;&#x2F; 备份存储，对象应该有慢元素。
+&#x2F;&#x2F; 静态
 
-// src\objects\dictionary.h
-// JSObjects prefer dictionary elements if the dictionary saves this much
-// memory compared to a fast elements backing store.
-static const uint32_t kPreferFastElementsSizeFactor = 3;
-// ---------------
-// src\objects\dictionary.h
+&#x2F;&#x2F; src\objects\dictionary.h
+&#x2F;&#x2F; JSObjects prefer dictionary elements if the dictionary saves this much
+&#x2F;&#x2F; memory compared to a fast elements backing store.
+static const uint32_t kPreferFastElementsSizeFactor &#x3D; 3;
+&#x2F;&#x2F; ---------------
+&#x2F;&#x2F; src\objects\dictionary.h
 class NumberDictionaryShape : public NumberDictionaryBaseShape &#123;
  public:
-  static const int kPrefixSize = 1;
-  static const int kEntrySize = 3;
+  static const int kPrefixSize &#x3D; 1;
+  static const int kEntrySize &#x3D; 3;
 &#125;;
-// --- src\objects\js-objects-inl.h
+&#x2F;&#x2F; --- src\objects\js-objects-inl.h
 static inline bool ShouldConvertToSlowElements(uint32_t used_elements,
                                                uint32_t new_capacity) &#123;
-  uint32_t size_threshold = NumberDictionary::kPreferFastElementsSizeFactor *
+  uint32_t size_threshold &#x3D; NumberDictionary::kPreferFastElementsSizeFactor *
                             NumberDictionary::ComputeCapacity(used_elements) *
                             NumberDictionary::kEntrySize;
-  return size_threshold &lt;= new_capacity;
+  return size_threshold &lt;&#x3D; new_capacity;
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p>将上述方法简化：</p>
 <p>​    当 3* ComputeCapacity(used_elements) * 3  =&lt; 新的容量 时，返回true，表示要将快数组向慢数组转化。而关于 <code>ComputeCapacity</code></p>
-<pre><code class="c++">static inline bool ShouldConvertToSlowElements(JSObject object,
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">static inline bool ShouldConvertToSlowElements(JSObject object,
                                                uint32_t capacity,
                                                uint32_t index,
                                                uint32_t* new_capacity) &#123;
-  STATIC_ASSERT(JSObject::kMaxUncheckedOldFastElementsLength &lt;=
+  STATIC_ASSERT(JSObject::kMaxUncheckedOldFastElementsLength &lt;&#x3D;
                 JSObject::kMaxUncheckedFastElementsLength);
   if (index &lt; capacity) &#123;
-    *new_capacity = capacity;
+    *new_capacity &#x3D; capacity;
     return false;
   &#125;
-    // 主要看这一行
-  if (index - capacity &gt;= JSObject::kMaxGap) return true;
-  *new_capacity = JSObject::NewElementsCapacity(index + 1);
+    &#x2F;&#x2F; 主要看这一行
+  if (index - capacity &gt;&#x3D; JSObject::kMaxGap) return true;
+  *new_capacity &#x3D; JSObject::NewElementsCapacity(index + 1);
   DCHECK_LT(index, *new_capacity);
-  if (*new_capacity &lt;= JSObject::kMaxUncheckedOldFastElementsLength ||
-      (*new_capacity &lt;= JSObject::kMaxUncheckedFastElementsLength &amp;&amp;
+  if (*new_capacity &lt;&#x3D; JSObject::kMaxUncheckedOldFastElementsLength ||
+      (*new_capacity &lt;&#x3D; JSObject::kMaxUncheckedFastElementsLength &amp;&amp;
        ObjectInYoungGeneration(object))) &#123;
     return false;
   &#125;
   return ShouldConvertToSlowElements(object.GetFastElementsUsage(),
                                      *new_capacity);
-&#125;
-</code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <p><code>kMaxGap</code>,通过查找，定义的值为1024； 也就是说当 <code>加入的 index</code> - <code>当前容量</code> 大于等于 <code>1024</code> 时，（这时候存在的holes数量就会大于等于1024个）也会转变成慢数组。</p>
-<pre><code class="javascript">let a = [1, 2]
-a[1030] = 1;
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>
+a<span class="token punctuation">[</span><span class="token number">1030</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
 <p><img src="/images/v8-array/1621994110850.png" alt="1621994110850"></p>
 <h4 id="2-4-2-慢-gt-快"><a href="#2-4-2-慢-gt-快" class="headerlink" title="2.4.2 慢 =&gt; 快"></a>2.4.2 慢 =&gt; 快</h4><p> 处于哈希表实现的数组，每次空间增长时， V8 的启发式算法都会检查其空间占用量 。</p>
 <p>而慢转快，比较直白的做法就是 给数组填充真实的数据，保证 填充的index - 当前容量 &lt;= 1024时即会转成快数组。比如：</p>
-<pre><code class="javascript">let a = [1,2];
-a[1030] = 1;
-//---
-a[500] = &quot;填充&quot;;
-</code></pre>
-<pre><code class="javascript">// src\objects\js-objects.cc
-</code></pre>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+a<span class="token punctuation">[</span><span class="token number">1030</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token comment">//---</span>
+a<span class="token punctuation">[</span><span class="token number">500</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"填充"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// src\objects\js-objects.cc</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <img src="https://oscimg.oschina.net/oscnet/up-e4a4403ce1d020bcf03db57051e6cb77820.png" alt="img" style="zoom:50%;" />
 
  
@@ -495,11 +493,11 @@ a[500] = &quot;填充&quot;;
 <li><strong>内存使用方面：</strong>由于快数组内存是连续的，可能需要开辟一大块供其使用，其中还可能有很多空洞，是比较费内存的。慢数组不会有空洞的情况，且都是零散的内存，比较节省内存空间。</li>
 <li><strong>遍历效率方面：</strong>快数组由于是空间连续的，遍历速度很快，而慢数组每次都要寻找 key 的位置，遍历效率会差一些。</li>
 </ol>
-<h3 id="2-5-v8调试相关"><a href="#2-5-v8调试相关" class="headerlink" title="2.5 v8调试相关"></a>2.5 v8调试相关</h3><pre><code class="javascript">1.npm install -g jsvu
-2.将.jsvu 所在的绝对路径添加到系统变量PATH中
-3.执行 jsvu 命令，会话首先会提示你选择64/32位系统，其次会询问安装v8还是v8-debug。
-建议安装v8-debug,它会比v8打印出来的数据要更为完整
-</code></pre>
+<h3 id="2-5-v8调试相关"><a href="#2-5-v8调试相关" class="headerlink" title="2.5 v8调试相关"></a>2.5 v8调试相关</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token number">1.</span>npm install <span class="token operator">-</span>g jsvu
+<span class="token number">2.</span>将<span class="token punctuation">.</span>jsvu 所在的绝对路径添加到系统变量<span class="token constant">PATH</span>中
+<span class="token number">3.</span>执行 jsvu 命令，会话首先会提示你选择<span class="token number">64</span><span class="token operator">/</span><span class="token number">32</span>位系统，其次会询问安装v8还是v8<span class="token operator">-</span>debug。
+建议安装v8<span class="token operator">-</span>debug<span class="token punctuation">,</span>它会比v8打印出来的数据要更为完整<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
 <hr>
 <p>记录一下个人安装jsvu遇到的坑：</p>
 <ol>

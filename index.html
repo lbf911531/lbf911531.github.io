@@ -182,9 +182,6 @@
       <span class="links-of-author-item">
         <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
-      <span class="links-of-author-item">
-        <a href="/1459029798@qq.com" title="E-Mail → 1459029798@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
@@ -250,7 +247,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：20:28:34" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
+      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：22:08:08" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -273,128 +270,15 @@
     
     <div class="post-body" itemprop="articleBody">
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。 </p>
-<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><ul>
-<li><p>用户在浏览网页时，单位时间能看到的视界是有限的，亦即视口大小所在区域。</p>
-</li>
-<li><p>而<img>标签渲染图片资源，是基于<code>src</code>属性。当<code>src</code>存在值时，网页会自动发起请求获取图片资源。</p>
-</li>
-</ul>
-<p>​    基于上述两点，<img>标签上预置一个额外属性<code>data-src</code>临时存放<code>src</code>的值，判断视口所在的<img>，将<code>data-src</code>的值赋值给<code>src</code>即可。为了优化视觉效果，也可以预先加载一张loading图作为<code>src</code>的初始值占位。</p>
-<h4 id="方案一：documentElement"><a href="#方案一：documentElement" class="headerlink" title="方案一：documentElement"></a>方案一：documentElement</h4><p> 引用一张网图：<img src="https://img-blog.csdnimg.cn/20190524164645631.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3cxNDE4ODk5NTMy,size_16,color_FFFFFF,t_70" alt="img"> </p>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>注解</th>
-<th>计算公式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>clientWidth</td>
-<td>元素可见宽</td>
-<td>width+padding</td>
-</tr>
-<tr>
-<td>clientTop</td>
-<td>顶部边框的宽度</td>
-<td>border-top</td>
-</tr>
-<tr>
-<td>offsetWidth</td>
-<td>元素实际宽</td>
-<td>width + 左右padding + 左右boder</td>
-</tr>
-<tr>
-<td>offsetTop</td>
-<td>当前元素相对于其 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetParent"><code>offsetParent</code></a> (已定位父级)元素的顶部内边距的距离。</td>
-<td></td>
-</tr>
-<tr>
-<td>scrollWidth</td>
-<td>获取指定标签内容层的真实宽度</td>
-<td>可视区域宽度+被隐藏区域宽度</td>
-</tr>
-<tr>
-<td>scrollTop</td>
-<td>内容层顶部 到 可视区域顶部的距离</td>
-<td>滚动条滚动距离</td>
-</tr>
-</tbody></table>
-<p>由上得知，判断一个元素是否在视口内的公式：<br>$$<br>offsetTop - scrollTop &lt;= clientHeight<br>$$</p>
-<pre><code class="javascript">const imgs = document.querySelectorAll(&quot;img&quot;);
-window.addEventListener(&#39;scroll&#39;,() =&gt; &#123;
-    bindLazyLoadEvent(imgs);
-&#125;);
-
-function bindLazyLoadEvent(imgs) &#123;
-    for(let i =0;i&lt;imgs.length;i++) &#123;
-        lazyLoad(imgs[i])
-    &#125;
-&#125;
-
-function lazyLoad(img) &#123;
-    console.log(img.src,`$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`,&#39;-&#39;)
-    if (img.src !== `$&#123;window.location.origin&#125;$&#123;loadingImg&#125;`) return;
-    const scrollHeight = document?.documentElement?.scrollTop || window.pageYOffset;
-    const offsetTop = img.offsetTop;
-    const clientHeight = document.documentElement.clientHeight;
-    console.log(offsetTop - scrollHeight &lt;= clientHeight,&#39;=&#39;)
-    if (offsetTop - scrollHeight &lt;= clientHeight) &#123;
-        img.src = img.getAttribute(&#39;data-src&#39;);
-    &#125;
-&#125;
-</code></pre>
-<h4 id="方案二：getBoundingClientRect"><a href="#方案二：getBoundingClientRect" class="headerlink" title="方案二：getBoundingClientRect"></a>方案二：getBoundingClientRect</h4><ol>
-<li>Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。</li>
-<li>如果是标准盒子模型，元素的尺寸等于width/height + padding + border-width的总和。</li>
-<li>如果box-sizing: border-box，元素的的尺寸等于 width/height。</li>
-</ol>
-<p>严格来说，方案二与一的思路一致，只是当前图片是否处在视口的计算方式有所区别。</p>
-<pre><code class="javascript">if (img.getBoundingClientRect().top &lt; window.innerHeight) &#123;
-  // 当前元素距离视口顶部的距离 &lt; 当前视口的高度
-  ...
-&#125;
-</code></pre>
-<p>关于上方方案一，二完整代码。还需要做一点改动，监听滚动条事件会给浏览器造成巨大的压力，滚动条事件频频触发。因此需要引入防抖。</p>
-<pre><code class="javascript">function debounce(fn,delay) &#123;
-    let timer = null;
-    if(timer) &#123;
-      clearTimeout(timer);
-    &#125; 
-    return function () &#123;
-      const context = this;
-      const args = arguments;
-      timer = setTimeout(() =&gt; &#123;
-        fn.call(context,args);
-      &#125;,delay);
-    &#125;
-  &#125;
-
- debounce(bindLazyLoadEvent(imgs),1000);
-</code></pre>
-<h4 id="方案三：IntersectionObserver"><a href="#方案三：IntersectionObserver" class="headerlink" title="方案三：IntersectionObserver"></a>方案三：<em>IntersectionObserver</em></h4><p>交叉观察器， 一种异步观察目标元素与其祖先元素或顶级文档视窗(<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/Viewport">viewport</a>)交叉状态的方法 。 浏览器原生提供的构造函数，接受两个参数：<code>callback</code>是可见性变化时的回调函数，<code>option</code>是配置对象（该参数可选）。 </p>
-<p>callback:  一般会触发两次。一次是目标元素刚刚进入视口（开始可见），另一次是完全离开视口（开始不可见）</p>
-<p>通过该API可以替代方案一，简化代码的同时优化性能。</p>
-<pre><code class="javascript">const intersectionObserver = new IntersectionObserver(function (entries,self) &#123;
-    entries.forEach((entry) =&gt; &#123;
-        if (entry.isIntersecting) &#123;
-            let img = entry.target
-            let src = img.dataset.src
-            if (src) &#123;
-                img.src = src
-                img.removeAttribute(&#39;data-src&#39;)
-            &#125;
-            // 解除观察
-            self.unobserve(entry.target)
-        &#125;
-    &#125;)
-&#125;);
-document.querySelectorAll(&#39;img[data-src]&#39;).forEach(eImg =&gt; &#123;
-    intersectionObserver.observe(eImg);
-&#125;)
-</code></pre>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>图片懒加载有一个局限： 需要事先设定图片的尺寸。</p>
-
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/05/img-lazy-load/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -725,10 +609,8 @@ document.querySelectorAll(&#39;img[data-src]&#39;).forEach(eImg =&gt; &#123;
           <h1 id="从零开始搭建hexo-blog"><a href="#从零开始搭建hexo-blog" class="headerlink" title="从零开始搭建hexo blog"></a>从零开始搭建hexo blog</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a><i class="fa fa-tags"></i>准备环境</h2><ol>
 <li>安装node</li>
 <li>安装Git</li>
-<li>安装hexo 脚手架 <pre><code class="bash">$ npm install hexo-cli -g
-$ hexo -v
-</code></pre>
-</li>
+<li>安装hexo 脚手架 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
+$ hexo -v<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
 </ol>
 <p><img src="/images/other/hexo/1.png" alt="version"></p>
           <!--noindex-->
@@ -872,26 +754,24 @@ $ hexo -v
 </tbody></table>
 <ul>
 <li><p>语法错误</p>
-<pre><code class="javascript">function listenerError() &#123;
-    window.addEventListener(&#39;error&#39;, (event) =&gt; &#123;
-        if (event.target.localName) &#123;
-            console.log(&#39;这是资源错误&#39;, event);
-        &#125;
-        else &#123;
-            console.log(&#39;这是代码错误&#39;, event);
-        &#125;
-    &#125;, true)
-&#125;
-// window.addEventListener(&#39;error&#39;) 比window.onError先执行，它可以全局捕获资源加载错误，但不能通过返回true的方式阻止执行默认事件处理函数
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">listenerError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>localName<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是资源错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是代码错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// window.addEventListener('error') 比window.onError先执行，它可以全局捕获资源加载错误，但不能通过返回true的方式阻止执行默认事件处理函数</span>
 
- function listenerPromiseError() &#123;
-    window.addEventListener(&#39;unhandledrejection&#39;, (event) =&gt; &#123;
-        console.log(&#39;这是Promise场景中错误&#39;, event);
-    &#125;)
-&#125;
-// Promise场景的处理方式有所不同，当Promise被reject且没有reject处理器的时候，会触发unhandlerejection事件，所以通过监听unhandlerejection的事件来捕获错误。
-</code></pre>
-</li>
+ <span class="token keyword">function</span> <span class="token function">listenerPromiseError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'unhandledrejection'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是Promise场景中错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// Promise场景的处理方式有所不同，当Promise被reject且没有reject处理器的时候，会触发unhandlerejection事件，所以通过监听unhandlerejection的事件来捕获错误。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
 
       
@@ -1243,10 +1123,10 @@ $ hexo -v
     <div class="post-body" itemprop="articleBody">
           <p>题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?</p>
 <p>答： 基本没有</p>
-<pre><code class="reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
+<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
 
-JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。
-</code></pre>
+JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <p>由上述问题，引发关于数组底层实现的概念介绍：</p>
           <!--noindex-->
             <div class="post-button">
