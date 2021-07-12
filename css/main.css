@@ -3087,12 +3087,12 @@ mark.search-keyword {
 }
 /* webkit, opera, IE9 */
 ::selection {
-  color: darkblue;
+  color: #00008b;
   background: unset;
 }
 /* firefox */
 ::-moz-selection {
-  color: darkblue;
+  color: #00008b;
   background: unset;
 }
 .post-block .post-body {
@@ -3167,12 +3167,12 @@ mark.search-keyword {
 .post-block .post-body a:hover {
   background-color: rgba(100,57,175,0.2);
 }
+main .header-inner .site-brand-container {
+  background-image: linear-gradient(54deg, #002051, #00eaf1);
+}
 blockquote {
   border-left-color: #6cbd45;
   background-color: rgba(0,0,0,0.04);
-}
-main .header-inner .site-brand-container {
-  background-image: linear-gradient(54deg, #002051, #00eaf1);
 }
 @-moz-keyframes h3Animation {
   0% {
