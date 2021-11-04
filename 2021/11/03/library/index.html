@@ -20,25 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="埋书小楼">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="从零开始封装React组件库零、目标 基于ant design 二次封装业务组件库，并建立站点，展示组件使用文档 发布npm包  一、准备环境技术选择： dumi + father-build $ npm init $ npx @umijs&#x2F;create-dumi-lib &#x2F;&#x2F; 默认以当前文件夹名字为项目名 生成如下目录结构 .editorconfig .fatherrc.ts      &#x3D;&#x3D;&#x3D;&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="组件库">
+<meta property="og:url" content="http://example.com/2021/11/03/library/index.html">
 <meta property="og:site_name" content="埋书小楼">
-<meta property="og:description" content="博客">
+<meta property="og:description" content="从零开始封装React组件库零、目标 基于ant design 二次封装业务组件库，并建立站点，展示组件使用文档 发布npm包  一、准备环境技术选择： dumi + father-build $ npm init $ npx @umijs&#x2F;create-dumi-lib &#x2F;&#x2F; 默认以当前文件夹名字为项目名 生成如下目录结构 .editorconfig .fatherrc.ts      &#x3D;&#x3D;&#x3D;&gt;">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-03T12:44:18.000Z">
+<meta property="article:modified_time" content="2021-11-04T07:42:57.427Z">
 <meta property="article:author" content="书生">
+<meta property="article:tag" content="实践">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/11/03/library/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/11/03/library/","path":"2021/11/03/library/","title":"组件库"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>埋书小楼</title>
+<title>组件库 | 埋书小楼</title>
   
 
 
@@ -131,7 +134,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -144,6 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%B0%81%E8%A3%85React%E7%BB%84%E4%BB%B6%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">从零开始封装React组件库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E3%80%81%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">零、目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83"><span class="nav-number">1.2.</span> <span class="nav-text">一、准备环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E5%86%99%E7%BB%84%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">二、编写组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81mock%E6%95%B0%E6%8D%AE"><span class="nav-number">1.4.</span> <span class="nav-text">三、mock数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE%E5%A4%9A%E8%AF%AD%E8%A8%80"><span class="nav-number">1.5.</span> <span class="nav-text">四、配置多语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">1.6.</span> <span class="nav-text">思路: </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.7.</span> <span class="nav-text">实践:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81dva-connect%EF%BC%88redux%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">五、dva&#x2F;connect（redux）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E7%BB%84%E4%BB%B6%E7%BC%96%E5%86%99less%E4%BD%BF%E7%94%A8global"><span class="nav-number">1.9.</span> <span class="nav-text">六、组件编写less使用global</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E7%AB%99%E7%82%B9%E9%A6%96%E9%A1%B5"><span class="nav-number">1.10.</span> <span class="nav-text">六、站点首页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85"><span class="nav-number">1.11.</span> <span class="nav-text">七、项目打包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">1.12.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -212,101 +216,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/home/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/12/home/" class="post-title-link" itemprop="url">山中何事？松花酿酒，春水煎茶</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <i class="fa fa-thumb-tack"></i>
-    <font color=7D26CD>置顶</font>
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-07-12 20:56:46 / 修改时间：22:12:54" itemprop="dateCreated datePublished" datetime="2021-07-12T20:56:46+08:00">2021-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9A%8F%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">随记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="/images/home/rain.png" alt="img"></p>
-<ol>
-<li>[转载：优质中文前端博客] <a target="_blank" rel="noopener" href="https://github.com/FrankFang/best-chinese-front-end-blogs">https://github.com/FrankFang/best-chinese-front-end-blogs</a></li>
-<li>[记录：string转ART] <a target="_blank" rel="noopener" href="http://patorjk.com/software/taag/#p=display&amp;h=2&amp;f=Alpha&amp;t=GO">http://patorjk.com/software/taag/#p=display&amp;h=2&amp;f=Alpha&amp;t=GO</a></li>
-<li>[记录：js代码在线调试] <a target="_blank" rel="noopener" href="https://www.jsv9000.app/">https://www.jsv9000.app/</a></li>
-<li>[记录：图片转手绘风] <a target="_blank" rel="noopener" href="https://www.matools.com/sketch">https://www.matools.com/sketch</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/03/library/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -319,9 +239,9 @@
       <meta itemprop="name" content="埋书小楼">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/11/03/library/" class="post-title-link" itemprop="url">组件库</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          组件库
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -362,7 +282,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="从零开始封装React组件库"><a href="#从零开始封装React组件库" class="headerlink" title="从零开始封装React组件库"></a>从零开始封装React组件库</h1><h2 id="零、目标"><a href="#零、目标" class="headerlink" title="零、目标"></a>零、目标</h2><ul>
+        <h1 id="从零开始封装React组件库"><a href="#从零开始封装React组件库" class="headerlink" title="从零开始封装React组件库"></a>从零开始封装React组件库</h1><h2 id="零、目标"><a href="#零、目标" class="headerlink" title="零、目标"></a>零、目标</h2><ul>
 <li>基于ant design 二次封装业务组件库，并建立站点，展示组件使用文档</li>
 <li>发布npm包</li>
 </ul>
@@ -643,7 +563,6 @@ cssLoader<span class="token operator">:</span> <span class="token punctuation">&
 <li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6904795653243994125#heading-22">dumi+father-build快速搭建react组件库</a></li>
 </ol>
 
-      
     </div>
 
     
@@ -651,618 +570,38 @@ cssLoader<span class="token operator">:</span> <span class="token punctuation">&
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/13/chrome-plugin/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/13/chrome-plugin/" class="post-title-link" itemprop="url">谷歌浏览器插件入门</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-07-13 21:20:11 / 修改时间：21:37:53" itemprop="dateCreated datePublished" datetime="2021-07-13T21:20:11+08:00">2021-07-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="manifest-json-入口文件"><a href="#manifest-json-入口文件" class="headerlink" title="manifest.json(入口文件)"></a>manifest.json(入口文件)</h2><ul>
-<li>browser_action指定扩展的图标放在Chrome的工具栏中</li>
-<li>browser_action中的default_icon属性定义了相应图标文件的位置</li>
-<li>default_title定义了当用户鼠标悬停于扩展图标上所显示的文字</li>
-<li>default_popup则定义了当用户单击扩展图标时所显示页面的文件位置。</li>
-<li> name 定义plug的名字</li>
-<li> version 定义了plug的版本</li>
-<li> icons 定义了plug相关图标文件的位置</li>
-<li> manifest_version则用整数表示manifest文件自身格式的版本号。目前为止只接受 2 （版本目前为2）
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/13/chrome-plugin/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/vue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/12/vue/" class="post-title-link" itemprop="url">vue入门</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-07-12 20:56:45 / 修改时间：22:12:55" itemprop="dateCreated datePublished" datetime="2021-07-12T20:56:45+08:00">2021-07-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> --global vue-cli
-$ vue init // vue-cli --version: <span class="token number">2</span>.x 
-$ vue create // vue-cli --version: <span class="token number">3</span>.x <span class="token punctuation">[</span>init/create 任选<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><table>
-<thead>
-<tr>
-<th>API</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>beforeCreate</td>
-<td>创建前</td>
-</tr>
-<tr>
-<td>created</td>
-<td>创建后</td>
-</tr>
-<tr>
-<td>beforeMount</td>
-<td>组件挂载前</td>
-</tr>
-<tr>
-<td>mounted</td>
-<td>组件挂载后</td>
-</tr>
-<tr>
-<td>beforeUpdate</td>
-<td>组件修改前,发生在虚拟 DOM 打补丁之前</td>
-</tr>
-<tr>
-<td>updated</td>
-<td>组件数据更新之后</td>
-</tr>
-<tr>
-<td>beforeDestory</td>
-<td>组件销毁前</td>
-</tr>
-<tr>
-<td>destoryed</td>
-<td>组件销毁后</td>
-</tr>
-</tbody></table>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/12/vue/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/tool/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/11/tool/" class="post-title-link" itemprop="url">工具函数</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-07-11 17:35:25 / 修改时间：18:16:30" itemprop="dateCreated datePublished" datetime="2021-07-11T17:35:25+08:00">2021-07-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/11/tool/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/08/prose/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/08/prose/" class="post-title-link" itemprop="url">web零散知识记录</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-08 20:01:35" itemprop="dateCreated datePublished" datetime="2021-07-08T20:01:35+08:00">2021-07-08</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-12 20:55:14" itemprop="dateModified" datetime="2021-07-12T20:55:14+08:00">2021-07-12</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="浏览器每一帧都在做什么？"><a href="#浏览器每一帧都在做什么？" class="headerlink" title="浏览器每一帧都在做什么？"></a>浏览器每一帧都在做什么？</h2><p><img src="/images/prose/hz.png" alt="img"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/08/prose/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/05/img-lazy-load/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/05/img-lazy-load/" class="post-title-link" itemprop="url">图片懒加载</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2021-07-05 20:14:47 / 修改时间：22:08:08" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。 </p>
-<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/05/img-lazy-load/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/promise/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/01/promise/" class="post-title-link" itemprop="url">promise初探</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-01 18:38:51" itemprop="dateCreated datePublished" datetime="2021-07-01T18:38:51+08:00">2021-07-01</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:00:17" itemprop="dateModified" datetime="2021-07-02T10:00:17+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a><i class="fa fa-tags"></i>定义</h2><p>Promise 是异步编程的一种解决方案，比传统的解决方案——回调函数和事件——更合理且更强大。它最早由社区提出并实现，ES6将其写进了语言标准，统一了用法，并原生提供了Promise对象。</p>
-<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a><i class="fa fa-tags"></i>特点</h2><ol>
-<li>对象的状态不受外界影响 （3种状态）</li>
-</ol>
+<div class="post-copyright">
 <ul>
-<li>pending</li>
-<li>resolved</li>
-<li>rejected</li>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>书生
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/11/03/library/" title="组件库">http://example.com/2021/11/03/library/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
 </ul>
-<ol start="2">
-<li>一旦状态改变就不会再变 （两种状态改变：成功或失败）</li>
-</ol>
-<ul>
-<li>Pending -&gt; Fulfilled</li>
-<li>Pending -&gt; Rejected</li>
-</ul>
-<h2 id="API"><a href="#API" class="headerlink" title="API"></a><i class="fa fa-tags"></i>API</h2><table>
-<thead>
-<tr>
-<th>方法</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Promise.prototype.then</td>
-<td>链式操作</td>
-</tr>
-<tr>
-<td>Promise.prototype.catch</td>
-<td>捕捉错误</td>
-</tr>
-<tr>
-<td>Promise.all</td>
-<td>入参是数组，成员为promise实例，仅当所有成员都是resolved，改方法的实例才是resolved</td>
-</tr>
-<tr>
-<td>Promise.race</td>
-<td>与all相对，可以理解为some</td>
-</tr>
-<tr>
-<td>Promise.resolve</td>
-<td>返回状态为resolved的实例</td>
-</tr>
-<tr>
-<td>Promise.reject</td>
-<td>返回状态为rejected的实例</td>
-</tr>
-</tbody></table>
-<h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a><i class="fa fa-tags"></i>模拟</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/01/promise/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AE%9E%E8%B7%B5/" rel="tag"># 实践</a>
+          </div>
+
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/13/chrome-plugin/" rel="prev" title="谷歌浏览器插件入门">
+                  <i class="fa fa-chevron-left"></i> 谷歌浏览器插件入门
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
@@ -1270,220 +609,7 @@ $ vue create // vue-cli --version: <span class="token number">3</span>.x <span c
 
 
 
-    
 
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/29/editor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/29/editor/" class="post-title-link" itemprop="url">模拟TextArea-踩坑记录</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-29 20:02:15" itemprop="dateCreated datePublished" datetime="2021-06-29T20:02:15+08:00">2021-06-29</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-06-30 17:55:18" itemprop="dateModified" datetime="2021-06-30T17:55:18+08:00">2021-06-30</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="思路提供"><a href="#思路提供" class="headerlink" title="思路提供"></a><i class="fa fa-tags"></i>思路提供</h2><ol>
-<li><p>原生 div + textarea ，通过调整系列样式，将div设置为透明色，以textarea所在外层div包裹,相对外层div绝对定位。</p>
-</li>
-<li><p>使用div+contentEditable属性，将div设置为可编辑状态</p>
-<p>ps: 在使用contentEditable属性时，可以放心大胆使用。IE在这里是最先支持的，</p>
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="left">属性</th>
-<th>Google</th>
-<th>IE</th>
-<th>Firefox</th>
-<th>Safari</th>
-<th>Opera</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">contentEditable</td>
-<td>11.0</td>
-<td>5.5</td>
-<td>3.0</td>
-<td>3.2</td>
-<td>10.6</td>
-</tr>
-</tbody></table>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a><i class="fa fa-tags"></i>实践</h2><h3 id="实践-‘思路一’"><a href="#实践-‘思路一’" class="headerlink" title="实践-‘思路一’"></a>实践-‘思路一’</h3><p>既然是踩坑，就先从第一条思路开始尝试</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/29/editor/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/28/hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/28/hexo/" class="post-title-link" itemprop="url">hexo</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-28 19:43:20" itemprop="dateCreated datePublished" datetime="2021-06-28T19:43:20+08:00">2021-06-28</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-11-03 20:44:06" itemprop="dateModified" datetime="2021-11-03T20:44:06+08:00">2021-11-03</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="从零开始搭建hexo-blog"><a href="#从零开始搭建hexo-blog" class="headerlink" title="从零开始搭建hexo blog"></a>从零开始搭建hexo blog</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a><i class="fa fa-tags"></i>准备环境</h2><ol>
-<li>安装node</li>
-<li>安装Git</li>
-<li>安装hexo 脚手架 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
-$ hexo -v<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
-</ol>
-<p><img src="/images/other/hexo/1.png" alt="version"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/28/hexo/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 </div>
   </main>
