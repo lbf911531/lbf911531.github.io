@@ -160,7 +160,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -289,6 +289,209 @@
 <li>[记录：渐变色] <a target="_blank" rel="noopener" href="https://www.grabient.com/">https://www.grabient.com/</a></li>
 <li>[记录：重装系统（镜像）] <a target="_blank" rel="noopener" href="https://msdn.itellyou.cn/">https://msdn.itellyou.cn/</a></li>
 </ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/11/editor-with-drop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/03/11/editor-with-drop/" class="post-title-link" itemprop="url">文本拖拽到可编辑区</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-03-11 14:34:18 / 修改时间：14:36:03" itemprop="dateCreated datePublished" datetime="2022-03-11T14:34:18+08:00">2022-03-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>关键字：wangEditor，原生drop</p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关于本文记录的起因是因为一个需求：</p>
+<p>后台接口返回的维值集合渲染到页面上；并要求通过拖拽方式，拖拽某一具体维值到可编辑区内，实现拖拽插入文本的需求；</p>
+<p>之所以是可编辑区，是因为，后续不光需要支持手动输入，且需高亮标识 <code>维值</code>和<code>公式</code>。</p>
+<p>此外，<strong>wangEditorv5版本</strong>官方在线demo，已经支持了拖拽插入文本的需求；因此本意是打算直接在React项目中引入 wangEditor就能解决该需求。</p>
+<p>但：</p>
+<h3 id="场景复现"><a href="#场景复现" class="headerlink" title="场景复现"></a>场景复现</h3><ol>
+<li>引入react-dnd 实现拖拽</li>
+<li>引入wangEditor实现编辑 （官方线上demo: <a target="_blank" rel="noopener" href="https://www.wangeditor.com/demo/zh-CN/%EF%BC%89">https://www.wangeditor.com/demo/zh-CN/）</a></li>
+</ol>
+<h3 id="实际结果"><a href="#实际结果" class="headerlink" title="实际结果"></a>实际结果</h3><p>维值的确被插入到了wangEditor中；</p>
+<p>但在拖拽到wangEditor编辑区内时，可以注意到，光标此时并不存在；更遑论光标跟随拖拽状态中的鼠标移动。（可以随便打开一个有input标签的网页，在input中随意输入一段文本，然后从其他地方选取并拖拽一段文本到input，就能看到input中是支持光标跟随鼠标移动的）</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>经过排查发现：</p>
+<p>如果不使用 React-Dnd的话，则不会出现该问题</p>
+<pre class="line-numbers language-react" data-language="react"><code class="language-react">&lt;DndProvider backend&#x3D;&#123;HTML5Backend&#125; context&#x3D;&#123;window&#125;&gt;
+    &lt;Row&gt;
+        &lt;Col span&#x3D;&#123;5&#125;&gt;
+           &#123;&#x2F;* 模型数据 *&#x2F;&#125;
+           &lt;ModelData dataSource&#x3D;&#123;modelDataSource&#125; &#x2F;&gt;
+        &lt;&#x2F;Col&gt;
+        &lt;Col span&#x3D;&#123;15&#125;&gt;
+           &#123;&#x2F;* 计算 *&#x2F;&#125;
+           &lt;VisualCalc ref&#x3D;&#123;formulaIns&#125; &#x2F;&gt;
+        &lt;&#x2F;Col&gt;
+        &lt;Col span&#x3D;&#123;4&#125;&gt;
+          &#123;&#x2F;* 公式 *&#x2F;&#125;
+          &lt;VisualFormula disabled&#x3D;&#123;disabled&#125; &#x2F;&gt;
+        &lt;&#x2F;Col&gt;
+    &lt;&#x2F;Row&gt;
+&lt;&#x2F;DndProvider&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>因此，采用原生drop API实现拖拽</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/tiy/t.asp?f=eg_html5_draganddrop">https://www.w3school.com.cn/tiy/t.asp?f=eg_html5_draganddrop</a></p>
+<h3 id="demo-html"><a href="#demo-html" class="headerlink" title="demo(html)"></a>demo(html)</h3><pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">HTML</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+   		 <span class="token selector">#div1</span> <span class="token punctuation">&#123;</span><span class="token property">width</span><span class="token punctuation">:</span>198px<span class="token punctuation">;</span> <span class="token property">height</span><span class="token punctuation">:</span>66px<span class="token punctuation">;</span><span class="token property">padding</span><span class="token punctuation">:</span>10px<span class="token punctuation">;</span><span class="token property">border</span><span class="token punctuation">:</span>1px solid #aaaaaa<span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+    </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+		<span class="token keyword">function</span> <span class="token function">drag</span><span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		    ev<span class="token punctuation">.</span>dataTransfer<span class="token punctuation">.</span><span class="token function">setData</span><span class="token punctuation">(</span><span class="token string">"Text"</span><span class="token punctuation">,</span>ev<span class="token punctuation">.</span>target<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    	<span class="token punctuation">&#125;</span>
+
+		<span class="token keyword">function</span> <span class="token function">drop</span><span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			ev<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"#editor-content"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerHTML <span class="token operator">+=</span> <span class="token number">444</span><span class="token punctuation">;</span>
+		<span class="token punctuation">&#125;</span>
+	</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+ <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+ <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>div1<span class="token punctuation">"</span></span> <span class="token attr-name">ondrop</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>drop(event)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+	 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">contenteditable</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>editor-content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/></span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>drag1<span class="token punctuation">"</span></span> <span class="token attr-name">draggable</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span> <span class="token attr-name">ondragstart</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>drag(event)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>被拖拽的数据源<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="demo-react"><a href="#demo-react" class="headerlink" title="demo(react)"></a>demo(react)</h3><pre class="line-numbers language-react" data-language="react"><code class="language-react">
+&#x2F;&#x2F; custom-draggable-item.js
+
+export default function DraggableItem(&#123; label, node, type &#125;) &#123;
+  &#x2F;**
+   * 监听拖拽开始的回调，设置数据
+   * @param &#123;*&#125; event
+   *&#x2F;
+  function dragStart(event) &#123;
+    const data &#x3D; &#123; ...node, children: undefined, valueType: type &#125;;
+    &#x2F;&#x2F; 用extra传值，用text设定允许拖拽放置，不能给空，否则不能放置，data数据放在text中
+    &#x2F;&#x2F; 会被wangEditor识别到自动插入到编辑区,因此改用 extra传值
+    &#x2F;&#x2F; 另外：Text 似乎是固定写法，必须有的  
+    event.dataTransfer.setData(&#39;Text&#39;, &#39; &#39;);
+    event.dataTransfer.setData(&#39;extra&#39;, JSON.stringify(data));
+  &#125;;
+
+  return (
+    &lt;span draggable onDragStart&#x3D;&#123;dragStart&#125;&gt;&#123;label&#125;&lt;&#x2F;span&gt;
+  )
+&#125;
+
+&#x2F;&#x2F; visiualCalc.js
+
+&#x2F;**
+ *如果对react-dnd熟悉的话，这边使用原生模拟：
+ * onDrop 就是 useDrop
+ * valueType 就是替代 accept的作用
+ *&#x2F;
+function onDrop(domEvent) &#123;
+    domEvent.preventDefault();
+    let data &#x3D; domEvent.dataTransfer.getData(&quot;extra&quot;);
+    data &#x3D; data ? JSON.parse(data) : null;
+    if (data &amp;&amp; [&#39;dimensionValue&#39;, &#39;formula&#39;, &#39;hierarchy&#39;].includes(data.valueType)) &#123;
+        &#x2F;&#x2F; 发布插入的动作，其实就是调用insertText方法而已
+        event.publish(data);
+    &#125;
+&#125;;
+
+ &lt;div onDrop&#x3D;&#123;onDrop&#125;&gt;
+     &lt;WangEditor
+        defaultValue&#x3D;&#123;editorValue&#125;
+        ref&#x3D;&#123;ref &#x3D;&gt; &#123; editorIns.current &#x3D; ref &#125;&#125;
+     &#x2F;&gt;
+&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><h3 id="draggable-”true”"><a href="#draggable-”true”" class="headerlink" title="draggable=”true”"></a>draggable=”true”</h3><p>设置 元素可拖拽</p>
+<p>注意：在React中要等于 字符串true，不要只写 draggable</p>
+<h3 id="event-dataTransfer-setData"><a href="#event-dataTransfer-setData" class="headerlink" title="event.dataTransfer.setData"></a>event.dataTransfer.setData</h3><p>用于设置值，方便在拖拽结束的那一瞬间，可以取到设置的值；（传递数据）</p>
+<p>setData(key:string, value:string)</p>
+<h3 id="event-dataTransfer-getData"><a href="#event-dataTransfer-getData" class="headerlink" title="event.dataTransfer.getData"></a>event.dataTransfer.getData</h3><p>用于接收 setData设置的值</p>
+<p>getData(key:string)</p>
+<h3 id="ondragstart"><a href="#ondragstart" class="headerlink" title="ondragstart"></a>ondragstart</h3><p>开始拖拽的回调，一般可在这里调用 event.dataTransfer.setData</p>
+<h3 id="ondrop"><a href="#ondrop" class="headerlink" title="ondrop"></a>ondrop</h3><p>拖拽项<strong>放置</strong>在可放置区时的回调，一般可在这调用event.dataTransfer.getData获取数据执行后续逻辑</p>
+<h3 id="ondragover"><a href="#ondragover" class="headerlink" title="ondragover"></a>ondragover</h3><p>拖拽项<strong>正处于</strong>可拖拽区时的回调，一般用法如下：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">allowDrag</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"#editor-content"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'dragover'</span><span class="token punctuation">,</span>allowDrag<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>注意：</p>
+<p>这里之所以取名叫 allowDrag 是因为：</p>
+<p>正常情况下，只有阻止了默认事件的 放置区才能允许 拖拽项放置</p>
+<p>但，个人在实现需求时发现：如果放置区是 input，textarea或者设置有 <code>contenteditable=true</code>的元素标签，不需要绑定该函数</p>
+<h2 id="额外发现"><a href="#额外发现" class="headerlink" title="额外发现"></a>额外发现</h2><p>拖拽时，文档聚焦对象也就是处于focus状态下的对象其实是你正拖拽的元素，</p>
+<p>而你可以通过 ondragover 函数，可以将document.activeElement改成你放置区的DOM元素（div#[‘editor-content’]）</p>
 
       
     </div>
@@ -1125,145 +1328,8 @@ $ vue create // vue-cli --version: <span class="token number">3</span>.x <span c
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/promise/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/01/promise/" class="post-title-link" itemprop="url">promise初探</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-01 18:38:51" itemprop="dateCreated datePublished" datetime="2021-07-01T18:38:51+08:00">2021-07-01</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:00:17" itemprop="dateModified" datetime="2021-07-02T10:00:17+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a><i class="fa fa-tags"></i>定义</h2><p>Promise 是异步编程的一种解决方案，比传统的解决方案——回调函数和事件——更合理且更强大。它最早由社区提出并实现，ES6将其写进了语言标准，统一了用法，并原生提供了Promise对象。</p>
-<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a><i class="fa fa-tags"></i>特点</h2><ol>
-<li>对象的状态不受外界影响 （3种状态）</li>
-</ol>
-<ul>
-<li>pending</li>
-<li>resolved</li>
-<li>rejected</li>
-</ul>
-<ol start="2">
-<li>一旦状态改变就不会再变 （两种状态改变：成功或失败）</li>
-</ol>
-<ul>
-<li>Pending -&gt; Fulfilled</li>
-<li>Pending -&gt; Rejected</li>
-</ul>
-<h2 id="API"><a href="#API" class="headerlink" title="API"></a><i class="fa fa-tags"></i>API</h2><table>
-<thead>
-<tr>
-<th>方法</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Promise.prototype.then</td>
-<td>链式操作</td>
-</tr>
-<tr>
-<td>Promise.prototype.catch</td>
-<td>捕捉错误</td>
-</tr>
-<tr>
-<td>Promise.all</td>
-<td>入参是数组，成员为promise实例，仅当所有成员都是resolved，改方法的实例才是resolved</td>
-</tr>
-<tr>
-<td>Promise.race</td>
-<td>与all相对，可以理解为some</td>
-</tr>
-<tr>
-<td>Promise.resolve</td>
-<td>返回状态为resolved的实例</td>
-</tr>
-<tr>
-<td>Promise.reject</td>
-<td>返回状态为rejected的实例</td>
-</tr>
-</tbody></table>
-<h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a><i class="fa fa-tags"></i>模拟</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/07/01/promise/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 </div>
@@ -1275,7 +1341,7 @@ $ vue create // vue-cli --version: <span class="token number">3</span>.x <span c
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
