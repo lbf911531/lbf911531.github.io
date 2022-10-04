@@ -2949,6 +2949,10 @@ body {
 .main u {
   color: #8b0000;
 }
+.main :not(pre) > code[class*="language-"],
+.main pre[class*="language-"] {
+  background: rgba(245,242,240,0.4);
+}
 footer {
   color: #333;
 }
