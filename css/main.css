@@ -3114,22 +3114,9 @@ mark.search-keyword {
   padding: 12px 0px;
   font-size: 24px;
   display: block;
-  border-bottom: 4px solid #4dd0e1;
 }
 .post-block .post-body h2 > i {
   margin-right: 0.5em;
-}
-.post-block .post-body h2::after {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 400px;
-  height: 10px;
-  border-top-right-radius: 24px;
-  background: linear-gradient(90deg, #fff, #4dd0e1);
-  max-width: 50vw;
 }
 .post-block .post-body h3 {
   width: max-content;
@@ -3164,9 +3151,7 @@ mark.search-keyword {
 .post-block .post-body a {
   color: #6439af;
 }
-.post-block .post-body a:hover {
-  background-color: rgba(100,57,175,0.2);
-}
+
 main .header-inner .site-brand-container {
   background-image: linear-gradient(54deg, #002051, #00eaf1);
 }
