@@ -160,20 +160,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -222,7 +222,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/promise/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/30/study/front/javascript/prototype/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -235,7 +235,958 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/01/promise/" class="post-title-link" itemprop="url">promise初探</a>
+          <a href="/2021/11/30/study/front/javascript/prototype/" class="post-title-link" itemprop="url">原型与原型链</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-11-30 21:21:36" itemprop="dateCreated datePublished" datetime="2021-11-30T21:21:36+08:00">2021-11-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 22:05:40" itemprop="dateModified" datetime="2022-10-03T22:05:40+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><p>规则一：</p>
+<p>​    每一个引用类型，都有一个属性<code>__proto__</code>，该属性值是一个普通的对象</p>
+<p>规则二：</p>
+<p>​    引用类型的<code>__proto__</code>属性指向该引用类型的构造函数的<code>prototype</code>属性，即</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+obj<span class="token punctuation">.</span>__proto__ <span class="token operator">===</span> <span class="token class-name">Object</span><span class="token punctuation">.</span>prototype<span class="token punctuation">;</span> <span class="token comment">// true</span>
+
+<span class="token keyword">var</span> <span class="token function-variable function">fnc</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+fnc<span class="token punctuation">.</span>__proto__ <span class="token operator">===</span> <span class="token class-name">Function</span><span class="token punctuation">.</span>prototype<span class="token punctuation">;</span> <span class="token comment">// true</span>
+
+<span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+arr<span class="token punctuation">.</span>__proto__ <span class="token operator">===</span> <span class="token class-name">Array</span><span class="token punctuation">.</span>prototype<span class="token punctuation">;</span> <span class="token comment">// true</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>规则三：</p>
+<p> 当试图获取对象的某个属性时，如果这个对象本身没有这个属性，那么它会去它的隐式原型 <code>__proto__</code>（也就是它的构造函数的显式原型 <code>prototype</code>）中寻找 </p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Number</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+num<span class="token punctuation">.</span><span class="token class-name">__proto__</span><span class="token punctuation">.</span>constructor <span class="token operator">===</span> num<span class="token punctuation">.</span>constructor<span class="token punctuation">;</span> <span class="token comment">// true</span>
+<span class="token comment">// 也可以说是： num上不存在constructor属性，转而去num的构造方法Number的原型上去找</span>
+<span class="token operator">==</span><span class="token operator">></span> num<span class="token punctuation">.</span><span class="token class-name">__proto__</span><span class="token punctuation">.</span>constructor <span class="token operator">===</span> <span class="token class-name">Number</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>constructor<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h2><p>举个例子：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token punctuation">,</span>age</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token function">growUp</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>  
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">var</span> 张三 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">"法外狂徒张三"</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+张三<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "[object Object]";</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到实例<code>张三</code>调用<code>toString</code>，但该方法其实并未在Person中定义。(现象一)</p>
+<p>通过追溯：</p>
+<ol>
+<li><p>实例中无法访问的属性，首先转化成去该实例的构造方法中查找，也就是：</p>
+<p><code>Person.prototype</code></p>
+<p>然而打印结果：{constructor: ƒ, growUp: ƒ}</p>
+<p>不存在 toString，即现象一；</p>
+</li>
+<li><p>但，构造方法的原型本身也是一个对象，（而对象都有一个构造方法<code>Object</code>），因此该对象也会存在<code>__proto__</code>属性，继而：</p>
+<p><code>Person.prototype.__proto__</code></p>
+<p>打印结果：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token punctuation">&#123;</span>
+  constructor<span class="token operator">:</span> ƒ <span class="token function">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  toString<span class="token operator">:</span> ƒ <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  __proto__<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token operator">...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>而改结果又和 <code>Object.prototype</code> 一致，</p>
+<p>因此综合上述说法，可以得出以下结论：</p>
+<p>张三.toString()</p>
+<p>===&gt; <code>Person.prototype.__proto__.toString</code></p>
+<p>===&gt; <code>Object.prototype.toString</code></p>
+<p>形成一条原型链</p>
+</li>
+<li><p>此外，<code>Object.prototype.__proto__</code> === <code>null</code>,也可以说明，引用类型的原型链的终端最终是<code>null</code>（ 设计上是为了避免死循环而设置的 ）</p>
+</li>
+</ol>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>由上，最终再简单总结：</p>
+<ul>
+<li>prototype 是构造方法才有的属性</li>
+<li><code>__proto__</code>是构造方法的实例（每个对象） 具有的属性</li>
+<li>所有的<code>__proto__</code>都将指向构造方法的<code>prototype</code></li>
+<li>通过层层指向，最终形成原型链，而基于原型链，可以继承来自上层的方法，或者重写</li>
+<li><code>__proto__</code>是浏览器为了方便我们找到 <u>当前实例</u> 的 <u>构造函数的原型</u>而加的一个属性</li>
+</ul>
+<p>额外补充：</p>
+<p>张三.contructor === Person;</p>
+<p>Person.constructor === Function;</p>
+<p>Object.constructor === Function;</p>
+<p>obj.constructor === Object;</p>
+<p>Object.constructor === Function;</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/23/study/server/node/node_require/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/08/23/study/server/node/node_require/" class="post-title-link" itemprop="url">node中require语句的第一次学习</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-08-23 22:16:55" itemprop="dateCreated datePublished" datetime="2021-08-23T22:16:55+08:00">2021-08-23</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 22:03:45" itemprop="dateModified" datetime="2022-10-03T22:03:45+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>NodeJS模块使用的CommonJS格式，模块通过require语句加载</p>
+<p>在了解require之前，先记录一下commonjs相关概念：</p>
+<h2 id="1-CommonJS"><a href="#1-CommonJS" class="headerlink" title="1. CommonJS"></a>1. CommonJS</h2><h3 id="1-1-简要"><a href="#1-1-简要" class="headerlink" title="1.1 简要"></a>1.1 简要</h3><p>每一个文件就是一个模块，拥有自己独立的作用域，变量，方法，对其他模块不可见，从而避免全局污染。CommonJS规范有规定：模块内部，module变量（对象）代表当前模块，其exports属性是对外接口。执行require语句时，其实是加载module.exports属性。</p>
+<h3 id="1-2-export变量"><a href="#1-2-export变量" class="headerlink" title="1.2 export变量"></a>1.2 export变量</h3><p>node为每一个模块提供了一个exports变量(可以说是一个对象)，指向 module.exports。这相当于每个模块中都有一句这样的命令:</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> exports <span class="token operator">=</span> module<span class="token punctuation">.</span>exports<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<h2 id="2-require源码"><a href="#2-require源码" class="headerlink" title="2. require源码"></a>2. require源码</h2><p>调试： </p>
+<ol>
+<li><p>命令搭建一个简单的node项目</p>
+</li>
+<li><p>创建js文件</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">debugger</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> demo <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./index"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">debugger</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>demo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// ./index</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">123</span><span class="token punctuation">;</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">&#123;</span> a <span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>借助vscode 的debug调试工具</p>
+</li>
+</ol>
+<h3 id="2-1-Module-prototype-require"><a href="#2-1-Module-prototype-require" class="headerlink" title="2.1 Module.prototype.require"></a>2.1 Module.prototype.require</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// /internal/modules/cjs/loader.js</span>
+
+<span class="token comment">// Loads a module at the given file path. Returns that module's</span>
+<span class="token comment">// `exports` property.</span>
+<span class="token class-name">Module</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">require</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// typeof value !== 'string',这里只是判断 id的值是否是字符串，否则抛出错误。</span>
+  <span class="token function">validateString</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token string">'id'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">===</span> <span class="token string">''</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ERR_INVALID_ARG_VALUE</span><span class="token punctuation">(</span><span class="token string">'id'</span><span class="token punctuation">,</span> id<span class="token punctuation">,</span><span class="token string">'must be a non-empty string'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 关键代码： 定义在原型链上的require方法其实质是调用了Module._load方法</span>
+  <span class="token keyword">return</span> Module<span class="token punctuation">.</span><span class="token function">_load</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token comment">/* isMain */</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-2-Module-load"><a href="#2-2-Module-load" class="headerlink" title="2.2 Module._load:"></a>2.2 Module._load:</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// internal/modules/cjs/loader.js</span>
+
+<span class="token comment">// Check the cache for the requested file.   检查请求文件的缓存。</span>
+<span class="token comment">// 1. If a module already exists in the cache: return its exports object.</span>
+<span class="token comment">//    如果一个模块已经存在于缓存中:返回它的exports对象。</span>
+<span class="token comment">// 2. If the module is native: call `NativeModule.require()` with the</span>
+<span class="token comment">//    filename and return the result.</span>
+<span class="token comment">//    如果模块是原生模块:根据文件名调用' nativmodule .require()`，并返回结果。</span>
+<span class="token comment">// 3. Otherwise, create a new module for the file and save it to the cache.</span>
+<span class="token comment">//    Then have it load  the file contents before returning its exports</span>
+<span class="token comment">//    object.</span>
+<span class="token comment">//    否则，为文件创建一个新模块并将其保存到缓存中。然后让它在返回它的导出之前加载文件内容对象。</span>
+Module<span class="token punctuation">.</span><span class="token function-variable function">_load</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> parent<span class="token punctuation">,</span> isMain</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// ...</span>
+  <span class="token comment">// 这里的request就是上方函数的id，也就是 文件路径，“./index”; </span>
+  <span class="token comment">// 从方法名可以推知：此处根据路径，解析require需要的文件名的方法</span>
+ <span class="token keyword">var</span> filename <span class="token operator">=</span> Module<span class="token punctuation">.</span><span class="token function">_resolveFilename</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> parent<span class="token punctuation">,</span> isMain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">// .... 具体代码片段： 2.4 ,2.5 ,2.6</span>
+ <span class="token keyword">if</span> <span class="token punctuation">(</span>isMain<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    process<span class="token punctuation">.</span>mainModule <span class="token operator">=</span> module<span class="token punctuation">;</span>
+    module<span class="token punctuation">.</span>id <span class="token operator">=</span> <span class="token string">'.'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 缓存</span>
+  Module<span class="token punctuation">.</span>_cache<span class="token punctuation">[</span>filename<span class="token punctuation">]</span> <span class="token operator">=</span> module<span class="token punctuation">;</span>
+
+  <span class="token function">tryModuleLoad</span><span class="token punctuation">(</span>module<span class="token punctuation">,</span> filename<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-3-Module-resolveFilename"><a href="#2-3-Module-resolveFilename" class="headerlink" title="2.3 Module._resolveFilename"></a>2.3 Module._resolveFilename</h3><p>暂时跳过 load方法后续代码，进入resolveFilename ；简化该方法后就是以下代码块：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">Module<span class="token punctuation">.</span><span class="token function-variable function">_resolveFilename</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> parent<span class="token punctuation">,</span> isMain<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// ...</span>
+  <span class="token keyword">var</span> paths<span class="token punctuation">;</span>
+  <span class="token comment">// ...</span>
+  <span class="token comment">// paths:  数组，内存的是 request 父级路径，这里debug以后是 </span>
+  <span class="token comment">// ["d:\study-front\project\node-express-test\demo"]</span>
+  <span class="token keyword">var</span> filename <span class="token operator">=</span> Module<span class="token punctuation">.</span><span class="token function">_findPath</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> paths<span class="token punctuation">,</span> isMain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// ...</span>
+  <span class="token keyword">return</span> filename<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> 进入findPath方法：</p>
+<p>该函数本质上，即处理完整的 绝对路径。</p>
+<ol>
+<li><p>Module._pathCache[cacheKey]：  先从缓存中读取，如果没有则继续往下 </p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">Module<span class="token punctuation">.</span><span class="token function-variable function">_findPath</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> paths<span class="token punctuation">,</span> isMain</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//...</span>
+    <span class="token keyword">var</span> entry <span class="token operator">=</span> Module<span class="token punctuation">.</span>_pathCache<span class="token punctuation">[</span>cacheKey<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  	<span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">)</span> <span class="token keyword">return</span> entry<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>判断需要模块路径是否以/结尾，如果不是，则要判断 :</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> trailingSlash <span class="token operator">=</span> request<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span>
+    request<span class="token punctuation">.</span><span class="token function">charCodeAt</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token constant">CHAR_FORWARD_SLASH</span><span class="token punctuation">;</span>
+<span class="token comment">// CHAR_FORWARD_SLASH = 47,也就是 " / " ;( "/".charCodeAt()===47 )</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>trailingSlash<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    trailingSlash <span class="token operator">=</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">(?:^|\/)\.?\.$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// For each path</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> paths<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 循环</span>
+    <span class="token comment">// Don't search further if path doesn't exist</span>
+    <span class="token keyword">const</span> curPath <span class="token operator">=</span> paths<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>curPath <span class="token operator">&amp;&amp;</span> <span class="token function">stat</span><span class="token punctuation">(</span>curPath<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> basePath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>curPath<span class="token punctuation">,</span> request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// basePath: d:\study-front\project\node-express-test\demo\index</span>
+    <span class="token keyword">var</span> filename<span class="token punctuation">;</span>
+    <span class="token keyword">var</span> rc <span class="token operator">=</span> <span class="token function">stat</span><span class="token punctuation">(</span>basePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>trailingSlash<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">// ... 2.1</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>filename<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 2.2</span>
+        <span class="token comment">// try it with each of the extensions</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>exts <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> exts <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>Module<span class="token punctuation">.</span>_extensions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        filename <span class="token operator">=</span> <span class="token function">tryExtensions</span><span class="token punctuation">(</span>basePath<span class="token punctuation">,</span> exts<span class="token punctuation">,</span> isMain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// </span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>filename <span class="token operator">&amp;&amp;</span> rc <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  <span class="token comment">// Directory. // 2.3</span>
+ <span class="token comment">// try it with each of the extensions at "index"</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>exts <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> exts <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>Module<span class="token punctuation">.</span>_extensions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ filename <span class="token operator">=</span> <span class="token function">tryPackage</span><span class="token punctuation">(</span>basePath<span class="token punctuation">,</span> exts<span class="token punctuation">,</span> isMain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>filename<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token comment">// 2.4 </span>
+        filename <span class="token operator">=</span> <span class="token function">tryExtensions</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>basePath<span class="token punctuation">,</span> <span class="token string">'index'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> exts<span class="token punctuation">,</span> isMain<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token punctuation">&#125;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>filename<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Module<span class="token punctuation">.</span>_pathCache<span class="token punctuation">[</span>cacheKey<span class="token punctuation">]</span> <span class="token operator">=</span> filename<span class="token punctuation">;</span> <span class="token comment">// 2.5</span>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>2.1.  判断当前路径是否是 <code>文件</code>，如果是，则先调用<code>toRealPath</code>转化真实的路径</p>
+<p>2.2.  如果没有读到路径上的文件，则通过<code>tryExtensions</code>尝试在该路径后依次加上<code>.js</code>，<code>.json</code>和<code>.node</code>后缀，判断是否存在，若存在则返回加上后缀后的路径 </p>
+<p>2.3.  如果是一个目录，则调用tryPackage方法读取该目录下的package.json文件，把里面的main属性设置为filename；如果缺少扩展名，则进入 <code>tryExtensions</code>，尝试拼接后缀，判断是否存在</p>
+<p>2.4.  当<code>main</code>指定的文件有误时，或不存在<code>package.json</code>文件，则将<code>index</code>作为默认文件名，依次拼接后缀</p>
+<p>2.5.  如果没找到则进入下一次的循环，继续查找</p>
+<p>2.6.  若解析成功，则把解析得到的文件名cache起来，下次require就不用再次解析了，否则若解析失败，则返回false ,对应了上方 步骤1</p>
+<hr>
+<p>简而言之：</p>
+<ol>
+<li>判断当前路径是否是文件</li>
+<li>是，则确定后缀，若无后缀则尝试依次拓展<code>.js</code>,<code>.json</code>,<code>.node</code></li>
+<li>否，则查找<code>package.json</code>的<code>main</code>属性；若<code>main</code>的值有误，则尝试将<code>index</code>当作文件名</li>
+</ol>
+<p>由此，重新回到 load 方法中，继续执行:，<code>查找缓存</code>，<code>判断是否内部模块</code>，<code>未被缓存的模块执行new Module</code></p>
+</li>
+</ol>
+<h3 id="2-4-查找缓存"><a href="#2-4-查找缓存" class="headerlink" title="2.4 查找缓存"></a>2.4 查找缓存</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 从缓存中读取 filename对应的modlue</span>
+<span class="token keyword">var</span> cachedModule <span class="token operator">=</span> Module<span class="token punctuation">.</span>_cache<span class="token punctuation">[</span>filename<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>cachedModule<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">updateChildren</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> cachedModule<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> cachedModule<span class="token punctuation">.</span>exports<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-5-判断是否是内部模块"><a href="#2-5-判断是否是内部模块" class="headerlink" title="2.5 判断是否是内部模块"></a>2.5 判断是否是内部模块</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 判断是不是内置模块，是的话 就exports</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>NativeModule<span class="token punctuation">.</span><span class="token function">nonInternalExists</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">'load native module %s'</span><span class="token punctuation">,</span> request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">return</span> NativeModule<span class="token punctuation">.</span><span class="token function">require</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-6-new-Module"><a href="#2-6-new-Module" class="headerlink" title="2.6 new Module"></a>2.6 new Module</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// // Don't call updateChildren(), Module constructor already does.</span>
+<span class="token comment">// 到此：说明这个模块没有缓存过，因此new 一个</span>
+<span class="token keyword">var</span> module <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Module</span><span class="token punctuation">(</span>filename<span class="token punctuation">,</span> parent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// ...</span>
+<span class="token keyword">function</span> <span class="token function">Module</span><span class="token punctuation">(</span><span class="token parameter">id<span class="token punctuation">,</span> parent</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span> <span class="token comment">// 绝对路径</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>parent <span class="token operator">=</span> parent<span class="token punctuation">;</span>
+  <span class="token function">updateChildren</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>filename <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>loaded <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>children <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-7-tryModuleLoad-moudle-load"><a href="#2-7-tryModuleLoad-moudle-load" class="headerlink" title="2.7 tryModuleLoad/moudle.load"></a>2.7 tryModuleLoad/moudle.load</h3><p>2.3 中倒数第二行代码执行<code>tryModuleLoad</code>方法，而该方法又调用了<code>moduel.load</code>，因此：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token class-name">Module</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">load</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">filename</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// ...</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>paths <span class="token operator">=</span> Module<span class="token punctuation">.</span><span class="token function">_nodeModulePaths</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">dirname</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 计算文件名后缀，</span>
+  <span class="token keyword">var</span> extension <span class="token operator">=</span> <span class="token function">findLongestRegisteredExtension</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 默认值： “.js”</span>
+  <span class="token comment">// 根据不同的后缀去调用不同的加载方法 (下方代码采用了策略模式)</span>
+  Module<span class="token punctuation">.</span>_extensions<span class="token punctuation">[</span>extension<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> filename<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">/*
+   * 这里以 js加载方式为例：
+   * Module._extensions['.js'] = function(module, filename) &#123;
+   *   var content = fs.readFileSync(filename, 'utf8'); fs模块。返回buffer
+   *   这里的方法可以看成最后会处理出一个格式如下的函数  
+   *   '(function (exports, require, module, __filename, __dirname) &#123;&#125;);'
+   *   module._compile(stripBOM(content), filename);
+   * &#125;
+   */</span>
+   <span class="token comment">// ... 执行</span>
+   <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-8-总结"><a href="#2-8-总结" class="headerlink" title="2.8 总结"></a>2.8 总结</h3><ol>
+<li> 读取文件</li>
+<li> 读取到文件以后给文件包装一个函数</li>
+<li> 函数格式function (exports,module,require,_dirname,filename){}</li>
+<li> 调用 <code>inspectorWrapper</code> 或者<code>compiledWrapper</code> 执行</li>
+</ol>
+<p>ps: 由源码中可得知，require的实现，底层依赖了 <code>fs</code>,<code>path</code>模块。</p>
+<h2 id="3-参考链接"><a href="#3-参考链接" class="headerlink" title="3. 参考链接"></a>3. 参考链接</h2><p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/05/require.html">http://www.ruanyifeng.com/blog/2015/05/require.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/609489e8c929">https://www.jianshu.com/p/609489e8c929</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/JavaScriptnoob1/blog/issues/4">https://github.com/JavaScriptnoob1/blog/issues/4</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6966967728296">https://juejin.cn/post/6966967728296</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/13/study/front/interest/chrome_plugin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/13/study/front/interest/chrome_plugin/" class="post-title-link" itemprop="url">学习制作一款简单的谷歌插件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-13 21:20:11" itemprop="dateCreated datePublished" datetime="2021-07-13T21:20:11+08:00">2021-07-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 16:26:24" itemprop="dateModified" datetime="2022-10-03T16:26:24+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="manifest-json-入口文件"><a href="#manifest-json-入口文件" class="headerlink" title="manifest.json(入口文件)"></a>manifest.json(入口文件)</h2><ul>
+<li>browser_action指定扩展的图标放在Chrome的工具栏中</li>
+<li>browser_action中的default_icon属性定义了相应图标文件的位置</li>
+<li>default_title定义了当用户鼠标悬停于扩展图标上所显示的文字</li>
+<li>default_popup则定义了当用户单击扩展图标时所显示页面的文件位置。</li>
+<li> name 定义plug的名字</li>
+<li> version 定义了plug的版本</li>
+<li> icons 定义了plug相关图标文件的位置</li>
+<li> manifest_version则用整数表示manifest文件自身格式的版本号。目前为止只接受 2 （版本目前为2）
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/13/study/front/interest/chrome_plugin/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/study/front/frame/vue/basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/12/study/front/frame/vue/basic/" class="post-title-link" itemprop="url">关于Vue入门的一些基本知识记录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-12 20:56:45" itemprop="dateCreated datePublished" datetime="2021-07-12T20:56:45+08:00">2021-07-12</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 17:00:56" itemprop="dateModified" datetime="2022-10-03T17:00:56+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> --global vue-cli
+$ vue init // vue-cli --version: <span class="token number">2</span>.x 
+$ vue create // vue-cli --version: <span class="token number">3</span>.x <span class="token punctuation">[</span>init/create 任选<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><table>
+<thead>
+<tr>
+<th>API</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beforeCreate</td>
+<td>创建前</td>
+</tr>
+<tr>
+<td>created</td>
+<td>创建后</td>
+</tr>
+<tr>
+<td>beforeMount</td>
+<td>组件挂载前</td>
+</tr>
+<tr>
+<td>mounted</td>
+<td>组件挂载后</td>
+</tr>
+<tr>
+<td>beforeUpdate</td>
+<td>组件修改前,发生在虚拟 DOM 打补丁之前</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>组件数据更新之后</td>
+</tr>
+<tr>
+<td>beforeDestory</td>
+<td>组件销毁前</td>
+</tr>
+<tr>
+<td>destoryed</td>
+<td>组件销毁后</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/12/study/front/frame/vue/basic/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/05/study/front/javascript/lazy_load/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/05/study/front/javascript/lazy_load/" class="post-title-link" itemprop="url">图片的懒加载</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-05 20:14:47" itemprop="dateCreated datePublished" datetime="2021-07-05T20:14:47+08:00">2021-07-05</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 16:30:23" itemprop="dateModified" datetime="2022-10-03T16:30:23+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>图片懒加载本质上是延迟请求图片资源， 一种网页性能优化的方式 。一般的网站，比如电商， 一张图片超过几兆是普遍现象。如果每次进入页面就请求所有的图片资源，那么可能等图片加载出来用户也早就走了。所以，我们需要懒加载，进入页面的时候，只请求可视区域的图片资源。 </p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/05/study/front/javascript/lazy_load/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/02/study/front/interest/v8_array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/02/study/front/interest/v8_array/" class="post-title-link" itemprop="url">取数array[0]与array[10000000]的性能差异</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-02 10:53:44" itemprop="dateCreated datePublished" datetime="2021-07-02T10:53:44+08:00">2021-07-02</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 17:09:33" itemprop="dateModified" datetime="2022-10-03T17:09:33+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="题目：数组-100万个成员的数组取第一个和最后一个有性能差距吗"><a href="#题目：数组-100万个成员的数组取第一个和最后一个有性能差距吗" class="headerlink" title="题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?"></a>题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?</h2><p>答： 基本没有</p>
+<h2 id="理由"><a href="#理由" class="headerlink" title="理由"></a>理由</h2><pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
+
+JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>由上述问题，引发关于数组底层实现的概念介绍：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/02/study/front/interest/v8_array/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/02/study/front/javascript/uri_or_url/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/02/study/front/javascript/uri_or_url/" class="post-title-link" itemprop="url">分不清的uri和url</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-02 10:34:51" itemprop="dateCreated datePublished" datetime="2021-07-02T10:34:51+08:00">2021-07-02</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 17:11:44" itemprop="dateModified" datetime="2022-10-03T17:11:44+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="从语义上区分"><a href="#从语义上区分" class="headerlink" title="从语义上区分"></a><i class="fa fa-tags"></i>从语义上区分</h2><p>URI：全称<code>Uniform Resource Identifier</code>，是统一资源标识符</p>
+<p>URL：全程<code>Uniform Resource Locator</code>，是统一资源定位符</p>
+<p>前者类似于一个id或者说是身份证一类的东西， 后者则偏向于文件路径一类；</p>
+<p>但二者同时指向的都是一个东西。只不过这个东西（资源）有两个唯一性属性，一个是id，一个是位置。我们无论用哪个属性，都能具体确定到当前资源。</p>
+<p>因此可以说 URL是URI的一个子集。</p>
+<p><img src="/images/es/url.png" alt="img"> </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/02/study/front/javascript/uri_or_url/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/01/study/front/javascript/promise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/01/study/front/javascript/promise/" class="post-title-link" itemprop="url">ES6 promise的模拟</a>
         </h2>
 
         <div class="post-meta-container">
@@ -255,7 +1206,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:00:17" itemprop="dateModified" datetime="2021-07-02T10:00:17+08:00">2021-07-02</time>
+        <time title="修改时间：2022-10-03 16:30:51" itemprop="dateModified" datetime="2022-10-03T16:30:51+08:00">2022-10-03</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -328,7 +1279,7 @@
 <h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a><i class="fa fa-tags"></i>模拟</h2>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/07/01/promise/#more" rel="contents">
+              <a class="btn" href="/2021/07/01/study/front/javascript/promise/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -359,7 +1310,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/29/editor/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/29/study/front/javascript/rough_editor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -372,7 +1323,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/29/editor/" class="post-title-link" itemprop="url">模拟TextArea-踩坑记录</a>
+          <a href="/2021/06/29/study/front/javascript/rough_editor/" class="post-title-link" itemprop="url">一次粗糙的editor模拟实现历程</a>
         </h2>
 
         <div class="post-meta-container">
@@ -392,7 +1343,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-06-30 17:55:18" itemprop="dateModified" datetime="2021-06-30T17:55:18+08:00">2021-06-30</time>
+        <time title="修改时间：2022-10-03 16:52:38" itemprop="dateModified" datetime="2022-10-03T16:52:38+08:00">2022-10-03</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -441,10 +1392,10 @@
 <td>10.6</td>
 </tr>
 </tbody></table>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a><i class="fa fa-tags"></i>实践</h2><h3 id="实践-‘思路一’"><a href="#实践-‘思路一’" class="headerlink" title="实践-‘思路一’"></a>实践-‘思路一’</h3><p>既然是踩坑，就先从第一条思路开始尝试</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a><i class="fa fa-tags"></i>实践</h2><h3 id="实践-‘思路一’"><a href="#实践-‘思路一’" class="headerlink" title="实践-‘思路一’"></a>实践-‘思路一’</h3>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/06/29/editor/#more" rel="contents">
+              <a class="btn" href="/2021/06/29/study/front/javascript/rough_editor/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -475,7 +1426,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/28/hexo/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/28/study/front/interest/blog/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -488,7 +1439,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/28/hexo/" class="post-title-link" itemprop="url">hexo</a>
+          <a href="/2021/06/28/study/front/interest/blog/" class="post-title-link" itemprop="url">page</a>
         </h2>
 
         <div class="post-meta-container">
@@ -508,7 +1459,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-11-03 20:44:06" itemprop="dateModified" datetime="2021-11-03T20:44:06+08:00">2021-11-03</time>
+        <time title="修改时间：2022-10-03 17:08:08" itemprop="dateModified" datetime="2022-10-03T17:08:08+08:00">2022-10-03</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -536,717 +1487,10 @@
 <li>安装hexo 脚手架 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
 $ hexo -v<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
 </ol>
-<p><img src="/images/other/hexo/1.png" alt="version"></p>
+<p><img src="/images/interest/blog1.png" alt="version"></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/06/28/hexo/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/front-listen/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/front-listen/" class="post-title-link" itemprop="url">前端性能监控初探</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 21:29:05" itemprop="dateCreated datePublished" datetime="2021-06-27T21:29:05+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-采集相关信息"><a href="#1-采集相关信息" class="headerlink" title="1. 采集相关信息"></a>1. 采集相关信息</h2><ul>
-<li><p>环境信息： </p>
-<ul>
-<li>url:  window.location.href （当前页面）</li>
-<li>ua: window.navigator.userAgent （ userAgent信息，包含操作系统和浏览器的类型、版本等 ）</li>
-<li>token信息</li>
-</ul>
-</li>
-<li><p>性能信息</p>
-<ul>
-<li>​    window.performance </li>
-</ul>
-<p><img src="/images/front-listen/timing.png" alt="1607391878316"></p>
-</li>
-</ul>
-<p>window.performance 下的timing属性记录了重定向，DNS解析，TCP连接，SSL连接，资源加载，数据传输，TTFB网络请求耗时的相关起止时间戳。</p>
-<p>公式：</p>
-<table>
-<thead>
-<tr>
-<th>指标</th>
-<th>计算</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>重定向耗时</td>
-<td>redirectEnd - redirectStartDNS</td>
-</tr>
-<tr>
-<td>解析耗时</td>
-<td>domainLookupEnd - domainLookupStartTCP</td>
-</tr>
-<tr>
-<td>连接耗时</td>
-<td>connectEnd - connectStartSSL</td>
-</tr>
-<tr>
-<td>连接耗时</td>
-<td>connectEnd - secureConnectionStartTTFB</td>
-</tr>
-<tr>
-<td>网络请求耗时</td>
-<td>responseStart - requestStart</td>
-</tr>
-<tr>
-<td>数据传输耗时</td>
-<td>responseEnd - responseStart</td>
-</tr>
-<tr>
-<td>资源加载耗时</td>
-<td>loadEventStart - domContentLoadedEventEnd</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>语法错误</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">listenerError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>localName<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是资源错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是代码错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-<span class="token comment">// window.addEventListener('error') 比window.onError先执行，它可以全局捕获资源加载错误，但不能通过返回true的方式阻止执行默认事件处理函数</span>
-
- <span class="token keyword">function</span> <span class="token function">listenerPromiseError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'unhandledrejection'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是Promise场景中错误'</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span>
-<span class="token comment">// Promise场景的处理方式有所不同，当Promise被reject且没有reject处理器的时候，会触发unhandlerejection事件，所以通过监听unhandlerejection的事件来捕获错误。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/proxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/proxy/" class="post-title-link" itemprop="url">proxy</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 21:27:42" itemprop="dateCreated datePublished" datetime="2021-06-27T21:27:42+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:00:44" itemprop="dateModified" datetime="2021-07-02T10:00:44+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="Proxy-和-Object-defineProperty"><a href="#Proxy-和-Object-defineProperty" class="headerlink" title="Proxy 和 Object.defineProperty"></a>Proxy 和 Object.defineProperty</h1><h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a><i class="fa fa-tags"></i>导言</h2><p>Proxy来自于es6</p>
-<p>Object.defineProperty 来自于es5</p>
-<p>二者本质都是通过 对象的 set , get 方法实现中间拦截处理。vue的双向数据绑定可以说是基于这个特性实现的。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a><i class="fa fa-tags"></i>使用</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/proxy/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/iterator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/iterator/" class="post-title-link" itemprop="url">iterator and Generator</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 21:26:15" itemprop="dateCreated datePublished" datetime="2021-06-27T21:26:15+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:00:03" itemprop="dateModified" datetime="2021-07-02T10:00:03+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="Iterator和Generator"><a href="#Iterator和Generator" class="headerlink" title="Iterator和Generator"></a>Iterator和Generator</h1><h2 id="Iterator遍历器对象"><a href="#Iterator遍历器对象" class="headerlink" title="Iterator遍历器对象"></a><i class="fa fa-tags"></i>Iterator遍历器对象</h2><p>ES6 规定，默认的 Iterator 接口部署在数据结构的 <strong>Symbol.iterator</strong> 属性，或者说，一个数据结构只要具有<strong>Symbol.iterator</strong>属性，就可以认为是“可遍历的”（iterable）。<strong>Symbol.iterator</strong> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数。调用这个函数时，每次都会返回一个迭代器。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/iterator/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/react-diff/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/react-diff/" class="post-title-link" itemprop="url">fiber and diff初探</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 20:36:32" itemprop="dateCreated datePublished" datetime="2021-06-27T20:36:32+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="react-fiber简介及15，16两版本Diff"><a href="#react-fiber简介及15，16两版本Diff" class="headerlink" title="react-fiber简介及15，16两版本Diff"></a>react-fiber简介及15，16两版本Diff</h1><h2 id="fiber"><a href="#fiber" class="headerlink" title="fiber"></a><i class="fa fa-tags"></i>fiber</h2><p>React 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权]</p>
-<p>因此React 16对底层做了一次重构：</p>
-<ol>
-<li>首先是基于虚拟DOM树，采用链表形式构建了一颗fiber树</li>
-</ol>
-<p>  <img src="/images/diff/1616311309865.png" alt="1616311309865"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/react-diff/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/v8-array/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/v8-array/" class="post-title-link" itemprop="url">v8-array数组底层实现</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 20:25:30" itemprop="dateCreated datePublished" datetime="2021-06-27T20:25:30+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>题目：数组: 100万个成员的数组取第一个和最后一个有性能差距吗?</p>
-<p>答： 基本没有</p>
-<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">数组可以直接根据索引取的对应的元素，所以不管取哪个位置的元素的时间复杂度都是 O(1)
-
-JavaScript 没有真正意义上的数组，所有的数组其实是对象，其“索引”看起来是数字，其实会被转换成字符串，作为属性名（对象的 key）来使用。所以无论是取第 1 个还是取第 10 万个元素，都是用 key 精确查找哈希表的过程，其消耗时间大致相同。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<p>由上述问题，引发关于数组底层实现的概念介绍：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/v8-array/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/URL-and-URI/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/URL-and-URI/" class="post-title-link" itemprop="url">URL-and-URI</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 20:23:15" itemprop="dateCreated datePublished" datetime="2021-06-27T20:23:15+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:53:54" itemprop="dateModified" datetime="2021-07-02T10:53:54+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="从语义上区分"><a href="#从语义上区分" class="headerlink" title="从语义上区分"></a>从语义上区分</h2><p>URI：全称<code>Uniform Resource Identifier</code>，是统一资源标识符</p>
-<p>URL：全程<code>Uniform Resource Locator</code>，是统一资源定位符</p>
-<p>前者类似于一个id或者说是身份证一类的东西， 后者则偏向于文件路径一类，但二者同时指向的都是一个东西。只不过这个东西（资源）有两个唯一性属性，一个是id，一个是位置。我们无论用哪个属性，都能具体确定到当前资源。因此可以说 URL是URI的一个子集。</p>
-<p> <img src="/images/URL-and-URI/url.png" alt="img"> </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/URL-and-URI/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/react-router/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="书生">
-      <meta itemprop="description" content="博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="埋书小楼">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/27/react-router/" class="post-title-link" itemprop="url">react-router</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-
-  
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-06-27 19:25:24" itemprop="dateCreated datePublished" datetime="2021-06-27T19:25:24+08:00">2021-06-27</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-02 10:01:37" itemprop="dateModified" datetime="2021-07-02T10:01:37+08:00">2021-07-02</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> react-router-dom<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1.基本使用"></a>1.基本使用</h2><p>ReactRouter提供了以下三种基本组件，通过这三种组件组合使用，可以编写一个简单的路由跳转：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/27/react-router/#more" rel="contents">
+              <a class="btn" href="/2021/06/28/study/front/interest/blog/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1296,7 +1540,6 @@ JavaScript 没有真正意义上的数组，所有的数组其实是对象，其
   </footer>
 
   
-  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 

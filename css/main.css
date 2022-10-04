@@ -2776,6 +2776,182 @@ mark.search-keyword {
 .use-motion .sidebar .animated {
   animation-fill-mode: both;
 }
+body {
+  background: url("../../../images/preview.jpg") no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+.main .header-inner,
+.main .sidebar-inner {
+  background: rgba(255,255,255,0.6);
+}
+.main .header-inner .menu-item a:hover,
+.main .sidebar-inner .menu-item a:hover,
+.main .header-inner .menu-item a.menu-item-active,
+.main .sidebar-inner .menu-item a.menu-item-active {
+  background: #b5f5ec;
+  background: rgba(181,245,236,0.6);
+}
+.main .header-inner .site-brand-container {
+  background-size: 175%;
+  background-image: linear-gradient(54deg, #002051, #0fd59f);
+}
+.main .main-inner .post-block {
+  background: rgba(255,255,255,0.6);
+}
+.main .post-block .post-body a[href] {
+  color: #006d75;
+}
+.main .post-block .post-body a[href]:hover {
+  color: #002329;
+}
+.main .post-block .post-body code:not([class]) {
+  background-color: rgba(173,78,0,0.08);
+  color: #ad4e00;
+}
+.main .post-block .post-button {
+  position: relative;
+  height: 42px;
+}
+.main .post-block .post-button a.btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 42px;
+  line-height: 42px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  box-shadow: 0 4px 15px 0 #6b8dd6;
+  background-size: 400%;
+}
+.main .post-block .post-button a.btn:hover {
+  color: #fff;
+}
+.main .post-block .post-button a.btn:hover::before {
+  animation: sun 8s infinite;
+}
+.main .post-block .post-button a.btn::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  top: -5px;
+  bottom: -5px;
+  background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  background-size: 400%;
+  border-radius: 50px;
+  filter: blur(20px);
+  z-index: -1;
+}
+@-moz-keyframes sun {
+  100% {
+    background-position: -400% 0;
+  }
+}
+@-webkit-keyframes sun {
+  100% {
+    background-position: -400% 0;
+  }
+}
+@-o-keyframes sun {
+  100% {
+    background-position: -400% 0;
+  }
+}
+@keyframes sun {
+  100% {
+    background-position: -400% 0;
+  }
+}
+.main .post-body h1 {
+  border: none;
+}
+.main .post-body h2 {
+  --borderWidth: 3px;
+  position: relative;
+  border-radius: var(--borderWidth);
+  border-bottom: 0;
+}
+.main .post-body h2:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: calc(-1 * var(--borderWidth));
+  height: 2px;
+  width: calc(100% + var(--borderWidth) * 2);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+  border-radius: calc(2 * var(--borderWidth));
+  z-index: -1;
+  animation: animatedgradient 3s ease alternate infinite;
+  background-size: 300% 300%;
+}
+@-moz-keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-webkit-keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-o-keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.main .post-block .post-body h1,
+.main .post-block .post-body h2,
+.main .post-block .post-body h3,
+.main .post-block .post-body h4,
+.main .post-block .post-body h5,
+.main .post-block .post-body h6 {
+  color: #b37feb;
+}
+.main u {
+  color: #8b0000;
+}
+footer {
+  color: #333;
+}
 .header-inner {
   background: var(--content-bg-color);
   border-radius: initial;
@@ -3151,7 +3327,6 @@ mark.search-keyword {
 .post-block .post-body a {
   color: #6439af;
 }
-
 main .header-inner .site-brand-container {
   background-image: linear-gradient(54deg, #002051, #00eaf1);
 }

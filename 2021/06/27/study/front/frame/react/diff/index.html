@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="react-fiber简介及15，16两版本DifffiberReact 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权] 因此React 16对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Diff的第一次学习">
+<meta property="og:url" content="http://example.com/2021/06/27/study/front/frame/react/diff/index.html">
+<meta property="og:site_name" content="埋书小楼">
+<meta property="og:description" content="react-fiber简介及15，16两版本DifffiberReact 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权] 因此React 16对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/react/diff1.png">
+<meta property="og:image" content="http://example.com/images/react/diff2.png">
+<meta property="og:image" content="http://example.com/images/react/diff3.png">
+<meta property="og:image" content="http://example.com/images/react/diff4.png">
+<meta property="og:image" content="http://example.com/images/react/diff5.png">
+<meta property="og:image" content="http://example.com/images/react/diff6.png">
+<meta property="og:image" content="http://example.com/images/react/diff7.png">
+<meta property="og:image" content="http://example.com/images/react/diff8.png">
+<meta property="og:image" content="http://example.com/images/react/diff9.png">
+<meta property="article:published_time" content="2021-06-27T12:36:32.000Z">
+<meta property="article:modified_time" content="2022-10-03T09:05:59.667Z">
+<meta property="article:author" content="书生">
+<meta property="article:tag" content="前端：React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/react/diff1.png">
+
+
+<link rel="canonical" href="http://example.com/2021/06/27/study/front/frame/react/diff/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/06/27/study/front/frame/react/diff/","path":"2021/06/27/study/front/frame/react/diff/","title":"React Diff的第一次学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>React Diff的第一次学习 | 埋书小楼</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">埋书小楼</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">清光未泯，来岁无穷</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#react-fiber%E7%AE%80%E4%BB%8B%E5%8F%8A15%EF%BC%8C16%E4%B8%A4%E7%89%88%E6%9C%ACDiff"><span class="nav-number">1.</span> <span class="nav-text">react-fiber简介及15，16两版本Diff</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fiber"><span class="nav-number">1.1.</span> <span class="nav-text">fiber</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Diff"><span class="nav-number">1.2.</span> <span class="nav-text">Diff</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#react-15-Diff"><span class="nav-number">1.2.1.</span> <span class="nav-text">react 15 Diff</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84Diff%E4%BB%A5%E5%8F%8Areact-15%E7%9A%84Diff"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">传统的Diff以及react 15的Diff</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React-patch"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">React patch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React-15-Diff-%E7%AE%80%E5%8D%95%E6%A8%A1%E6%8B%9F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">React 15 Diff 简单模拟</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React-16-Diff"><span class="nav-number">1.2.2.</span> <span class="nav-text">React 16 Diff</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fiber%E8%8A%82%E7%82%B9%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">Fiber节点数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Diff%E6%BA%90%E7%A0%81%E8%AE%B0%E5%BD%95"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">Diff源码记录</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#reconcileSingleElement"><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">reconcileSingleElement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#reconcileSingleTextNode"><span class="nav-number">1.2.2.2.2.</span> <span class="nav-text">reconcileSingleTextNode</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#reconcileChildrenArray"><span class="nav-number">1.2.2.2.3.</span> <span class="nav-text">reconcileChildrenArray</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Ediff%E7%9A%84%E5%BC%80%E5%8F%91%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">基于diff的开发建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5%EF%BC%88%E9%99%84%EF%BC%89%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">参考链接（附）：</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="书生"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">书生</p>
+  <div class="site-description" itemprop="description">博客</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lbf911531" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lbf911531" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yourname" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/27/study/front/frame/react/diff/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="书生">
+      <meta itemprop="description" content="博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="埋书小楼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React Diff的第一次学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+
+  
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-06-27 20:36:32" itemprop="dateCreated datePublished" datetime="2021-06-27T20:36:32+08:00">2021-06-27</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-10-03 17:05:59" itemprop="dateModified" datetime="2022-10-03T17:05:59+08:00">2022-10-03</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="react-fiber简介及15，16两版本Diff"><a href="#react-fiber简介及15，16两版本Diff" class="headerlink" title="react-fiber简介及15，16两版本Diff"></a>react-fiber简介及15，16两版本Diff</h1><h2 id="fiber"><a href="#fiber" class="headerlink" title="fiber"></a><i class="fa fa-tags"></i>fiber</h2><p>React 16版本之前 Diff 算法的实现是基于深度优先遍历虚拟DOM树结构，在这个过程中由于每次 Diff 都从根节点开始遍历。这会由于不可控因素，导致在底层执行任务的时候线程阻塞导致页面卡顿。[具体卡顿原因可以从浏览器渲染帧引申出去，简言之就是大执行量的同步任务阻塞线程，导致浏览器不能及时拿回线程控制权]</p>
+<p>因此React 16对底层做了一次重构：</p>
+<ol>
+<li>首先是基于虚拟DOM树，采用链表形式构建了一颗fiber树</li>
+</ol>
+<p>  <img src="/images/react/diff1.png" alt="1616311309865"></p>
+<span id="more"></span> 
+   <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 如上图，其关系可以转化成下方代码，root拥有两个子节点，第一个子节点也拥有两个子节点</span>
+<span class="token keyword">var</span> root <span class="token operator">=</span> <span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token string">"div"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token string">"root"</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> firstChild <span class="token operator">=</span> <span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token string">"div"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token string">"firstChild"</span><span class="token punctuation">,</span> <span class="token keyword">return</span><span class="token operator">:</span> root <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> secondChild <span class="token operator">=</span> <span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token string">"div"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token string">"secondChild"</span><span class="token punctuation">,</span><span class="token keyword">return</span><span class="token operator">:</span> root <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> firstSunNode <span class="token operator">=</span> <span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token string">"div"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token string">"firstSunNode"</span><span class="token punctuation">,</span> <span class="token keyword">return</span><span class="token operator">:</span> firstChild <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> secondSunNode <span class="token operator">=</span> <span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token string">"div"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token string">"secondSunNode"</span><span class="token punctuation">,</span> <span class="token keyword">return</span><span class="token operator">:</span> firstChild <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  
+ root<span class="token punctuation">.</span>child <span class="token operator">=</span> firstChild<span class="token punctuation">;</span>
+ firstChild<span class="token punctuation">.</span>sibling <span class="token operator">=</span> secondChild<span class="token punctuation">;</span>
+ firstChild<span class="token punctuation">.</span>child <span class="token operator">=</span> firstSunNode<span class="token punctuation">;</span>
+
+ firstSunNode<span class="token punctuation">.</span>sibling <span class="token operator">=</span> secondSunNode<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>   fiber节点都拥有 <code>child</code>,<code>return</code>,<code>sibling</code>,三个指针</p>
+<p>  1.1 child: 用来指向当前节点的第一个子节点</p>
+<p>  1.2 return: 用来指向当前节点的父节点</p>
+<p>  1.3 sibling: 用来指向当前节点的兄弟节点</p>
+<p><img src="/images/react/diff2.png" alt="1616311816104"></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 这里简单的模拟一下 react 16版本调度，调和（含diff算法）的大纲过程</span>
+<span class="token comment">// 根据 虚拟DOM 信息 构建 fiber树【workLoop】，每一个fiber节点都是一个函数/任务【performUnitOfWork】</span>
+<span class="token keyword">let</span> nextUnitOfWork <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> workInProgressRoot <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">scheduleRoot</span><span class="token punctuation">(</span><span class="token parameter">rootFible</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    nextUnitOfWork <span class="token operator">=</span> rootFible<span class="token punctuation">;</span>
+    workInProgressRoot <span class="token operator">=</span> rootFible<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">function</span> <span class="token function">workLoop</span><span class="token punctuation">(</span><span class="token parameter">deadLine</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> shouldYield <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>nextUnitOfWork <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>shouldYield<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    nextUnitOfWork <span class="token operator">=</span> <span class="token function">performUnitOfWork</span><span class="token punctuation">(</span>nextUnitOfWork<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    shouldYield <span class="token operator">=</span> deadLine<span class="token punctuation">.</span><span class="token function">timeRemaining</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>nextUnitOfWork<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"结束render"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">requestIdleCallback</span><span class="token punctuation">(</span>workLoop<span class="token punctuation">,</span><span class="token punctuation">&#123;</span>timeout<span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">performUnitOfWork</span><span class="token punctuation">(</span><span class="token parameter">curNode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 源码里的beginWork，第一件事就是根据tag属性判断，然后执行不同的 updateComponent 方法</span>
+  <span class="token comment">// 在 updateComponent方法中调用了 reconcileChildren 方法，然后返回curNode.child</span>
+  <span class="token comment">// 相当于 performUnitOfWork整个函数可以简化成 </span>
+  <span class="token comment">//  &#123;const child = beginWork(curNode); if(!child) completeUnitOfWork(curNode);&#125;</span>
+  <span class="token function">beginWork</span><span class="token punctuation">(</span>curNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 遍历找到最下层的子节点</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>curNode<span class="token punctuation">.</span>child<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> curNode<span class="token punctuation">.</span>child<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>curNode<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 源码里是将return sibling和重设curNode的逻辑放到了 completeUnitOfWork中</span>
+    <span class="token function">completeUnitOfWork</span><span class="token punctuation">(</span>curNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>curNode<span class="token punctuation">.</span>sibling<span class="token punctuation">)</span> <span class="token keyword">return</span> curNode<span class="token punctuation">.</span>sibling<span class="token punctuation">;</span>
+    curNode <span class="token operator">=</span> curNode<span class="token punctuation">.</span>return<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">beginWork</span><span class="token punctuation">(</span><span class="token parameter">curNode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">开始: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>curNode<span class="token punctuation">.</span>key<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">completeUnitOfWork</span><span class="token punctuation">(</span><span class="token parameter">curNode</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">结束: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>curNode<span class="token punctuation">.</span>key<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">scheduleRoot</span><span class="token punctuation">(</span>root<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">requestIdleCallback</span><span class="token punctuation">(</span>workLoop<span class="token punctuation">,</span><span class="token punctuation">&#123;</span>timeout<span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+开始: root
+开始: firstChild
+开始: firstSunNode
+结束: firstSunNode
+开始: secondSunNode
+结束: secondSunNode
+结束: firstChild
+开始: secondChild
+结束: secondChild
+结束: root
+结束render
+ */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol>
+<li>其次引入了<code>window.requestIdleCallback</code>，对<code>workLoop()</code>函数的调度进行优化。每当performUnitOfWork构建完一个fiber 节点后，都会将线程控制权归还浏览器，如果有更高优先级任务需要执行，则放弃构建fiber树，如果没有则继续在下一次从浏览器拿到控制权时继续执行节点的构建。</li>
+</ol>
+<p>  —– 以上是react fiber的大致思路，源码层面其实就是干了一件递归改循环的事情 —–</p>
+<p>为了更加形象深入的了解fiber以及为react 16版本diff铺路，以下粘贴一段网上关于 react fiber过程的介绍。</p>
+<p> <img src="/images/react/diff3.png" alt="img"> </p>
+<ol>
+<li>第一部分从 <code>ReactDOM.render()</code> 方法开始，把接收的React Element转换为Fiber节点，并为其设置优先级，记录update等。这部分主要是一些数据方面的准备工作。</li>
+<li>第二部分主要是三个函数：<code>scheduleWork</code>、<code>requestWork</code>、<code>performWork</code>，即安排工作、申请工作、正式工作三部曲。React 16 新增的异步调用的功能则在这部分实现。</li>
+<li>第三部分是一个大循环，遍历所有的Fiber节点，通过Diff算法计算所有更新工作，产出 EffectList 给到commit阶段使用。这部分的核心是 beginWork 函数。</li>
+</ol>
+<p>从<code>beginWork</code>来看，在<code>beginWork</code>阶段，<code>updateHostComponent</code>的时候会执行<code>reconcileChildFibers</code>或者<code>mountChildFibers(</code>初始化的时候)。主要分为两部分，一部分是对<code>Context</code>的处理，一部分是根据<code>fiber</code>对象的<code>tag</code>类型，调用对应的update方法（<strong>vdom diff的步骤就是在这里</strong>）：</p>
+<ol>
+<li>先更新classComponent的Instance，期间调用生命周期函数</li>
+<li>根据shouldUpdate来判断是否需要更新</li>
+<li>需要更新的话调用render()获得最新ReactElement</li>
+<li>如果是新建节点直接mount，如果是更新类型则调用fiber协调算法</li>
+<li><code>reconcileChildFibers</code>函数中主要是根据newChild类型，调用不同的Diff算法：<code>reconcileSingleElement、reconcileSinglePortal、reconcileSingleTextNode、reconcileChildrenArray</code>，在子节点上添加 <code>effectTag</code>记录变更类型如<code>placement</code></li>
+<li><code>reconcileSingleElement</code>的diff方式可参考：<a target="_blank" rel="noopener" href="https://react.jokcy.me/book/flow/reconcile-children/single.html">https://react.jokcy.me/book/flow/reconcile-children/single.html</a> 。array子元素群的diff方式：<a target="_blank" rel="noopener" href="https://react.jokcy.me/book/flow/reconcile-children/array.html">https://react.jokcy.me/book/flow/reconcile-children/array.html</a></li>
+<li>commit阶段做的事情是拿到<code>reconciliation</code>阶段产出的<code>EffectList</code>，即所有更新工作，提交这些更新工作并调用渲染模块（react-dom）渲染UI。</li>
+</ol>
+<p>最后通过事件触发进入到commitAllHostEffects里进行dom操作步骤。</p>
+<h2 id="Diff"><a href="#Diff" class="headerlink" title="Diff"></a><i class="fa fa-tags"></i>Diff</h2><h3 id="react-15-Diff"><a href="#react-15-Diff" class="headerlink" title="react 15 Diff"></a>react 15 Diff</h3><!--diff算法在 react 15版本和 react 16版本中有不同的实现。这里先整理15版本的。-->
+
+<h4 id="传统的Diff以及react-15的Diff"><a href="#传统的Diff以及react-15的Diff" class="headerlink" title="传统的Diff以及react 15的Diff"></a>传统的Diff以及react 15的Diff</h4><p>关于Diff算法，react官网有这样一段介绍：</p>
+<p>传统的Diff算法通过循环递归对节点进行依次对比，效率低下，其算法复杂度达到 <code>O(n^3)</code>,其中n表示节点的个数。这就意味着，假如页面有1000个节点，那么每次就要执行上十亿次的对比。而如今的CPU每秒钟能够执行大约30亿条指令。</p>
+<p>因此react官方基于传统Diff算法的基础上，制定了三条规则：</p>
+<ol>
+<li>WEB UI 中的DOM节点跨层级的移动操作特别少，可以忽略不计</li>
+<li>拥有相同类的两个组件会生成相似的树形结构，不同类的两个组件，将会生成不同的树形结构</li>
+<li>对于同一层级的一组子节点，可以通过key区分</li>
+</ol>
+<p>对于上述三条规则，简话即是： </p>
+<ul>
+<li><p> 不考虑跨层级移动，如果有那就卸载之前的，然后创建新的</p>
+</li>
+<li><p>基本不会考虑以下这种情况，如果有，那就按照卸载，再创建思路去考虑</p>
+<pre class="line-numbers language-jsx" data-language="jsx"><code class="language-jsx"><span class="token keyword">function</span> <span class="token function">originTree</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">1</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">2</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">3</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">newTree</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">return</span> <span class="token punctuation">(</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">1</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">2</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">3</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+	<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>为每个节点增加 key属性， 同一层级key相同，表示只需要考虑 同级移动</p>
+</li>
+</ul>
+<p>—– 基于这三条规则，可以想象一下React 中对diff算法的 实现思路 —–</p>
+<ol>
+<li><p>比类型，类型不同，就创建新的替换</p>
+</li>
+<li><p>比属性，同一类型下，可以比较新旧的 props，需要置空的置空，需要增加的增加，需要修改值的修改</p>
+</li>
+<li><p>递归 children 重复上方操作</p>
+<p><u>如果只是上面几步仍然是不够的，在React中还有一个点需要了解</u></p>
+</li>
+</ol>
+<h4 id="React-patch"><a href="#React-patch" class="headerlink" title="React patch"></a>React patch</h4><p>在上述规则的基础上，通过diff算法，可以直接知道哪些节点是需要删除，哪些节点又是需要创建，哪些节点需要移动的。但是，在这种场景下，是不可能每比对一次，就调用DOM API修改一次DOM树的，这样的操作也仅仅是比原生的性能稍好一点。</p>
+<p>因此，React 15通过打补丁的方式，基于Diff算法求出一个补丁对象——<code>patch</code>,然后再重新遍历旧的树，一次性批量更新。</p>
+<h4 id="React-15-Diff-简单模拟"><a href="#React-15-Diff-简单模拟" class="headerlink" title="React 15 Diff 简单模拟"></a>React 15 Diff 简单模拟</h4><img src="/images/react/diff4.png" alt="pic" style="zoom:50%;" />
+
+<img src="/images/react/diff5.png" alt="pic" style="zoom:50%;" />
+
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// diff.js</span>
+<span class="token keyword">class</span> <span class="token class-name">Element</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">type<span class="token punctuation">,</span> props<span class="token punctuation">,</span> children</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>type <span class="token operator">=</span> type<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>props <span class="token operator">=</span> props<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>children <span class="token operator">=</span> children<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>key <span class="token operator">=</span> props<span class="token punctuation">.</span>key<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token parameter">type<span class="token punctuation">,</span> props<span class="token punctuation">,</span> children</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Element</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> props<span class="token punctuation">,</span> children<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 简单模拟react createElement，二者如上图展示</span>
+<span class="token keyword">const</span> lastVirtualDom <span class="token operator">=</span> <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"div"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"container"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>
+  <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"item"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"item"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">3</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token comment">// createElement("li", &#123; className: "item", key: 5 &#125;, ["c"])</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextVirtualDom <span class="token operator">=</span> <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"div"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"container1"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>
+  <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"item"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"1"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"item"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">3</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"li"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> className<span class="token operator">:</span> <span class="token string">"item"</span><span class="token punctuation">,</span> key<span class="token operator">:</span> <span class="token number">5</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"2"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token constant">ATTRS</span> <span class="token operator">=</span> <span class="token string">"ATTRS"</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">TEXT</span> <span class="token operator">=</span> <span class="token string">"TEXT"</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">REMOVE</span> <span class="token operator">=</span> <span class="token string">"REMOVE"</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">REPLACE</span> <span class="token operator">=</span> <span class="token string">"REPLACE"</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">ADD</span> <span class="token operator">=</span> <span class="token string">"ADD"</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">MOVE</span> <span class="token operator">=</span> <span class="token string">"MOVE"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">diff</span><span class="token punctuation">(</span><span class="token parameter">oldVDom<span class="token punctuation">,</span> newVDom</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> patches <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// index表示层级</span>
+  <span class="token function">walk</span><span class="token punctuation">(</span>oldVDom<span class="token punctuation">,</span> newVDom<span class="token punctuation">,</span> index<span class="token punctuation">,</span> patches<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> patches<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">isString</span><span class="token punctuation">(</span><span class="token parameter">string</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token keyword">typeof</span> string <span class="token operator">===</span> <span class="token string">'string'</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">isArray</span><span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>array<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">diffAttribute</span><span class="token punctuation">(</span><span class="token parameter">oldVDomProps<span class="token punctuation">,</span> newVDomProps</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> currentPatches <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> attrName <span class="token keyword">in</span> oldVDomProps<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 在旧的props中，比对新旧，存留新值</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>oldVDomProps<span class="token punctuation">[</span>attrName<span class="token punctuation">]</span> <span class="token operator">!==</span> newVDomProps<span class="token punctuation">[</span>attrName<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      currentPatches<span class="token punctuation">[</span>attrName<span class="token punctuation">]</span> <span class="token operator">=</span> newVDomProps<span class="token punctuation">[</span>attrName<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> attrName <span class="token keyword">in</span> newVDomProps<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//新的属性值在旧节点不存在</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>oldVDomProps<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span>attrName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      currentPatches<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> newVDomProps<span class="token punctuation">[</span>attrName<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">return</span> currentPatches<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> tempKeyMap <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">diffChildren</span><span class="token punctuation">(</span><span class="token parameter">oldChildren<span class="token punctuation">,</span> newChildren<span class="token punctuation">,</span> index<span class="token punctuation">,</span> patches</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isArray</span><span class="token punctuation">(</span>oldChildren<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">isArray</span><span class="token punctuation">(</span>newChildren<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> oldChildrenLen <span class="token operator">=</span> oldChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> newChildrenLen <span class="token operator">=</span> newChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> maxLen <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>oldChildrenLen<span class="token punctuation">,</span> newChildrenLen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> oldChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>oldChildren<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        tempKeyMap<span class="token punctuation">[</span>oldChildren<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span> node<span class="token operator">:</span> oldChildren<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> index<span class="token operator">:</span> <span class="token punctuation">(</span>index<span class="token operator">+</span><span class="token number">1</span> <span class="token operator">+</span> i<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> maxLen<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">// 由于是深度优先遍历，且index是全局的，所以这边在遍历的同时，index是全局改变，且会累加上子元素的下标</span>
+      <span class="token comment">// 这样结束子元素遍历，去往父级的兄弟元素开始的时候，</span>
+      <span class="token comment">// 下标正好符合 根 0 => 父1 => 子2 => 叔3 => 叔.子 4这样排列</span>
+      <span class="token function">walk</span><span class="token punctuation">(</span>oldChildren<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> newChildren<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">++</span>index <span class="token operator">+</span> i<span class="token punctuation">,</span> patches<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    tempKeyMap <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function">walk</span><span class="token punctuation">(</span><span class="token parameter">oldVDom<span class="token punctuation">,</span> newVDom<span class="token punctuation">,</span> index<span class="token punctuation">,</span> patches</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> differences <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>newVDom<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">REMOVE</span><span class="token punctuation">,</span> index <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>newVDom<span class="token punctuation">.</span>key <span class="token operator">&amp;&amp;</span> tempKeyMap<span class="token punctuation">[</span>newVDom<span class="token punctuation">.</span>key<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> tempKeyMap<span class="token punctuation">[</span>newVDom<span class="token punctuation">.</span>key<span class="token punctuation">]</span><span class="token punctuation">.</span>index<span class="token punctuation">,</span><span class="token string">'='</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>index <span class="token operator">></span> tempKeyMap<span class="token punctuation">[</span>newVDom<span class="token punctuation">.</span>key<span class="token punctuation">]</span><span class="token punctuation">.</span>index<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">MOVE</span><span class="token punctuation">,</span> node<span class="token operator">:</span> newVDom<span class="token punctuation">,</span> sourceIndex<span class="token operator">:</span> index<span class="token punctuation">,</span> targetIndex<span class="token operator">:</span> tempKeyMap<span class="token punctuation">[</span>newVDom<span class="token punctuation">.</span>key<span class="token punctuation">]</span><span class="token punctuation">.</span>index<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>oldVDom <span class="token operator">&amp;&amp;</span> newVDom<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">ADD</span><span class="token punctuation">,</span> node<span class="token operator">:</span> newVDom <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isString</span><span class="token punctuation">(</span>oldVDom<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">isString</span><span class="token punctuation">(</span>newVDom<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>oldVDom <span class="token operator">!==</span> newVDom<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">TEXT</span><span class="token punctuation">,</span> text<span class="token operator">:</span> newVDom <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>oldVDom<span class="token punctuation">.</span>type <span class="token operator">===</span> newVDom<span class="token punctuation">.</span>type<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> attrs <span class="token operator">=</span> <span class="token function">diffAttribute</span><span class="token punctuation">(</span>oldVDom<span class="token punctuation">.</span>props<span class="token punctuation">,</span> newVDom<span class="token punctuation">.</span>props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>attrs<span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">ATTRS</span><span class="token punctuation">,</span> attrs <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 比对完当前节点属性后，还需要遍历children</span>
+    <span class="token function">diffChildren</span><span class="token punctuation">(</span>oldVDom<span class="token punctuation">.</span>children<span class="token punctuation">,</span> newVDom<span class="token punctuation">.</span>children<span class="token punctuation">,</span> index<span class="token punctuation">,</span> patches<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    differences<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> type<span class="token operator">:</span> <span class="token constant">REPLACE</span><span class="token punctuation">,</span> node<span class="token operator">:</span> newVDom <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>differences<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    patches<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> differences<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">diff</span><span class="token punctuation">(</span>lastVirtualDom<span class="token punctuation">,</span> nextVirtualDom<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">/**
+ * &#123; 
+ 	'0': [ &#123; type: 'ATTRS', attrs: [Object] &#125; ],
+  	'2': [ &#123; type: 'TEXT', text: '1' &#125; ],
+  	'5': [ &#123; type: 'ADD', node: [Element] &#125; ] 
+  	&#125;
+ */</span>
+<span class="token comment">// patches.js</span>
+<span class="token keyword">let</span> allPatches<span class="token punctuation">;</span>
+<span class="token keyword">let</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">patch</span><span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> patches</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  allPatches <span class="token operator">=</span> patches<span class="token punctuation">;</span>
+  <span class="token comment">// console.log(node);</span>
+  <span class="token function">walk</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">function</span> <span class="token function">walk</span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> currentPatch <span class="token operator">=</span> allPatches<span class="token punctuation">[</span>index<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> childNodes <span class="token operator">=</span> node<span class="token punctuation">.</span>childNodes<span class="token punctuation">;</span>
+  childNodes<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">child</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">walk</span><span class="token punctuation">(</span>child<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>currentPatch<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">doPatch</span><span class="token punctuation">(</span>node<span class="token punctuation">,</span> currentPatch<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">function</span> <span class="token function">doPatch</span><span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> patches</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  patches<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">patch</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>patch<span class="token punctuation">.</span>type<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">case</span> <span class="token string">"ATTRS"</span><span class="token operator">:</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> key <span class="token keyword">in</span> patch<span class="token punctuation">.</span>attrs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+          <span class="token keyword">let</span> value <span class="token operator">=</span> patch<span class="token punctuation">.</span>attrs<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token function">setAttr</span><span class="token punctuation">(</span>node<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            node<span class="token punctuation">.</span><span class="token function">removeAttribute</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span> <span class="token string">"TEXT"</span><span class="token operator">:</span>
+        node<span class="token punctuation">.</span>textContent <span class="token operator">=</span> patch<span class="token punctuation">.</span>text<span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span> <span class="token string">"REMOVE"</span><span class="token operator">:</span>
+        node<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span> <span class="token string">"REPLACE"</span><span class="token operator">:</span>
+        <span class="token keyword">let</span> newNode <span class="token operator">=</span>
+          patch<span class="token punctuation">.</span>newNode <span class="token keyword">instanceof</span> <span class="token class-name">Element</span>
+            <span class="token operator">?</span> <span class="token function">render</span><span class="token punctuation">(</span>patch<span class="token punctuation">.</span>newNode<span class="token punctuation">)</span>
+            <span class="token operator">:</span> document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span>patch<span class="token punctuation">.</span>newNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        node<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">repalceChild</span><span class="token punctuation">(</span>newNode<span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span> <span class="token string">"ADD"</span><span class="token operator">:</span>
+        <span class="token keyword">let</span> newNode <span class="token operator">=</span>
+          patch<span class="token punctuation">.</span>newNode <span class="token keyword">instanceof</span> <span class="token class-name">Element</span>
+            <span class="token operator">?</span> <span class="token function">render</span><span class="token punctuation">(</span>patch<span class="token punctuation">.</span>newNode<span class="token punctuation">)</span>
+            <span class="token operator">:</span> document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span>patch<span class="token punctuation">.</span>newNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+         node<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>newNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">default</span><span class="token operator">:</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>补充 <code>TODO</code>: </p>
+<ol>
+<li>同级移动： 其思路是遍历同级的时候，先生成一个map存放key，并对应VDOM，diff的时候，比对一下key是否有相同的，如果有，且位置发生改变，记录一下 sourceIndex,targetIndex到patches中。</li>
+<li>简化版demo,如有bug实属正常，后续待深入了解完善 ，凑合着看 </li>
+</ol>
+<h3 id="React-16-Diff"><a href="#React-16-Diff" class="headerlink" title="React 16 Diff"></a>React 16 Diff</h3><h4 id="Fiber节点数据结构"><a href="#Fiber节点数据结构" class="headerlink" title="Fiber节点数据结构"></a>Fiber节点数据结构</h4><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">export</span> type Fiber <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token operator">...</span><span class="token punctuation">,</span>                     
+  tag<span class="token operator">:</span> TypeOfWork<span class="token punctuation">,</span> <span class="token comment">// number类型，区分原生标签，function，class,text等等</span>
+  key<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> string<span class="token punctuation">,</span>
+  type<span class="token operator">:</span> any<span class="token punctuation">,</span>
+  <span class="token comment">// 这个可以理解为是节点的实例，它和type在很多场景是一致的，但是也有特例</span>
+  <span class="token comment">//  type: "div", stateNode: "div"</span>
+  <span class="token comment">//  type: "Function", stateNode: null, </span>
+  <span class="token comment">//  当fiber node的type是函数式组件或class组件的时候，是没有stateNode的，</span>
+  <span class="token comment">//  但是 function() 返回的和class.render返回的 jsx，他们有stateNode</span>
+  stateNode<span class="token operator">:</span> any<span class="token punctuation">,</span> 
+  <span class="token keyword">return</span><span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 父节点</span>
+  child<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span>  <span class="token comment">// 第一个子节点</span>
+  sibling<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// 兄弟节点</span>
+  index<span class="token operator">:</span> number<span class="token punctuation">,</span>
+  ref<span class="token operator">:</span> <span class="token keyword">null</span> <span class="token operator">|</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">handle<span class="token operator">:</span> mixed</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">&#123;</span>_stringRef<span class="token operator">:</span> <span class="token operator">?</span>string<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token operator">|</span> RefObject<span class="token punctuation">,</span>
+  <span class="token comment">// 标记， diff过程中添加的值</span>
+  effectTag<span class="token operator">:</span> TypeOfSideEffect<span class="token punctuation">,</span>
+  <span class="token comment">// 当前fiber节点的一个克隆体,（这个属性牵扯到**双缓冲机制，后面需要了解一下），用在current树和workInProgress树中，新树节点对应旧树节点。</span>
+  alternate<span class="token operator">:</span> Fiber <span class="token operator">|</span> <span class="token keyword">null</span><span class="token punctuation">,</span> 
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="Diff源码记录"><a href="#Diff源码记录" class="headerlink" title="Diff源码记录"></a>Diff源码记录</h4><p>之前有提及，在ReactFiberBeginWork.js/beginWork中会调用一个 reconcileChildren方法，该方法比较简单，仅判断了是否是初次渲染， 如果是初次则调用mountChildFibers，否则就执行reconcileChildFibers。</p>
+<p>而reconcileChildFibers中则又根据当前fiber节点的tag，来决定调用不同的方法更新子节点。所以从reconcileChildFibers入手。</p>
+<img src="/images/react/diff6.png" alt="diff6" style="zoom:40%;" />
+
+<h5 id="reconcileSingleElement"><a href="#reconcileSingleElement" class="headerlink" title="reconcileSingleElement"></a>reconcileSingleElement</h5><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">//returnFiber就是 workInProgress</span>
+<span class="token comment">// currentFirstChild就是workInProgress.alternate的child（如果存在的话） | </span>
+<span class="token comment">// element是 newChild,也是 当前workInProgress(fiber节点)的children</span>
+<span class="token comment">// expirationTime过期时间</span>
+<span class="token keyword">function</span> <span class="token function">reconcileSingleElement</span><span class="token punctuation">(</span><span class="token parameter">returnFiber<span class="token punctuation">,</span> currentFirstChild<span class="token punctuation">,</span> element<span class="token punctuation">,</span> expirationTime</span><span class="token punctuation">)</span><span class="token operator">:</span> Fiber <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> key <span class="token operator">=</span> element<span class="token punctuation">.</span>key<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> child <span class="token operator">=</span> currentFirstChild<span class="token punctuation">;</span>
+    <span class="token comment">//初始渲染这个currentFirstChild直接传的null，所以更新时候才会diff</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>child <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">//查看节点是否可以复用</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">.</span>key <span class="token operator">===</span> key<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">switch</span> <span class="token punctuation">(</span>child<span class="token punctuation">.</span>tag<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token operator">...</span>
+          <span class="token keyword">default</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//节点类型也相同</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">.</span>elementType <span class="token operator">===</span> element<span class="token punctuation">.</span>type<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+              <span class="token comment">// 相同的老的节点的兄弟节点清空  为了本次可以复用</span>
+              <span class="token function">deleteRemainingChildren</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> child<span class="token punctuation">.</span>sibling<span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token comment">// useFiber可以看作只是用来clone一个fiber节点，但它的sibling被置空了， effectTag被设置成了和初始化创建一样的值:NoWork(无更新);</span>
+              <span class="token keyword">const</span> existing <span class="token operator">=</span> <span class="token function">useFiber</span><span class="token punctuation">(</span>child<span class="token punctuation">,</span> element<span class="token punctuation">.</span>props<span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token operator">...</span>
+              <span class="token keyword">return</span> existing<span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">// key相同但是节点类型不同，无法复用，其兄弟节点也需要删除</span>
+        <span class="token comment">//**问题：【这个场景暂时没明白为什么，个人认为变的是自己，又不是父级，为何要在自己的类型不同时删除sibling】</span>
+        <span class="token comment">/*
+        * while (childToDelete !== null) &#123;
+        *  deleteChild(returnFiber, childToDelete);
+        *  childToDelete = childToDelete.sibling;
+      	* &#125;
+        */</span>
+        <span class="token function">deleteRemainingChildren</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> child<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// key不相同 无法服用，但是其兄弟可能还会复用上次的</span>
+        <span class="token function">deleteChild</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> child<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      child <span class="token operator">=</span> child<span class="token punctuation">.</span>sibling<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//上面如果执行完没有可复用的 则进入这里进行创建</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>element<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token constant">REACT_FRAGMENT_TYPE</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token operator">...</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> created <span class="token operator">=</span> <span class="token function">createFiberFromElement</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token operator">...</span>
+      <span class="token keyword">return</span> created<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="reconcileSingleTextNode"><a href="#reconcileSingleTextNode" class="headerlink" title="reconcileSingleTextNode"></a>reconcileSingleTextNode</h5><p>reconcileSingleTextNode方法比reconcileSingleElement代码量少，而且基本类似，只是少了<code>while(!child)</code>遍历兄弟节点这一块逻辑</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token operator">...</span><span class="token punctuation">.</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>currentFirstChild <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> currentFirstChild<span class="token punctuation">.</span>tag <span class="token operator">===</span> HostText<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">//删除兄弟</span>
+  <span class="token function">deleteRemainingChildren</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> currentFirstChild<span class="token punctuation">.</span>sibling<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">//复用</span>
+  <span class="token keyword">const</span> existing <span class="token operator">=</span> <span class="token function">useFiber</span><span class="token punctuation">(</span>currentFirstChild<span class="token punctuation">,</span> textContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  existing<span class="token punctuation">.</span>return <span class="token operator">=</span> returnFiber<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> existing<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token operator">...</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h5 id="reconcileChildrenArray"><a href="#reconcileChildrenArray" class="headerlink" title="reconcileChildrenArray"></a>reconcileChildrenArray</h5><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">   <span class="token keyword">function</span> <span class="token function">reconcileChildrenArray</span><span class="token punctuation">(</span><span class="token parameter">returnFiber<span class="token punctuation">,</span> currentFirstChild<span class="token punctuation">,</span> newChildren<span class="token punctuation">,</span> expirationTime</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token operator">...</span>
+
+     <span class="token keyword">var</span> resultingFirstChild <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+     <span class="token keyword">var</span> previousNewFiber <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+     <span class="token keyword">var</span> oldFiber <span class="token operator">=</span> currentFirstChild<span class="token punctuation">;</span>
+     <span class="token keyword">var</span> lastPlacedIndex <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">var</span> newIdx <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+     <span class="token keyword">var</span> nextOldFiber <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token comment">// 遍历子节点数组，用旧节点的index去和新节点数组的index去比对 </span>
+     <span class="token comment">// 循环结束场景： </span>
+     <span class="token comment">//   1. 新旧长度一致，新旧都遍历完成</span>
+     <span class="token comment">//   2. 新的比旧的短，新的完成遍历</span>
+     <span class="token comment">//   3. 新的比旧的长，旧的遍历完成 oldFiber === null,跳出循环</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> oldFiber <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> newIdx <span class="token operator">&lt;</span> newChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span> newIdx<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token comment">// 取相同位置的新旧节点，</span>
+       <span class="token keyword">if</span> <span class="token punctuation">(</span>oldFiber<span class="token punctuation">.</span>index <span class="token operator">></span> newIdx<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">// 当oldFiber.index大于index时，表示旧链长度大于了新链长度了</span>
+         <span class="token comment">// ** 问题：上行理解感觉有点悖论，如果旧链长度大于新链，那么循环都结束了，为什么要加这个判断</span>
+         nextOldFiber <span class="token operator">=</span> oldFiber<span class="token punctuation">;</span>
+         oldFiber <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+       <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">// 这里相当于取旧节点的兄弟节点作为下一次循环的，在最下面 `oldFiber = nextOldFiber`</span>
+         nextOldFiber <span class="token operator">=</span> oldFiber<span class="token punctuation">.</span>sibling<span class="token punctuation">;</span>
+       <span class="token punctuation">&#125;</span>
+	 <span class="token comment">//这里面根据key 判断是否可以复用节点</span>
+       <span class="token keyword">var</span> newFiber <span class="token operator">=</span> <span class="token function">updateSlot</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> oldFiber<span class="token punctuation">,</span> newChildren<span class="token punctuation">[</span>newIdx<span class="token punctuation">]</span><span class="token punctuation">,</span> expirationTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+       <span class="token keyword">if</span> <span class="token punctuation">(</span>newFiber <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span>oldFiber <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+           oldFiber <span class="token operator">=</span> nextOldFiber<span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+
+         <span class="token keyword">break</span><span class="token punctuation">;</span>
+       <span class="token punctuation">&#125;</span>
+       <span class="token operator">...</span><span class="token punctuation">.</span>
+       oldFiber <span class="token operator">=</span> nextOldFiber<span class="token punctuation">;</span>
+	
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">// -------------------------   </span>
+    
+   <span class="token comment">// 这里表示新链遍历结束后，假设旧链还存在值，则需要删除旧链多余的节点</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>newIdx <span class="token operator">===</span> newChildren<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token comment">// We've reached the end of the new children. We can delete the rest.</span>
+       <span class="token function">deleteRemainingChildren</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> oldFiber<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">return</span> resultingFirstChild<span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+       <span class="token comment">// 旧节点遍历完 新节点还有值 [a,b] => [a,b,c]</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>oldFiber <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token comment">//遍历 插入标记</span>
+     <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> newIdx <span class="token operator">&lt;</span> newChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span> newIdx<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token keyword">const</span> newFiber <span class="token operator">=</span> <span class="token function">createChild</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//创建新的fiber节点</span>
+       <span class="token comment">// 插入标记 </span>
+       lastPlacedIndex <span class="token operator">=</span> <span class="token function">placeChild</span><span class="token punctuation">(</span>newFiber<span class="token punctuation">,</span> lastPlacedIndex<span class="token punctuation">,</span> newIdx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token operator">...</span>
+     <span class="token punctuation">&#125;</span>
+     <span class="token keyword">return</span> resultingFirstChild<span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">// 这里返回了一个map结构， 其目的是遍历了旧fiber及其兄弟节点，按照有key则取key，无key则index</span>
+   <span class="token comment">// 作为map的key，存储 【 existingChildren.set(existingChild.key, existingChild)】</span>
+   <span class="token keyword">var</span> existingChildren <span class="token operator">=</span> <span class="token function">mapRemainingChildren</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> oldFiber<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 下面还有一次遍历</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>  <code>updateFromMap</code> 和 <code>updateSlot</code> 的区别，内容逻辑是一致的，但是这里不再通过单纯的 <code>key</code> 判定是否可复用，而是通过新建的 <code>map</code> 对象中取旧节点，如果能取到意味着可以复用旧节点，反之创建新节点： </p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> newIdx <span class="token operator">&lt;</span> newChildren<span class="token punctuation">.</span>length<span class="token punctuation">;</span> newIdx<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> newFiber <span class="token operator">=</span> <span class="token function">updateFromMap</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 这里正常情况下会返回值  复用或新创建 和updateSlot不同</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>newFiber <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>shouldTrackSideEffects<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>newFiber<span class="token punctuation">.</span>alternate <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 新的节点是复用老节点  从Map对象中删除旧节点值</span>
+        existingChildren<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>
+          newFiber<span class="token punctuation">.</span>key <span class="token operator">===</span> <span class="token keyword">null</span> <span class="token operator">?</span> newIdx <span class="token operator">:</span> newFiber<span class="token punctuation">.</span>key<span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 更新index 判定哪些节点需要被标记 插入effectTag</span>
+    <span class="token comment">// placeChild 函数 通过alternate属性取了旧树节点，，如果没有，则newFiber是创建</span>
+    <span class="token comment">// 如果有则判断二者的index，如果旧index小于 lastPlacedIndex，则打上移动的effectTag</span>
+    lastPlacedIndex <span class="token operator">=</span> <span class="token function">placeChild</span><span class="token punctuation">(</span>newFiber<span class="token punctuation">,</span> lastPlacedIndex<span class="token punctuation">,</span> newIdx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>previousNewFiber <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">//返回时候只需要返回自己   因为兄弟节点都挂载到自己身上了</span>
+      resultingFirstChild <span class="token operator">=</span> newFiber<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">//不停的给自己追加兄弟 a--->b--->c--->d</span>
+      previousNewFiber<span class="token punctuation">.</span>sibling <span class="token operator">=</span> newFiber<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    previousNewFiber <span class="token operator">=</span> newFiber<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>shouldTrackSideEffects<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">//旧节点中还存在，没法被复用  这里需要遍历删除</span>
+  existingChildren<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">child</span> <span class="token operator">=></span> <span class="token function">deleteChild</span><span class="token punctuation">(</span>returnFiber<span class="token punctuation">,</span> child<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// 只需要返回第一个节点即可   后面兄弟通过 slibling连接</span>
+<span class="token keyword">return</span> resultingFirstChild<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>关于 placeChild 函数，从网上摘了个例子描述一下其具体功能：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">placeChild</span><span class="token punctuation">(</span><span class="token parameter">newFiber<span class="token punctuation">,</span> lastPlacedIndex<span class="token punctuation">,</span> newIndex</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     newFiber<span class="token punctuation">.</span>index <span class="token operator">=</span> newIndex<span class="token punctuation">;</span>
+
+     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>shouldTrackSideEffects<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token comment">// Noop.</span>
+       <span class="token keyword">return</span> lastPlacedIndex<span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+
+     <span class="token keyword">var</span> current <span class="token operator">=</span> newFiber<span class="token punctuation">.</span>alternate<span class="token punctuation">;</span>
+
+     <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       <span class="token keyword">var</span> oldIndex <span class="token operator">=</span> current<span class="token punctuation">.</span>index<span class="token punctuation">;</span>
+
+       <span class="token keyword">if</span> <span class="token punctuation">(</span>oldIndex <span class="token operator">&lt;</span> lastPlacedIndex<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">// This is a move.</span>
+         newFiber<span class="token punctuation">.</span>effectTag <span class="token operator">=</span> Placement<span class="token punctuation">;</span>
+         <span class="token keyword">return</span> lastPlacedIndex<span class="token punctuation">;</span>
+       <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">// This item can stay in place.</span>
+         <span class="token keyword">return</span> oldIndex<span class="token punctuation">;</span>
+       <span class="token punctuation">&#125;</span>
+     <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+       <span class="token comment">// This is an insertion.</span>
+       newFiber<span class="token punctuation">.</span>effectTag <span class="token operator">=</span> Placement<span class="token punctuation">;</span>
+       <span class="token keyword">return</span> lastPlacedIndex<span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+   <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> <strong>绿色线条代表复用节点且无操作，黄色代表移动操作，蓝色插入，红色删除</strong>： </p>
+<p> <img src="/images/react/diff7.png" alt="img"> </p>
+<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">新节点 key1，Map 集合中存在 key1 则取出复用，key1 老节点的 oldIndex 为 1，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 1。
+
+新节点 key2，Map 集合中存在 key2 则取出复用，key2 老节点的 oldIndex 为 2，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 2。
+
+新节点 key0，Map 集合中存在 key0 则取出复用，key0 老节点的 oldIndex 为 0，满足 oldIndex &lt; lastPlacedIndex，则将 key0 标记为插入，返回 lastPlacedIndex。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> <img src="/images/react/diff8.png" alt="img"> </p>
+<pre class="line-numbers language-reStructuredText" data-language="reStructuredText"><code class="language-reStructuredText">新节点 key1，Map 集合中存在 key1 则取出复用，key1 老节点的 oldIndex 为 1，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 1。
+
+新节点 key5，Map 集合中不存在 key5 新建节点，不满足 current !&#x3D;&#x3D; null，则将 key5 标记为插入，返回 lastPlacedIndex。
+
+新节点 key3，Map 集合中存在 key3 则取出复用，key3 老节点的 oldIndex 为 3，不满足 oldIndex &lt; lastPlacedIndex，返回 oldIndex，并且赋值给 lastPlacedIndex 值更新为 3。
+
+新节点 key0，Map 集合中存在 key0 则取出复用，key0 老节点的 oldIndex 为 0，满足 oldIndex &lt; lastPlacedIndex，则将 key0 标记为插入，返回 lastPlacedIndex。
+
+剩余节点 key2 通过 existingChildren 遍历删除，被复用过的节点因为从 map 集合中已经移除了，所以这里的删除只是为未复用的。
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="基于diff的开发建议"><a href="#基于diff的开发建议" class="headerlink" title="基于diff的开发建议"></a><strong>基于diff的开发建议</strong></h2><ul>
+<li>基于tree diff：</li>
+</ul>
+<p>(1) 开发组件时，注意保持DOM结构的稳定；即，尽可能少地动态操作DOM结构，尤其是移动操作。</p>
+<p>(2) 当节点数过大或者页面更新次数过多时，页面卡顿的现象会比较明显。这时可以通过 CSS 隐藏或显示节点，而不是真的移除或添加 DOM 节点。</p>
+<ul>
+<li>基于component diff：</li>
+</ul>
+<p>(1) 注意使用 shouldComponentUpdate() 来减少组件不必要的更新。</p>
+<p>(2) 对于类似的结构应该尽量封装成组件，既减少代码量，又能减少component diff的性能消耗。</p>
+<ul>
+<li>基于element diff：</li>
+</ul>
+<p>(1) 对于列表结构，尽量减少类似将最后一个节点移动到列表首部的操作，当节点数量过大或更新操作过于频繁时，在一定程度上会影响 React 的渲染性能。</p>
+<h2 id="参考链接（附）："><a href="#参考链接（附）：" class="headerlink" title="参考链接（附）："></a>参考链接（附）：</h2><p><a target="_blank" rel="noopener" href="https://codesandbox.io/s/dom-diffgengxinshitu-e8j3n?file=/src/patch.js">https://codesandbox.io/s/dom-diffgengxinshitu-e8j3n?file=/src/patch.js</a></p>
+<p><a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/docs/reconciliation.html#the-diffing-algorithm">https://zh-hans.reactjs.org/docs/reconciliation.html#the-diffing-algorithm</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av714591492/">https://www.bilibili.com/video/av714591492/</a><br>        <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cE411B7by?from=search&amp;seid=3682473561399472505">https://www.bilibili.com/video/BV1cE411B7by?from=search&amp;seid=3682473561399472505</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/y805939188/simple-react/blob/master/src/my-react/react-dom/react-dom.js">https://github.com/y805939188/simple-react/blob/master/src/my-react/react-dom/react-dom.js</a></p>
+<p>** <a target="_blank" rel="noopener" href="http://www.ayqy.net/blog/dive-into-react-fiber/">http://www.ayqy.net/blog/dive-into-react-fiber/</a></p>
+<p><del>记录一下（**标记的都是需要后面花时间再看的）</del></p>
+<p><img src="/images/react/diff9.png" alt="1616657196256"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>书生
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2021/06/27/study/front/frame/react/diff/" title="React Diff的第一次学习">http://example.com/2021/06/27/study/front/frame/react/diff/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF%EF%BC%9AReact/" rel="tag"># 前端：React</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/06/27/study/front/frame/react/router/" rel="prev" title="React Router的一次学习">
+                  <i class="fa fa-chevron-left"></i> React Router的一次学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/06/27/study/front/javascript/es_iterator/" rel="next" title="iterator and Generator">
+                  iterator and Generator <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">书生</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="/js/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
